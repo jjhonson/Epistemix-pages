@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epistemix — Clarity that advances health and economic outcomes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #4056F4;
+      --blue-dark:   #1C3080;
+      --blue-mid:    #2D42C8;
+      --blue-light:  #6B82F7;
+      --blue-xlight: #F5F7FF;
+      --grey-dark:   #1A1A2E;
+      --grey-text:   #404040;
+      --grey-mid:    #595959;
+      --grey-light:  #8C96A8;
+      --grey-border: #E2E6EF;
+      --off-white:   #F8F9FC;
+      --white:       #FFFFFF;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      color: var(--grey-text);
+      line-height: 1.65;
+      background: var(--white);
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 1px solid var(--grey-border);
+      z-index: 200;
+      padding: 0 56px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .nav-logo {
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--blue-dark);
+    }
+
+    .nav-logo img { height: 26px; width: auto; display: block; }
+
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--grey-mid);
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--blue-dark); }
+
+    .nav-links .dropdown { position: relative; cursor: pointer; }
+
+    .nav-links .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      background: white;
+      border: 1px solid var(--grey-border);
+      border-radius: 8px;
+      padding: 8px 0;
+      min-width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .nav-links .dropdown:hover .dropdown-menu { display: block; }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 13.5px;
+      color: var(--grey-text);
+    }
+
+    .dropdown-menu a:hover { background: var(--blue-xlight); color: var(--blue); }
+
+    .dropdown-label { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 500; color: var(--grey-mid); }
+    .dropdown-label::after { content: '▾'; font-size: 11px; color: var(--grey-light); }
+
+    .nav-cta {
+      background: var(--blue);
+      color: white !important;
+      padding: 9px 20px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .nav-cta:hover { background: var(--blue-mid) !important; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue-mid) 60%, var(--blue) 100%);
+      color: white;
+      padding: 100px 56px 112px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 40px;
+      align-items: center;
+      max-width: 1200px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -1px;
+      margin-bottom: 28px;
+      color: white;
+    }
+
+    .hero h1 em { font-style: normal; color: rgba(255,255,255,0.7); }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 44px;
+    }
+
+    .hero-sub .highlight {
+      color: white;
+      font-weight: 700;
+      background: rgba(255,255,255,0.12);
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    .hero-actions { display: flex; gap: 14px; align-items: center; }
+
+    /* HERO DIAGRAM */
+    .hero-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* HERO PRODUCT CARD */
+    .hero-product-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 28px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hpc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .hpc-pill {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue-light);
+      background: rgba(64,86,244,0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .hpc-dots { display: flex; gap: 5px; }
+    .hpc-dots span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .hpc-section { margin-bottom: 18px; }
+
+    .hpc-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 5px;
+    }
+
+    .hpc-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .hpc-chart { margin-bottom: 20px; }
+    .hpc-chart svg { width: 100%; height: auto; display: block; }
+
+    .hpc-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    .hpc-metric { }
+
+    .hpc-m-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.3px;
+      margin-bottom: 2px;
+    }
+
+    .hpc-m-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 6px;
+    }
+
+    .hpc-m-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .hpc-m-bar div {
+      height: 100%;
+      background: var(--blue-light);
+      border-radius: 2px;
+    }
+
+    .hpc-status { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px; }
+
+    .hpc-s-item {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hpc-s-item.on-track { color: #4ADE80; }
+    .hpc-s-item.warning { color: #FCD34D; }
+
+    .btn-primary {
+      background: white;
+      color: var(--blue-dark);
+      padding: 13px 28px;
+      border-radius: 7px;
+      font-size: 14.5px;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.92; }
+
+    .btn-secondary {
+      color: rgba(255,255,255,0.85);
+      padding: 13px 24px;
+      border-radius: 7px;
+      font-size: 14.5px;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.6); color: white; }
+
+    /* TRUSTED BY */
+    .trusted-bar {
+      background: var(--off-white);
+      border-bottom: 1px solid var(--grey-border);
+      padding: 24px 56px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .trusted-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--grey-light);
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    .trusted-logos {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+
+    .trusted-logos img {
+      height: 26px;
+      width: auto;
+      max-width: 100px;
+      opacity: 0.5;
+      filter: grayscale(100%);
+      transition: opacity 0.2s;
+      object-fit: contain;
+    }
+
+    .trusted-logos img:hover { opacity: 0.8; }
+
+    .trusted-logos .text-logo {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      color: var(--grey-light);
+      white-space: nowrap;
+    }
+
+    /* SECTION SHARED */
+    section { padding: 96px 56px; }
+
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+
+    .section-eyebrow {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-headline {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      color: var(--grey-dark);
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--grey-mid);
+      max-width: 680px;
+    }
+
+    /* PROBLEM SECTION */
+    .problem-section { background: white; }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      margin-top: 56px;
+      align-items: start;
+    }
+
+    .quote-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+
+    .quote-item {
+      padding-left: 20px;
+      border-left: 2px solid var(--blue);
+    }
+
+    .quote-item q {
+      display: block;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--grey-dark);
+      font-style: italic;
+      quotes: none;
+      margin-bottom: 6px;
+    }
+
+    .quote-item cite {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: var(--grey-light);
+      text-transform: uppercase;
+      font-style: normal;
+    }
+
+    .problem-quote {
+      font-size: 20px;
+      line-height: 1.65;
+      color: var(--grey-dark);
+      font-weight: 400;
+      border-left: 3px solid var(--blue);
+      padding-left: 24px;
+      margin-bottom: 32px;
+    }
+
+    .problem-text {
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--grey-mid);
+    }
+
+    .force-cards { display: flex; flex-direction: column; gap: 16px; }
+
+    .force-card {
+      background: var(--off-white);
+      border: 1px solid var(--grey-border);
+      border-radius: 10px;
+      padding: 24px 28px;
+    }
+
+    .force-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--grey-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .force-card-title .icon {
+      width: 28px;
+      height: 28px;
+      background: var(--blue-xlight);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .force-card p { font-size: 13.5px; line-height: 1.65; color: var(--grey-mid); }
+
+    /* SYNTHETIC POPULATION SECTION */
+    .synpop-section { background: var(--off-white); }
+
+    .synpop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      margin-top: 48px;
+      align-items: start;
+    }
+
+    .synpop-text p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--grey-mid);
+      margin-bottom: 20px;
+    }
+
+    .synpop-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .synpop-stat {
+      background: white;
+      border: 1px solid var(--grey-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+    }
+
+    .synpop-stat .val {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .synpop-stat .lbl {
+      font-size: 12.5px;
+      color: var(--grey-mid);
+      line-height: 1.4;
+    }
+
+    .synpop-visual {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+    }
+
+    .synpop-visual img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* HOW IT WORKS */
+    .how-section { background: var(--blue-dark); color: white; }
+
+    .how-section .section-eyebrow { color: var(--blue-light); }
+    .how-section .section-headline { color: white; }
+    .how-section .section-body { color: rgba(255,255,255,0.7); }
+
+    .cycle-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 48px;
+    }
+
+    .cycle-wrapper svg {
+      width: 700px;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .stage-descs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .stage-desc .sd-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue-light);
+      margin-bottom: 10px;
+    }
+
+    .stage-desc h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .stage-desc p {
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.58);
+    }
+
+    /* PRODUCT SECTION */
+    .product-section { background: white; }
+
+    .product-card {
+      background: var(--off-white);
+      border: 1px solid var(--grey-border);
+      border-radius: 14px;
+      padding: 48px;
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    .product-card-left h3 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--grey-dark);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .product-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: var(--blue-xlight);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .product-card-left p {
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--grey-mid);
+      margin-bottom: 32px;
+    }
+
+    .product-components { display: flex; flex-direction: column; gap: 12px; }
+
+    .component {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--grey-mid);
+    }
+
+    .component-num {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      background: var(--blue-xlight);
+      color: var(--blue);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .product-stats { display: flex; flex-direction: column; gap: 24px; }
+
+    .stat-box {
+      background: white;
+      border: 1px solid var(--grey-border);
+      border-radius: 10px;
+      padding: 28px 32px;
+    }
+
+    .stat-box .stat-val {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .stat-box .stat-label { font-size: 13px; color: var(--grey-mid); line-height: 1.5; }
+
+    .product-cta-row { margin-top: 36px; display: flex; gap: 14px; }
+
+    .btn-blue {
+      background: var(--blue);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .btn-blue:hover { background: var(--blue-mid); }
+
+    .btn-outline {
+      border: 1px solid var(--grey-border);
+      color: var(--grey-mid);
+      padding: 12px 24px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* AUDIENCE */
+    .audience-section { background: var(--off-white); }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .audience-card {
+      background: white;
+      border: 1px solid var(--grey-border);
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+
+    .audience-card:hover { border-color: var(--blue); }
+
+    .audience-role {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .audience-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--grey-dark);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .audience-card p { font-size: 13.5px; line-height: 1.7; color: var(--grey-mid); }
+
+    /* CTA */
+    .cta-section {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+      color: white;
+      text-align: center;
+      padding: 96px 56px;
+    }
+
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .cta-section p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.72);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .cta-actions { display: flex; gap: 14px; justify-content: center; }
+
+    /* FOOTER */
+    footer {
+      background: var(--grey-dark);
+      color: rgba(255,255,255,0.5);
+      padding: 48px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .footer-logo {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a { color: rgba(255,255,255,0.45); transition: color 0.15s; font-size: 13px; }
+    .footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+    .footer-copy { font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="#">EPISTEMIX</a>
+  <div class="nav-links">
+    <a href="#">Product</a>
+    <div class="dropdown">
+      <div class="dropdown-label">Solutions</div>
+      <div class="dropdown-menu">
+        <a href="#">Life Sciences &amp; Pharma</a>
+        <a href="#">Insurance &amp; Reinsurance</a>
+        <a href="#">Health Plans &amp; Payers</a>
+        <a href="#">Enterprise Strategy</a>
+      </div>
+    </div>
+    <a href="../Pricing/Pricing-Page-Mockup.html">Pricing</a>
+    <a href="#">About</a>
+  </div>
+  <a class="nav-cta" href="#">Request a Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <span class="hero-eyebrow">Epistemix &nbsp;·&nbsp; Clarity that advances health and economic outcomes</span>
+      <h1>You know what you need to achieve.<br><em>What you can't see<br>stands in your way.</em></h1>
+      <p class="hero-sub">Built on <span class="highlight">synthetic population modeling</span>, Epistemix represents every person, behavior, and network your strategy will move through and runs it forward. Before you commit, pressure-test the plan and understand where it holds and where it is fragile. When you're ready to move, build the conviction and organizational alignment behind it. Once you're executing, track in real time so small deviations don't become expensive ones.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#">See how it works</a>
+        <a class="btn-secondary" href="#">Request a demo</a>
+      </div>
+    </div>
+
+    <div class="hero-product-card">
+      <div class="hpc-header">
+        <span class="hpc-pill">NEXIVIR &nbsp;·&nbsp; CKD &nbsp;·&nbsp; Launch Intelligence</span>
+        <div class="hpc-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="hpc-section">
+        <div class="hpc-label">Strategic Objective</div>
+        <div class="hpc-value">$420M NPV &nbsp;·&nbsp; Accelerate peak sales by 18 months</div>
+      </div>
+
+      <div class="hpc-chart">
+        <svg viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4056F4" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#4056F4" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,98 C50,92 100,78 160,58 C200,44 250,30 300,24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <path d="M0,98 C40,88 70,62 110,38 C150,18 220,10 300,7 L300,110 L0,110Z" fill="url(#fillGrad)"/>
+          <path d="M0,98 C40,88 70,62 110,38 C150,18 220,10 300,7" fill="none" stroke="#6B82F7" stroke-width="2"/>
+          <text x="232" y="20" font-size="8" fill="rgba(107,130,247,0.85)" font-family="sans-serif">Accelerated</text>
+          <text x="237" y="32" font-size="8" fill="rgba(255,255,255,0.28)" font-family="sans-serif">Historical</text>
+        </svg>
+      </div>
+
+      <div class="hpc-metrics">
+        <div class="hpc-metric">
+          <div class="hpc-m-val">74.3%</div>
+          <div class="hpc-m-label">Formulary coverage</div>
+          <div class="hpc-m-bar"><div style="width:74%"></div></div>
+        </div>
+        <div class="hpc-metric">
+          <div class="hpc-m-val">61.8%</div>
+          <div class="hpc-m-label">Patient identification</div>
+          <div class="hpc-m-bar"><div style="width:62%"></div></div>
+        </div>
+        <div class="hpc-metric">
+          <div class="hpc-m-val">82%</div>
+          <div class="hpc-m-label">Sales force attainment</div>
+          <div class="hpc-m-bar"><div style="width:82%"></div></div>
+        </div>
+        <div class="hpc-metric">
+          <div class="hpc-m-val">Month 7</div>
+          <div class="hpc-m-label">Next inflection point</div>
+          <div class="hpc-m-bar"><div style="width:58%"></div></div>
+        </div>
+      </div>
+
+      <div class="hpc-status">
+        <div class="hpc-s-item on-track">● Strategy on track for $420M outcome</div>
+        <div class="hpc-s-item warning">▲ Competitive entry: monitor payer response</div>
+        <div class="hpc-s-item">⬡ Synthetic population model &nbsp;·&nbsp; 1.8M CKD patients</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<div class="trusted-bar">
+  <span class="trusted-label">Trusted by</span>
+  <div class="trusted-logos">
+    <img src="https://framerusercontent.com/images/CwCG3cMFfJF39rYsDROfkqAXIBc.svg" alt="Freeman">
+    <img src="https://framerusercontent.com/images/8IrRYivHgRSjI2r9M3t2XSnfm34.svg" alt="MITRE">
+    <img src="https://framerusercontent.com/images/7v2ylN8a9tiOh5c5h6Kf4VRLLBs.svg" alt="Harvard University">
+    <img src="https://framerusercontent.com/images/XUKD5w9tRRrRrDjFV2Xlu3mIZQY.svg" alt="World Health Organization">
+    <img src="https://framerusercontent.com/images/rwAvn9eKZlD0wCJmik4Wo1tb0zo.svg" alt="CVS">
+    <img src="https://framerusercontent.com/images/sVBbhqqWce9DlzpkChMhciuvc1s.svg" alt="Columbia University">
+    <img src="https://framerusercontent.com/images/REYtP5hTsFMgKRMomqnmqdnpbA.svg" alt="Client">
+    <img src="https://framerusercontent.com/images/BT3S6jClPCuIB5ruKAceYkF1vGY.svg" alt="Deloitte">
+  </div>
+</div>
+
+<!-- PROBLEM SECTION -->
+<section class="problem-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">Why strategies fail</div>
+    <h2 class="section-headline">Strategy is clear at the point of decision.<br>What follows rarely is.</h2>
+
+    <div class="problem-grid">
+      <div class="problem-left">
+        <div class="quote-stack">
+          <div class="quote-item">
+            <q>No plan survives contact with the enemy.</q>
+            <cite>Helmuth von Moltke the Elder</cite>
+          </div>
+          <div class="quote-item">
+            <q>Plans are worthless, but planning is indispensable.</q>
+            <cite>Dwight D. Eisenhower</cite>
+          </div>
+          <div class="quote-item">
+            <q>Everybody has a plan until they get punched in the mouth.</q>
+            <cite>Mike Tyson</cite>
+          </div>
+        </div>
+        <p class="problem-text">Formulating a strategy is the work of a few people in a room. Communicating it with enough clarity that an organization of thousands understands it, aligns behind it, and holds to it as conditions change is a different order of challenge. The forces that work against successful execution are not signs of poor leadership. They are the natural properties of organizations under pressure: signal that attenuates as it moves through layers, alignment that drifts as people interpret and adapt, and external variables that interact in ways no single leader can track alone.</p>
+      </div>
+      <div class="force-cards">
+        <div class="force-card">
+          <div class="force-card-title"><span class="icon">⚡</span>Execution Friction</div>
+          <p>Energy and clarity are lost at every layer between a decision and the people executing it. The further a strategy travels from the people who made it, the less of it arrives intact.</p>
+        </div>
+        <div class="force-card">
+          <div class="force-card-title"><span class="icon">🌀</span>Organizational Entropy</div>
+          <p>Organizations naturally drift toward disorder. Strategic alignment does not maintain itself. Without continuous effort, a strategy gradually loses ground to old habits and competing priorities.</p>
+        </div>
+        <div class="force-card">
+          <div class="force-card-title"><span class="icon">◎</span>Unknown Unknowns</div>
+          <p>Competitive moves, market shifts, and policy changes all interact with your strategy whether you can see them or not. With the right model, you can track them. Without it, you find out when it is too late.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYNTHETIC POPULATION SECTION -->
+<section class="synpop-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">The Technology</div>
+    <h2 class="section-headline">Every person. Every network. Every interaction.<br>Modeled from the bottom up.</h2>
+
+    <div class="synpop-grid">
+      <div class="synpop-text">
+        <p>Epistemix is built on a synthetic population covering every individual in your market. Each person is modeled with the demographic attributes, health conditions, social connections, household context, and geographic location of a real person. Not a statistical sample. Not historical averages. A computational representation of the actual population your strategy will move through.</p>
+        <p>This is what makes it possible to run a strategy forward before committing resources. The model doesn't describe what happened in the past. It shows what will happen across a range of conditions and choices, which variables you can influence, and when execution is drifting from plan before the damage is visible in the numbers.</p>
+        <p>Because the model is built from the bottom up rather than backward from historical data, it can represent populations and scenarios that have never existed before. That is the difference between a forecast and a navigation system. The United States is the starting point. Canada and the United Kingdom are coming online, with Singapore to follow.</p>
+      </div>
+
+      <div class="synpop-visual">
+        <img src="https://framerusercontent.com/images/lbFNSiFKEeZYOxmYF26OyWsZHDk.gif" alt="Epistemix platform">
+      </div>
+    </div>
+
+    <div class="synpop-stats">
+      <div class="synpop-stat">
+        <div class="val">1B+</div>
+        <div class="lbl">Individuals, locations, and networks represented</div>
+      </div>
+      <div class="synpop-stat">
+        <div class="val">1:1</div>
+        <div class="lbl">Representation of every person in your market</div>
+      </div>
+      <div class="synpop-stat">
+        <div class="val">99%</div>
+        <div class="lbl">Accuracy in demographic and geographic distributions</div>
+      </div>
+      <div class="synpop-stat">
+        <div class="val">Global</div>
+        <div class="lbl">US live. Canada, UK, Singapore in build.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">How Epistemix works</div>
+    <h2 class="section-headline">A navigation system for the full strategy lifecycle</h2>
+    <p class="section-body">The same synthetic population runs through every stage. You build it once, and it stays live as your strategy moves from commitment through activation and into execution.</p>
+
+    <div class="cycle-wrapper">
+      <svg id="strategy-cycle" viewBox="0 0 780 520" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="stage-descs">
+      <div class="stage-desc">
+        <div class="sd-num">Stage 01 &nbsp;·&nbsp; Creation</div>
+        <h3>Craft and sell your strategy</h3>
+        <p>Map the variables that determine your outcome. Understand which assumptions matter most, where your strategy is robust, and where it is fragile. Walk into the resource conversation with a case built on evidence of how your strategy performs across realistic conditions, including the pessimistic ones.</p>
+      </div>
+      <div class="stage-desc">
+        <div class="sd-num">Stage 02 &nbsp;·&nbsp; Activation</div>
+        <h3>Activate and align the organization</h3>
+        <p>Translate strategic intent into a shared operating model. Give your organization the clarity to understand not just what to do, but why, and how each decision connects to the outcome you are trying to drive together.</p>
+      </div>
+      <div class="stage-desc">
+        <div class="sd-num">Stage 03 &nbsp;·&nbsp; Operation</div>
+        <h3>Operate in pursuit of the outcome</h3>
+        <p>The synthetic population stays live as a reference as execution unfolds. When real-world signals diverge from the modeled range, you know it early, before the damage compounds. What used to work against you becomes your advantage.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var svg = document.getElementById('strategy-cycle');
+    var ns = 'http://www.w3.org/2000/svg';
+    var cx = 390, cy = 275, outerR = 165, innerR = 72, gap = 5;
+
+    function rad(d) { return d * Math.PI / 180; }
+    function pt(r, d) { return { x: cx + r * Math.cos(rad(d)), y: cy + r * Math.sin(rad(d)) }; }
+
+    function arcPath(s, e) {
+      // Arrowhead at the clockwise (leading) end: outer arc goes to E, tapers to a
+      // mid-radius tip 7° past E, then back to inner arc end at E.
+      var tipAngle = e + 7;
+      var tipR = innerR + (outerR - innerR) * 0.52;
+      var span = e - s; while (span < 0) span += 360;
+      var large = span > 180 ? 1 : 0;
+      var os = pt(outerR, s), oe = pt(outerR, e);
+      var tip = pt(tipR, tipAngle);
+      var ie = pt(innerR, e), is = pt(innerR, s);
+      return 'M'+os.x.toFixed(1)+' '+os.y.toFixed(1)+
+        ' A'+outerR+' '+outerR+' 0 '+large+' 1 '+oe.x.toFixed(1)+' '+oe.y.toFixed(1)+
+        ' L'+tip.x.toFixed(1)+' '+tip.y.toFixed(1)+
+        ' L'+ie.x.toFixed(1)+' '+ie.y.toFixed(1)+
+        ' A'+innerR+' '+innerR+' 0 '+large+' 0 '+is.x.toFixed(1)+' '+is.y.toFixed(1)+'Z';
+    }
+
+    function el(tag, attrs) {
+      var e = document.createElementNS(ns, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+
+    function txt(content, x, y, anchor, attrs) {
+      var e = el('text', Object.assign({
+        x: x.toFixed(1), y: y.toFixed(1),
+        'text-anchor': anchor || 'middle',
+        'dominant-baseline': 'central',
+        'font-family': 'system-ui,-apple-system,sans-serif'
+      }, attrs));
+      e.textContent = content;
+      return e;
+    }
+
+    var stages = [
+      {
+        word: 'CREATION', mid: 270,
+        label: ['STAGE 01  ·  Creation', 'Craft and sell', 'your strategy'],
+        labelX: 390, labelY: 52, anchor: 'middle',
+        lineEnd: { x: 390, y: 78 }
+      },
+      {
+        word: 'ACTIVATION', mid: 30,
+        label: ['STAGE 02  ·  Activation', 'Activate and align', 'the organization'],
+        labelX: 755, labelY: 365, anchor: 'end',
+        lineEnd: { x: 722, y: 358 }
+      },
+      {
+        word: 'OPERATION', mid: 150,
+        label: ['STAGE 03  ·  Operation', 'Operate in pursuit', 'of the outcome'],
+        labelX: 25, labelY: 365, anchor: 'start',
+        lineEnd: { x: 58, y: 358 }
+      }
+    ];
+
+    stages.forEach(function(s) {
+      var start = s.mid - 60 + gap, end = s.mid + 60 - gap;
+
+      // Segment — white outline, subtle fill
+      svg.appendChild(el('path', {
+        d: arcPath(start, end),
+        fill: 'rgba(255,255,255,0.08)',
+        stroke: 'rgba(255,255,255,0.5)',
+        'stroke-width': '1.5'
+      }));
+
+      // Single word inside segment
+      var np = pt((innerR + outerR) / 2, s.mid);
+      svg.appendChild(txt(s.word, np.x, np.y, 'middle', {
+        fill: 'rgba(255,255,255,0.85)',
+        'font-size': '12',
+        'font-weight': '700',
+        'letter-spacing': '1.5'
+      }));
+
+      // Callout line from outer arc midpoint to label
+      var op = pt(outerR + 6, s.mid);
+      svg.appendChild(el('line', {
+        x1: op.x.toFixed(1), y1: op.y.toFixed(1),
+        x2: s.lineEnd.x, y2: s.lineEnd.y,
+        stroke: 'rgba(255,255,255,0.3)',
+        'stroke-width': '1',
+        'stroke-dasharray': '3 3'
+      }));
+
+      // Small dot at callout start
+      svg.appendChild(el('circle', {
+        cx: op.x.toFixed(1), cy: op.y.toFixed(1),
+        r: '2.5', fill: 'rgba(255,255,255,0.5)'
+      }));
+
+      // Label lines
+      var lineH = 17;
+      svg.appendChild(txt(s.label[0], s.labelX, s.labelY - lineH, s.anchor, {
+        fill: 'rgba(255,255,255,0.4)', 'font-size': '10', 'font-weight': '700', 'letter-spacing': '1.5'
+      }));
+      svg.appendChild(txt(s.label[1], s.labelX, s.labelY, s.anchor, {
+        fill: 'white', 'font-size': '13', 'font-weight': '600'
+      }));
+      svg.appendChild(txt(s.label[2], s.labelX, s.labelY + lineH, s.anchor, {
+        fill: 'white', 'font-size': '13', 'font-weight': '600'
+      }));
+    });
+
+    // Inner circle
+    svg.appendChild(el('circle', { cx: cx, cy: cy, r: innerR - 3, fill: '#0D1540' }));
+    svg.appendChild(el('circle', { cx: cx, cy: cy, r: innerR - 3, fill: 'none', stroke: 'rgba(255,255,255,0.15)', 'stroke-width': '1' }));
+
+    // Center text
+    svg.appendChild(txt('EPISTEMIX', cx, cy - 8, 'middle', {
+      fill: 'rgba(255,255,255,0.75)', 'font-size': '11', 'font-weight': '700', 'letter-spacing': '2.5'
+    }));
+    svg.appendChild(txt('PLATFORM', cx, cy + 8, 'middle', {
+      fill: 'rgba(255,255,255,0.45)', 'font-size': '9', 'letter-spacing': '3'
+    }));
+
+  })();
+  </script>
+</section>
+
+<!-- PRODUCT SECTION -->
+<section class="product-section">
+  <div class="section-inner">
+    <div class="section-eyebrow">The product</div>
+    <h2 class="section-headline">Epistemix Launch Intelligence</h2>
+    <p class="section-body">A working strategy document built from a synthetic population of your market. Applicable wherever the outcome depends on how people, organizations, and systems behave — drug launch, benefit redesign, market entry, portfolio strategy, and more.</p>
+
+    <div class="product-card">
+      <div class="product-card-left">
+        <span class="product-tag">Entry Package</span>
+        <h3>Six sections. One connected strategy.</h3>
+        <p>Built from a synthetic population of your actual market, not industry benchmarks. Every component connects to the same underlying model, so when one variable changes, you see the cascading impact across your entire strategy in real time.</p>
+
+        <div class="product-components">
+          <div class="component"><span class="component-num">1</span>Strategic objective and success criteria</div>
+          <div class="component"><span class="component-num">2</span>Variable map: influenced and external forces</div>
+          <div class="component"><span class="component-num">3</span>Strategic plan with tactic sequencing</div>
+          <div class="component"><span class="component-num">4</span>Scenario explorer with live model outputs</div>
+          <div class="component"><span class="component-num">5</span>Counterfactual analysis: what if things go wrong</div>
+          <div class="component"><span class="component-num">6</span>Control system for execution monitoring</div>
+        </div>
+
+        <div class="product-cta-row">
+          <a class="btn-blue" href="../strategy-package-mockup.html">See a live demo</a>
+          <a class="btn-outline" href="../Pricing/Pricing-Page-Mockup.html">View pricing</a>
+        </div>
+      </div>
+
+      <div class="product-stats">
+        <div class="stat-box">
+          <div class="stat-val">~2 weeks</div>
+          <div class="stat-label">From your first conversation to a live strategy document built on your market's synthetic population</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">No setup</div>
+          <div class="stat-label">No data integration, no system connection, no preparation required to get started</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">Stays live</div>
+          <div class="stat-label">The model runs forward as execution unfolds, tracking whether you are heading toward your intended outcome</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Start with one use case.</h2>
+  <p>A 30-minute conversation is enough to show whether Epistemix applies to the strategy you are working on right now.</p>
+  <div class="cta-actions">
+    <a class="btn-primary" href="#">Request a demo</a>
+    <a class="btn-secondary" href="../Pricing/Pricing-Page-Mockup.html">View pricing</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">EPISTEMIX</div>
+  <div class="footer-links">
+    <a href="#">Product</a>
+    <a href="#">Solutions</a>
+    <a href="../Pricing/Pricing-Page-Mockup.html">Pricing</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Epistemix, Inc. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
