@@ -1,0 +1,2614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXIVIR Launch Launch Intelligence | Epistemix</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --blue: #4056F4;
+  --blue-dark: #1C3080;
+  --blue-mid: #2D42C8;
+  --blue-light: #EEF1FE;
+  --blue-xlight: #F5F7FF;
+  --grey-dark: #404040;
+  --grey-mid: #595959;
+  --grey-light: #F0F0F0;
+  --border: #E0E0E0;
+  --green: #16A34A;
+  --green-light: #DCFCE7;
+  --yellow: #D97706;
+  --yellow-light: #FEF9C3;
+  --red: #DC2626;
+  --red-light: #FEE2E2;
+  --white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+  color: var(--grey-dark);
+  background: #F8F9FC;
+  font-size: 14px;
+  line-height: 1.5;
+}
+a { color: var(--blue); text-decoration: none; }
+
+/* ---- LAYOUT ---- */
+.layout { display: flex; min-height: 100vh; }
+
+/* ---- SIDEBAR NAV ---- */
+.sidebar {
+  width: 220px;
+  background: var(--blue-dark);
+  color: white;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  padding: 0;
+}
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.sidebar-logo .wordmark {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+}
+.sidebar-logo .subline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.sidebar-drug {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.sidebar-drug .drug-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+.sidebar-drug .drug-indication {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 2px;
+}
+.nav-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.4);
+  padding: 16px 20px 6px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: rgba(255,255,255,0.75);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+}
+.nav-link:hover { background: rgba(255,255,255,0.08); color: white; }
+.nav-link.active {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-left-color: #4056F4;
+}
+.nav-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+.nav-link.active .nav-dot { background: #4056F4; }
+.sidebar-footer {
+  margin-top: auto;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ---- MAIN CONTENT ---- */
+.main {
+  margin-left: 220px;
+  flex: 1;
+  padding: 0 0 60px 0;
+}
+
+/* ---- SECTION HEADERS ---- */
+.section-header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.section-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  letter-spacing: -0.3px;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: var(--grey-mid);
+  margin-top: 4px;
+}
+.section-body { padding: 32px 40px; }
+
+/* ---- SECTION PANELS ---- */
+.section-panel {
+  display: none;
+}
+.section-panel.active { display: block; }
+
+/* ---- STAT CARDS ---- */
+.stat-row { display: flex; gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  flex: 1;
+}
+.stat-card.highlight {
+  background: var(--blue-dark);
+  border-color: var(--blue-dark);
+  color: white;
+}
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey-mid); font-weight: 500; }
+.stat-card.highlight .stat-label { color: rgba(255,255,255,0.6); }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--blue-dark); margin-top: 4px; letter-spacing: -1px; }
+.stat-card.highlight .stat-value { color: white; }
+.stat-context { font-size: 12px; color: var(--grey-mid); margin-top: 4px; }
+.stat-card.highlight .stat-context { color: rgba(255,255,255,0.6); }
+.stat-delta {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+.delta-positive { background: var(--green-light); color: var(--green); }
+.delta-negative { background: var(--red-light); color: var(--red); }
+
+/* ---- CHART AREA ---- */
+.chart-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-dark);
+  margin-bottom: 4px;
+}
+.chart-subtitle { font-size: 12px; color: var(--grey-mid); margin-bottom: 20px; }
+.chart-wrap { position: relative; height: 260px; }
+
+/* ---- LEGEND ---- */
+.legend { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--grey-mid); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend-line { width: 16px; height: 3px; border-radius: 2px; }
+
+/* ---- VARIABLE MAP ---- */
+.var-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.var-column-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 8px 14px;
+  border-radius: 5px 5px 0 0;
+  margin-bottom: 0;
+}
+.col-controlled .var-column-header { background: var(--blue); color: white; }
+.col-uncontrolled .var-column-header { background: var(--grey-dark); color: white; }
+.var-list {
+  background: white;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+.var-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.var-item:last-child { border-bottom: none; }
+.var-icon {
+  width: 28px; height: 28px;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.col-controlled .var-icon { background: var(--blue-light); }
+.col-uncontrolled .var-icon { background: var(--grey-light); }
+.var-name { font-size: 13px; font-weight: 600; color: var(--grey-dark); }
+.var-desc { font-size: 12px; color: var(--grey-mid); margin-top: 2px; }
+.var-lever {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--blue-light);
+  color: var(--blue);
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* ---- STRATEGIC PLAN: TACTIC CARDS ---- */
+.plan-timeline {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ptl-segment { padding: 8px 14px; text-align: center; }
+.ptl-pre { background: var(--blue-dark); color: white; }
+.ptl-launch { background: var(--blue); color: white; }
+.ptl-post { background: #6B8BF5; color: white; }
+.tactic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.tactic-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  border-top: 4px solid var(--blue-dark);
+}
+.tactic-card.tactic-pre { border-top-color: var(--blue-dark); }
+.tactic-card.tactic-launch { border-top-color: var(--blue); }
+.tactic-card.tactic-post { border-top-color: #6B8BF5; }
+.tactic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.tactic-phase-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.phase-pre { background: #EEF0FC; color: var(--blue-dark); }
+.phase-launch { background: #E8EBFD; color: var(--blue); }
+.phase-post { background: #EDF0FF; color: #4B6BF0; }
+.tactic-priority {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--grey-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.tactic-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--grey-dark);
+  margin-bottom: 8px;
+}
+.tactic-desc {
+  font-size: 12px;
+  color: var(--grey-mid);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.tactic-var-section { margin-bottom: 10px; }
+.tvar-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--grey-mid);
+  margin-bottom: 6px;
+}
+.tvar-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.vchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.vchip-sens {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  opacity: 0.7;
+}
+.vchip-influenced.crit { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+.vchip-influenced.high { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+.vchip-influenced.med  { background: #F3F4F6; color: #374151; border: 1px solid #E5E7EB; }
+.vchip-external.crit { background: white; color: #991B1B; border: 1.5px dashed #FECACA; }
+.vchip-external.high { background: white; color: #92400E; border: 1.5px dashed #FDE68A; }
+.vchip-external.med  { background: white; color: #374151; border: 1.5px dashed #D1D5DB; }
+.tactic-target {
+  font-size: 11px;
+  color: var(--grey-dark);
+  background: var(--grey-light);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.tactic-model-note {
+  font-size: 10.5px;
+  color: var(--blue-mid);
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(64,86,244,0.12);
+  line-height: 1.45;
+}
+.chart-model-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--blue);
+  background: var(--blue-xlight);
+  border: 1px solid rgba(64,86,244,0.18);
+  border-radius: 4px;
+  padding: 3px 9px;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.explorer-model-tag {
+  font-size: 10.5px;
+  color: var(--grey-mid);
+  font-style: italic;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+/* Model link notifications */
+.slider-group {
+  transition: background 0.35s, border-radius 0.35s, padding 0.35s;
+}
+.slider-group.slider-linked {
+  background: rgba(64,86,244,0.05);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.model-link-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--blue-dark);
+  background: var(--blue-xlight);
+  border: 1px solid rgba(64,86,244,0.22);
+  border-radius: 4px;
+  padding: 6px 9px;
+  margin-top: 7px;
+  line-height: 1.4;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+.model-link-note.fading { opacity: 0; }
+.mln-icon { flex-shrink: 0; font-style: normal; color: var(--blue); }
+.mln-dir { font-weight: 700; }
+.mln-dir.up { color: var(--green); }
+.mln-dir.down { color: #DC2626; }
+.ttarget-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  color: var(--grey-mid);
+  margin-right: 6px;
+}
+
+/* ---- SCENARIO EXPLORER ---- */
+.explorer-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+.controls-panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+.controls-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey-mid); margin-bottom: 16px; }
+.slider-group { margin-bottom: 20px; }
+.slider-group:last-child { margin-bottom: 0; }
+.slider-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grey-dark);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.slider-value { color: var(--blue); font-weight: 700; }
+.slider-desc { font-size: 11px; color: var(--grey-mid); margin-bottom: 8px; }
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--grey-light);
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.slider-range { display: flex; justify-content: space-between; font-size: 10px; color: var(--grey-mid); margin-top: 3px; }
+.target-marker {
+  font-size: 10px;
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* ---- SLIDER ZONE INDICATORS ---- */
+.slider-context { margin-top: 8px; }
+.slider-benchmark-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.benchmark-label { font-size: 10px; color: var(--grey-mid); }
+.zone-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 10px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.zone-achievable { background: #DCFCE7; color: #16A34A; }
+.zone-stretch { background: #FEF9C3; color: #B45309; }
+.zone-exceptional { background: #FEE2E2; color: #DC2626; }
+.slider-assumption {
+  font-size: 11px;
+  color: var(--grey-mid);
+  line-height: 1.5;
+  padding: 7px 10px;
+  background: #F8F9FC;
+  border-radius: 4px;
+  border-left: 2px solid var(--border);
+}
+
+/* ---- SCENARIO ASSESSMENT ---- */
+.scenario-assessment {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.sa-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--grey-mid);
+  margin-bottom: 6px;
+}
+.sa-level {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+.sa-text {
+  font-size: 12px;
+  color: var(--grey-mid);
+  line-height: 1.55;
+}
+
+/* ---- VAR CREDIBILITY ---- */
+.var-credibility {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.cred-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+}
+.cred-standard { background: #DCFCE7; color: #16A34A; }
+.cred-stretch { background: #FEF9C3; color: #B45309; }
+.cred-aggressive { background: #FEE2E2; color: #DC2626; }
+.cred-assumed { background: #F0F0F0; color: #595959; }
+.cred-critical { background: #FEE2E2; color: #DC2626; }
+.cred-high { background: #FEF9C3; color: #B45309; }
+.cred-medium { background: #F0F0F0; color: #595959; }
+.var-benchmark-note { font-size: 10px; color: var(--grey-mid); }
+.var-column-subheader {
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  padding: 0 14px 8px;
+  background: var(--grey-dark);
+  font-style: italic;
+}
+
+.results-panel { display: flex; flex-direction: column; gap: 16px; }
+.outcome-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.outcome-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.outcome-card.primary { border-color: var(--blue); background: var(--blue-xlight); }
+.oc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--grey-mid); font-weight: 500; }
+.outcome-card.primary .oc-label { color: var(--blue-mid); }
+.oc-value { font-size: 24px; font-weight: 700; color: var(--blue-dark); margin-top: 2px; letter-spacing: -0.5px; }
+.outcome-card.primary .oc-value { color: var(--blue); }
+.oc-vs { font-size: 11px; color: var(--grey-mid); margin-top: 3px; }
+.oc-delta { font-size: 11px; font-weight: 600; margin-top: 4px; }
+.oc-delta.pos { color: var(--green); }
+.oc-delta.neg { color: var(--red); }
+.scenario-toggle-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.scenario-btn {
+  padding: 6px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--grey-mid);
+  transition: all 0.15s;
+}
+.scenario-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+.scenario-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+
+/* ---- COUNTERFACTUALS ---- */
+.cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.cf-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.cf-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+.cf-card.active { border-color: var(--blue); }
+.cf-header {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.cf-card.active .cf-header { background: var(--blue-xlight); border-bottom-color: rgba(64,86,244,0.2); }
+.cf-severity {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.severity-high { background: var(--red-light); }
+.severity-med { background: var(--yellow-light); }
+.cf-title { font-size: 13px; font-weight: 600; color: var(--grey-dark); }
+.cf-trigger { font-size: 11px; color: var(--grey-mid); margin-top: 2px; }
+.cf-body { padding: 14px 18px; }
+.cf-impact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.cf-impact-label { color: var(--grey-mid); }
+.cf-impact-value { font-weight: 600; }
+.cf-impact-value.neg { color: var(--red); }
+.cf-impact-value.neutral { color: var(--yellow); }
+.cf-response {
+  font-size: 12px;
+  color: var(--grey-dark);
+  background: var(--grey-light);
+  border-radius: 5px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  display: none;
+}
+.cf-card.active .cf-response { display: block; }
+.cf-response-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--blue); margin-bottom: 4px; }
+.cf-chart-wrap { position: relative; height: 220px; margin-top: 20px; }
+
+/* ---- CONTROLS DASHBOARD ---- */
+.control-timeline-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.timeline-btn {
+  padding: 6px 16px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--grey-mid);
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.timeline-btn.active { background: var(--blue-dark); color: white; border-color: var(--blue-dark); }
+.controls-table {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.ct-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 80px;
+  background: var(--grey-light);
+  padding: 10px 18px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--grey-mid);
+  border-bottom: 1px solid var(--border);
+}
+.ct-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 80px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.ct-row:last-child { border-bottom: none; }
+.ct-metric { font-size: 13px; font-weight: 500; color: var(--grey-dark); }
+.ct-sub { font-size: 11px; color: var(--grey-mid); margin-top: 1px; }
+.ct-cell { font-size: 13px; color: var(--grey-dark); }
+.ct-cell.target { font-weight: 600; color: var(--blue-dark); }
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status-green { background: var(--green-light); color: var(--green); }
+.status-yellow { background: var(--yellow-light); color: var(--yellow); }
+.status-red { background: var(--red-light); color: var(--red); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.playbook-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+.playbook-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--grey-dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.playbook-tag {
+  font-size: 10px;
+  background: var(--yellow-light);
+  color: var(--yellow);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.playbook-items { display: flex; flex-direction: column; gap: 8px; }
+.playbook-item {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--grey-dark);
+  padding: 10px 14px;
+  background: var(--grey-light);
+  border-radius: 5px;
+}
+.playbook-item-icon { flex-shrink: 0; }
+
+/* ---- MISC ---- */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+.info-box {
+  background: var(--blue-xlight);
+  border: 1px solid rgba(64,86,244,0.2);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--blue-dark);
+  margin-bottom: 20px;
+}
+.info-box strong { font-weight: 600; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.label-value-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.label-value-row:last-child { border-bottom: none; }
+.lv-label { color: var(--grey-mid); }
+.lv-value { font-weight: 600; color: var(--grey-dark); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="wordmark">Epistemix</div>
+    <div class="subline">Launch Intelligence</div>
+  </div>
+  <div class="sidebar-drug">
+    <div class="drug-name">NEXIVIR</div>
+    <div class="drug-indication">Chronic Kidney Disease<br>Stage 3-4</div>
+  </div>
+  <div class="nav-section-label">Analysis</div>
+  <div class="nav-link active" onclick="showSection('objective', this)"><div class="nav-dot"></div> Strategic Objective</div>
+  <div class="nav-link" onclick="showSection('variables', this)"><div class="nav-dot"></div> Variable Map</div>
+  <div class="nav-link" onclick="showSection('plan', this)"><div class="nav-dot"></div> Strategic Plan</div>
+  <div class="nav-section-label">Interrogation</div>
+  <div class="nav-link" onclick="showSection('explorer', this)"><div class="nav-dot"></div> Scenario Explorer</div>
+  <div class="nav-link" onclick="showSection('counterfactuals', this)"><div class="nav-dot"></div> Counterfactuals</div>
+  <div class="nav-section-label">Operations</div>
+  <div class="nav-link" onclick="showSection('controls', this)"><div class="nav-dot"></div> Control System</div>
+  <div class="sidebar-footer">Confidential · Epistemix Inc.<br>April 2026<br><span style="opacity:0.6;font-style:italic;">Powered by synthetic population modeling</span></div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ============================================================ -->
+<!-- SECTION 1: OBJECTIVE -->
+<!-- ============================================================ -->
+<div id="section-objective" class="section-panel active">
+  <div class="section-header">
+    <div class="section-tag">Section 1 of 6</div>
+    <div class="section-title">Strategic Objective</div>
+    <div class="section-subtitle">Accelerate time-to-peak-sales for NEXIVIR and maximize the financial value of that acceleration</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      <strong>The strategic bet:</strong> NEXIVIR has a compelling clinical profile in Stage 3-4 CKD but faces a competitive window. Reaching peak sales 18 months earlier than the base trajectory generates $420M in incremental NPV. This package defines the system that drives that acceleration and the controls that keep us on track.
+    </div>
+    <div class="info-box" style="background:#F0F4FF; border-color:rgba(28,48,128,0.2); color:#1C3080; margin-top:-8px;">
+      <strong>How this was built:</strong> The trajectory, variable sensitivities, and scenario ranges below are outputs of a synthetic population of the CKD patient universe — modeled from the bottom up, not extrapolated from historical benchmarks or analogous launches. The model maps possible futures; this package translates those futures into decisions and actions.
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card highlight">
+        <div class="stat-label">NPV of Acceleration</div>
+        <div class="stat-value" id="hero-npv">$420M</div>
+        <div class="stat-context">Value of reaching peak 18 months earlier</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Peak Annual Revenue</div>
+        <div class="stat-value">$800M</div>
+        <div class="stat-context">~23,000 patients at $35K net/year</div>
+        <div class="stat-delta delta-positive">Both scenarios reach same peak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Accelerated Peak</div>
+        <div class="stat-value">Year 2.5</div>
+        <div class="stat-context">vs. Year 4 in base case</div>
+        <div class="stat-delta delta-positive">18-month improvement</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">5-Year Cumulative Rev.</div>
+        <div class="stat-value">$3.4B</div>
+        <div class="stat-context">vs. $2.97B base case</div>
+        <div class="stat-delta delta-positive">+$430M vs. base</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Revenue Trajectory: Accelerated vs. Base Case</div>
+      <div class="chart-subtitle">Annual net revenue ($M) · Dashed line = base case · Solid line = accelerated strategy</div>
+      <div class="chart-model-tag">⬡ Synthetic population model output &nbsp;·&nbsp; CKD patient universe &nbsp;·&nbsp; 1.8M diagnosed Stage 3–4 patients</div>
+      <div class="chart-wrap">
+        <canvas id="objectiveChart"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-line" style="background:#4056F4"></div> Accelerated strategy</div>
+        <div class="legend-item"><div class="legend-line" style="background:#595959; opacity:0.4"></div> Base case</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16A34A"></div> 18-month acceleration gap</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-title">What the acceleration depends on</div>
+        <div style="margin-top:10px;">
+          <div class="label-value-row"><span class="lv-label">Payer formulary access</span><span class="lv-value">75% coverage by Month 9</span></div>
+          <div class="label-value-row"><span class="lv-label">Prescriber activation</span><span class="lv-value">2,500 active writers by Month 6</span></div>
+          <div class="label-value-row"><span class="lv-label">Patient identification</span><span class="lv-value">60% eligible patients reached</span></div>
+          <div class="label-value-row"><span class="lv-label">Sales force execution</span><span class="lv-value">95% call plan attainment</span></div>
+          <div class="label-value-row"><span class="lv-label">Competitive window</span><span class="lv-value">24+ months before major entry</span></div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-title">Critical assumptions</div>
+        <div style="margin-top:10px;">
+          <div class="label-value-row"><span class="lv-label">Net price per patient/year</span><span class="lv-value">$35,000</span></div>
+          <div class="label-value-row"><span class="lv-label">Addressable patient population</span><span class="lv-value">~1.8M diagnosed Stage 3-4 CKD</span></div>
+          <div class="label-value-row"><span class="lv-label">Peak market share target</span><span class="lv-value">12-15%</span></div>
+          <div class="label-value-row"><span class="lv-label">Launch date</span><span class="lv-value">Q3 2026 (US)</span></div>
+          <div class="label-value-row"><span class="lv-label">Discount rate (NPV)</span><span class="lv-value">10%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: VARIABLES -->
+<!-- ============================================================ -->
+<div id="section-variables" class="section-panel">
+  <div class="section-header">
+    <div class="section-tag">Section 2 of 6</div>
+    <div class="section-title">Variable Map</div>
+    <div class="section-subtitle">The forces acting on peak sales timing — what we can move and what we have to navigate</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      The acceleration target depends on a system of interacting variables. Some we influence directly through investment and execution. Others we cannot influence but must monitor and respond to. The strategic plan is built around moving the variables we can influence while building resilience against the ones we cannot.
+    </div>
+    <div class="info-box" style="background:#F0F4FF; border-color:rgba(28,48,128,0.2); color:#1C3080; margin-top:-8px;">
+      <strong>Why this list:</strong> Variable sensitivities are model outputs, not analyst judgment. The population model shows which variables actually move the revenue trajectory, and by how much — including interaction effects that sensitivity tables miss. Click any variable to see what the model shows.
+    </div>
+    <div class="var-grid">
+      <div class="col-controlled">
+        <div class="var-column-header">Variables We Influence</div>
+        <div class="var-column-subheader" style="background:var(--blue);">Ordered by sensitivity to revenue trajectory</div>
+        <div class="var-list">
+          <div class="var-item clickable" onclick="openModal('payer')">
+            <div class="var-icon">💊</div>
+            <div>
+              <div class="var-name">Payer Access Strategy</div>
+              <div class="var-desc">Formulary placement, rebate structure, and step therapy positioning at top 20 PBMs and payers. Directly determines % of patients with covered access at launch.</div>
+              <div class="var-lever">Target: 75% coverage by Month 9</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-critical">Critical sensitivity</span>
+                <span class="cred-badge cred-stretch">Stretch target</span>
+                <span class="var-benchmark-note">Industry median ~52% · Below 60% coverage the acceleration trajectory breaks</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('patid')">
+            <div class="var-icon">🔍</div>
+            <div>
+              <div class="var-name">Patient Identification Programs</div>
+              <div class="var-desc">Health system partnerships, EHR alerting, and diagnostic education to surface eligible patients. Determines how quickly diagnosed patients convert to treated patients.</div>
+              <div class="var-lever">Target: 60% eligible patients identified Year 1</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-critical">Critical sensitivity</span>
+                <span class="cred-badge cred-stretch">Stretch target</span>
+                <span class="var-benchmark-note">Industry median ~38% · Below 40% is difficult to recover in Year 2</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('kol')">
+            <div class="var-icon">🏥</div>
+            <div>
+              <div class="var-name">Medical Affairs &amp; KOL Engagement</div>
+              <div class="var-desc">Pre-launch education, peer-to-peer programs, advisory boards. Accelerates prescriber awareness and clinical conviction before the sales force deploys.</div>
+              <div class="var-lever">Target: 500 activated KOLs by launch</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-high">High sensitivity</span>
+                <span class="cred-badge cred-stretch">Stretch target</span>
+                <span class="var-benchmark-note">Comparable launches: 200-350 KOLs · Each KOL influences ~8-12 prescribers in the CKD network</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('sf')">
+            <div class="var-icon">👥</div>
+            <div>
+              <div class="var-name">Sales Force Deployment</div>
+              <div class="var-desc">Rep count, targeting model, call frequency, and geography sequencing. The primary driver of prescriber reach and trial velocity post-launch.</div>
+              <div class="var-lever">Target: 480 reps, 95% call attainment</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-high">High sensitivity</span>
+                <span class="cred-badge cred-standard">Rep count: achievable</span>
+                <span class="cred-badge cred-stretch">95% attainment: stretch</span>
+                <span class="var-benchmark-note">Industry median attainment ~82% · Top-500 prescriber penetration is the leverage point</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('support')">
+            <div class="var-icon">🤝</div>
+            <div>
+              <div class="var-name">Patient Support Programs</div>
+              <div class="var-desc">Co-pay assistance, hub services, nurse navigator support. Reduces barriers to first fill and improves early persistence — critical in the first 90 days.</div>
+              <div class="var-lever">Target: &lt;3% abandonment at first fill</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-medium">Medium sensitivity</span>
+                <span class="cred-badge cred-standard">Achievable</span>
+                <span class="var-benchmark-note">Industry range: 3-8% · Hub design quality matters more than funding level</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('pricing')">
+            <div class="var-icon">📣</div>
+            <div>
+              <div class="var-name">Pricing &amp; Contracting</div>
+              <div class="var-desc">WAC price, net price after rebates, and value-based contract structure. Affects both access (payer) and revenue per patient — with an internal tension between them.</div>
+              <div class="var-lever">Target: $35K net price maintained</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-medium">Medium sensitivity</span>
+                <span class="cred-badge cred-stretch">Internal tension</span>
+                <span class="var-benchmark-note">Model shows $28K net / 75% access outperforms $35K net / 55% access by $115M NPV</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore model assumptions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-uncontrolled">
+        <div class="var-column-header">Variables We Don't Influence</div>
+        <div class="var-column-subheader">Ordered by sensitivity to revenue trajectory</div>
+        <div class="var-list">
+          <div class="var-item clickable" onclick="openModal('comp-resp')">
+            <div class="var-icon">⚔️</div>
+            <div>
+              <div class="var-name">Competitive Response</div>
+              <div class="var-desc">Timing, pricing, and clinical positioning of competitor launches. A major entry within 18 months compresses the market share window significantly.</div>
+              <div class="var-lever">Base case: 24 months before major entry</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-critical">Critical sensitivity</span>
+                <span class="var-benchmark-note">A 6-month early entry costs ~$180M NPV — largest single external risk · Category median: ~18 months · Base case slightly optimistic</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('payer-comm')">
+            <div class="var-icon">📋</div>
+            <div>
+              <div class="var-name">Payer Committee Decisions</div>
+              <div class="var-desc">Formulary tier placement, prior authorization requirements, step therapy mandates. We can influence but not determine these decisions through contracting.</div>
+              <div class="var-lever">Monitor: P&amp;T committee cycles</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-critical">Critical sensitivity</span>
+                <span class="var-benchmark-note">Formulary tier and PA burden are the primary gating factor for patient access — cannot be fully offset by contracting or sales force effort</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('adoption')">
+            <div class="var-icon">📈</div>
+            <div>
+              <div class="var-name">Prescriber Adoption Curve</div>
+              <div class="var-desc">Rate at which nephrologists and PCPs move from awareness to trial to routine use. Driven by clinical conviction, peer influence, and patient outcomes.</div>
+              <div class="var-lever">Monitor: trial-to-repeat conversion rate</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-high">High sensitivity</span>
+                <span class="var-benchmark-note">Trial-to-repeat conversion determines whether early momentum compounds or plateaus · Adoption curve derived from CKD prescriber network structure, not analogous categories</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('persistence')">
+            <div class="var-icon">💉</div>
+            <div>
+              <div class="var-name">Patient Persistence &amp; Adherence</div>
+              <div class="var-desc">How long patients stay on therapy after starting. Early discontinuation reduces revenue per patient and limits real-world evidence generation.</div>
+              <div class="var-lever">Monitor: 6-month persistence rate</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-high">High sensitivity</span>
+                <span class="var-benchmark-note">Underperformance cannot be recovered through new patient volume — 10-point drop in 6-month persistence reduces Year 2 revenue ~$40M</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('rwe')">
+            <div class="var-icon">🔬</div>
+            <div>
+              <div class="var-name">Real-World Evidence Emergence</div>
+              <div class="var-desc">Post-launch outcomes data that reinforces or undermines clinical trial results. Positive RWE accelerates late adopters; negative signals can stall mainstream adoption regardless of sales force effort.</div>
+              <div class="var-lever">Monitor: adverse event signals, RWE publications</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-medium">Medium sensitivity</span>
+                <span class="var-benchmark-note">Primarily affects Year 2+ late-adopter trajectory · Month 9-12 RWE signal is the leading indicator for mainstream adoption inflection</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+          <div class="var-item clickable" onclick="openModal('protocols')">
+            <div class="var-icon">🏛️</div>
+            <div>
+              <div class="var-name">Health System Protocols</div>
+              <div class="var-desc">Institutional treatment guidelines, EMR order sets, and nephrology society recommendations. Slow-moving but high-multiplier effect — guideline inclusion can unlock large patient populations in Year 2+.</div>
+              <div class="var-lever">Monitor: guideline update timelines</div>
+              <div class="var-credibility">
+                <span class="cred-badge cred-medium">Medium sensitivity</span>
+                <span class="var-benchmark-note">Lower near-term impact but highest Year 2+ leverage · Nephrology society guideline cycle typically 18-24 months post-launch</span>
+              </div>
+              <div class="var-explore-hint">↗ Explore modeled scenarios</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: PLAN -->
+<!-- ============================================================ -->
+<div id="section-plan" class="section-panel">
+  <div class="section-header">
+    <div class="section-tag">Section 3 of 6</div>
+    <div class="section-title">Strategic Plan</div>
+    <div class="section-subtitle">What we are going to do to move the variables to where they need to be</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      Each tactic is designed to move one or more of the variables from the prior page into their target range. Solid chips are variables we directly influence. Dashed chips are external variables the tactic helps position against. Tactics are ordered by launch phase and resource priority.
+    </div>
+
+    <div class="plan-timeline">
+      <div class="ptl-segment ptl-pre">Pre-Launch · 18 Months</div>
+      <div class="ptl-segment ptl-launch">Launch</div>
+      <div class="ptl-segment ptl-post">Post-Launch · Year 1</div>
+    </div>
+
+    <div class="tactic-grid">
+
+      <div class="tactic-card tactic-pre">
+        <div class="tactic-header">
+          <span class="tactic-phase-badge phase-pre">Pre-Launch</span>
+          <span class="tactic-priority">Priority 1</span>
+        </div>
+        <div class="tactic-name">Formulary-First Access Program</div>
+        <div class="tactic-desc">Negotiate preferred, non-restricted formulary placement across top 5 PBMs and commercial payers. Accept moderate rebate compression to secure unrestricted access before launch.</div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Directly influences</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-influenced crit">Payer Access <span class="vchip-sens">Critical</span></span>
+            <span class="vchip vchip-influenced med">Net Price <span class="vchip-sens">Medium</span></span>
+          </div>
+        </div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Positions against</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-external crit">Payer Committee Timing <span class="vchip-sens">Critical</span></span>
+          </div>
+        </div>
+        <div class="tactic-target">
+          <span class="ttarget-label">Target</span>
+          75% formulary coverage at launch — preferred or non-restricted. PA hurdles below 20% of scripts. Net price floor: $35K.
+        </div>
+        <div class="tactic-model-note">Coverage threshold derived from the CKD population model — below 60% formulary access, the acceleration trajectory is not achievable regardless of other driver performance.</div>
+      </div>
+
+      <div class="tactic-card tactic-pre">
+        <div class="tactic-header">
+          <span class="tactic-phase-badge phase-pre">Pre-Launch</span>
+          <span class="tactic-priority">Priority 2</span>
+        </div>
+        <div class="tactic-name">Precision KOL Activation</div>
+        <div class="tactic-desc">Build a 500-KOL network through advisory boards, investigator-initiated studies, and congress symposia. KOL activation precedes and enables both prescriber adoption and favorable RWE generation.</div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Directly influences</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-influenced high">Medical Affairs <span class="vchip-sens">High</span></span>
+          </div>
+        </div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Positions against</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-external high">Prescriber Adoption <span class="vchip-sens">High</span></span>
+            <span class="vchip vchip-external med">Real-World Evidence <span class="vchip-sens">Medium</span></span>
+            <span class="vchip vchip-external med">Health System Protocols <span class="vchip-sens">Medium</span></span>
+          </div>
+        </div>
+        <div class="tactic-target">
+          <span class="ttarget-label">Target</span>
+          500 KOLs active pre-launch. 2,500 early-adopter prescribers writing within 90 days of launch.
+        </div>
+        <div class="tactic-model-note">KOL count and peer influence targets sized from the modeled CKD prescriber network — co-authorship and conference co-presentation data, not analogous specialty benchmarks.</div>
+      </div>
+
+      <div class="tactic-card tactic-launch">
+        <div class="tactic-header">
+          <span class="tactic-phase-badge phase-launch">Launch</span>
+          <span class="tactic-priority">Priority 2</span>
+        </div>
+        <div class="tactic-name">Patient Identification &amp; Navigation</div>
+        <div class="tactic-desc">Deploy EHR-integrated patient identification tools and a dedicated navigation layer to reduce time from diagnosis to first script and prevent abandonment at point-of-prescribing.</div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Directly influences</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-influenced crit">Patient ID Rate <span class="vchip-sens">Critical</span></span>
+            <span class="vchip vchip-influenced med">Patient Support <span class="vchip-sens">Medium</span></span>
+          </div>
+        </div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Positions against</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-external high">Patient Persistence <span class="vchip-sens">High</span></span>
+          </div>
+        </div>
+        <div class="tactic-target">
+          <span class="ttarget-label">Target</span>
+          60% of eligible diagnosed patients identified in Year 1. First-fill abandonment below 3%. 75% persistence at 6 months.
+        </div>
+        <div class="tactic-model-note">Identification rate and abandonment targets derived from the CKD patient journey simulation — hub design quality has 3x more impact on persistence than hub funding level.</div>
+      </div>
+
+      <div class="tactic-card tactic-launch">
+        <div class="tactic-header">
+          <span class="tactic-phase-badge phase-launch">Launch</span>
+          <span class="tactic-priority">Priority 3</span>
+        </div>
+        <div class="tactic-name">Sales Force Deployment</div>
+        <div class="tactic-desc">Deploy 480 reps at launch with territory models optimized against the synthetic population's prescriber network. Concentrate 2x call frequency on the top 500 prescribers identified by the model.</div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Directly influences</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-influenced high">Sales Force Attainment <span class="vchip-sens">High</span></span>
+          </div>
+        </div>
+        <div class="tactic-var-section">
+          <div class="tvar-label">Positions against</div>
+          <div class="tvar-chips">
+            <span class="vchip vchip-external high">Prescriber Adoption <span class="vchip-sens">High</span></span>
+            <span class="vchip vchip-external crit">Competitive Response <span class="vchip-sens">Critical</span></span>
+          </div>
+        </div>
+        <div class="tactic-target">
+          <span class="ttarget-label">Target</span>
+          480 reps; 95% call plan attainment. Top 500 prescribers at 2x frequency from Day 1.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Initiative Sequencing &amp; Revenue Impact Timeline</div>
+      <div class="chart-subtitle">Relative contribution of each tactic to cumulative revenue acceleration by quarter</div>
+      <div class="chart-wrap">
+        <canvas id="planChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: SCENARIO EXPLORER -->
+<!-- ============================================================ -->
+<div id="section-explorer" class="section-panel">
+  <div class="section-header">
+    <div class="section-tag">Section 4 of 6</div>
+    <div class="section-title">Scenario Explorer</div>
+    <div class="section-subtitle">Adjust the key variables and see how they shift the revenue trajectory and NPV</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      Move the sliders to explore how different levels of execution and market conditions affect peak sales timing and cumulative revenue. The preset scenarios load a bundle of assumptions for a quick comparison.
+    </div>
+    <div class="scenario-toggle-row">
+      <button class="scenario-btn" onclick="loadScenario('aggressive', this)">Aggressive</button>
+      <button class="scenario-btn active" onclick="loadScenario('base_accel', this)">Base Accelerated</button>
+      <button class="scenario-btn" onclick="loadScenario('conservative', this)">Conservative</button>
+      <button class="scenario-btn" onclick="loadScenario('base_noplan', this)">No Acceleration Plan</button>
+    </div>
+    <div class="explorer-layout">
+      <div class="controls-panel">
+        <div class="controls-title">Variable Controls</div>
+
+        <div class="slider-group">
+          <div class="slider-label">Formulary Coverage at Month 9 <span class="slider-value" id="val-formulary">75%</span></div>
+          <div class="slider-desc">% of commercially insured patients with non-restricted access</div>
+          <input type="range" id="slider-formulary" min="40" max="92" value="75" oninput="updateExplorer()">
+          <div class="slider-range"><span>40%</span><span>92%</span></div>
+          <div class="target-marker">&#9650; Target: 75%</div>
+          <div class="slider-context">
+            <div class="slider-benchmark-row">
+              <span class="benchmark-label">Industry median: ~52% (comparable specialty launches)</span>
+              <span class="zone-badge zone-stretch" id="zone-formulary">Stretch target</span>
+            </div>
+            <div class="slider-assumption" id="assume-formulary">Requires strong clinical differentiation, aggressive contracting, and payer willingness to grant preferred status — above typical launch outcomes.</div>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">Sales Force Attainment <span class="slider-value" id="val-sf">95%</span></div>
+          <div class="slider-desc">% of planned calls executed against target list</div>
+          <input type="range" id="slider-sf" min="60" max="110" value="95" oninput="updateExplorer()">
+          <div class="slider-range"><span>60%</span><span>110%</span></div>
+          <div class="target-marker">&#9650; Target: 95%</div>
+          <div class="slider-context">
+            <div class="slider-benchmark-row">
+              <span class="benchmark-label">Industry median: ~82% (specialty launches, Year 1)</span>
+              <span class="zone-badge zone-stretch" id="zone-sf">Stretch target</span>
+            </div>
+            <div class="slider-assumption" id="assume-sf">Requires above-average rep retention, strong territory alignment, and consistent HCP receptivity — achievable but not typical.</div>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">Competitive Entry (months) <span class="slider-value" id="val-comp">24</span></div>
+          <div class="slider-desc">Months post-launch before a major competitor launches</div>
+          <input type="range" id="slider-comp" min="6" max="42" value="24" oninput="updateExplorer()">
+          <div class="slider-range"><span>6 mo</span><span>42 mo</span></div>
+          <div class="target-marker">&#9650; Base assumption: 24 months</div>
+          <div class="slider-context">
+            <div class="slider-benchmark-row">
+              <span class="benchmark-label">Category median: ~18 months · Not a variable we can influence</span>
+              <span class="zone-badge zone-achievable" id="zone-comp">Within base assumption</span>
+            </div>
+            <div class="slider-assumption" id="assume-comp">Model assumes competitor on standard regulatory timeline without expedited pathway — consistent with current intelligence on lead competitor's Phase 3 status.</div>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">Patient ID Effectiveness <span class="slider-value" id="val-patid">60%</span></div>
+          <div class="slider-desc">% of eligible diagnosed patients surfaced in Year 1</div>
+          <input type="range" id="slider-patid" min="20" max="80" value="60" oninput="updateExplorer()">
+          <div class="slider-range"><span>20%</span><span>80%</span></div>
+          <div class="target-marker">&#9650; Target: 60%</div>
+          <div class="slider-context">
+            <div class="slider-benchmark-row">
+              <span class="benchmark-label">Industry median: ~38% (specialty chronic disease launches)</span>
+              <span class="zone-badge zone-stretch" id="zone-patid">Stretch target</span>
+            </div>
+            <div class="slider-assumption" id="assume-patid">Requires EHR integrations live within 6 months, top-20 health system partnerships signed, and strong patient advocacy channel — above what most launches achieve in Year 1.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-panel">
+        <div class="scenario-assessment">
+          <div class="sa-header">Scenario Assessment</div>
+          <div class="sa-level" id="sa-level" style="color:#B45309">Credible Stretch</div>
+          <div class="sa-text" id="sa-text">Three of four drivers require above-historical performance. The population model supports this revenue trajectory, but it assumes strong execution and limited adverse market conditions in Year 1. Worth stress-testing which single driver failure would most damage the trajectory.</div>
+        </div>
+        <div class="explorer-model-tag">⬡ Population model output — values update as variables change</div>
+        <div class="outcome-cards">
+          <div class="outcome-card primary">
+            <div class="oc-label">NPV of Acceleration</div>
+            <div class="oc-value" id="result-npv">$420M</div>
+            <div class="oc-vs">vs. no-acceleration base</div>
+            <div class="oc-delta pos" id="result-npv-delta">&#9650; Current scenario</div>
+          </div>
+          <div class="outcome-card">
+            <div class="oc-label">Est. Peak Year</div>
+            <div class="oc-value" id="result-peak">Year 2.5</div>
+            <div class="oc-vs">when $800M run rate reached</div>
+            <div class="oc-delta pos" id="result-peak-delta">&#9650; 18 months faster than base</div>
+          </div>
+          <div class="outcome-card">
+            <div class="oc-label">5-Year Cumulative Rev.</div>
+            <div class="oc-value" id="result-cumrev">$3.40B</div>
+            <div class="oc-vs">vs. $2.97B no-acceleration</div>
+            <div class="oc-delta pos" id="result-cumrev-delta">&#9650; +$430M</div>
+          </div>
+          <div class="outcome-card">
+            <div class="oc-label">Year 2 Revenue</div>
+            <div class="oc-value" id="result-y2">$460M</div>
+            <div class="oc-vs">vs. $280M no-acceleration</div>
+            <div class="oc-delta pos" id="result-y2-delta">&#9650; +$180M vs. base</div>
+          </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom:0; flex:1">
+          <div class="chart-title">Revenue Trajectory — Current Variable Settings</div>
+          <div class="chart-subtitle">Annual net revenue ($M) · Blue = current scenario · Grey dashed = no acceleration base</div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="explorerChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: COUNTERFACTUALS -->
+<!-- ============================================================ -->
+<div id="section-counterfactuals" class="section-panel">
+  <div class="section-header">
+    <div class="section-tag">Section 5 of 6</div>
+    <div class="section-title">Counterfactuals</div>
+    <div class="section-subtitle">What happens when the variables we don't influence move against us — and what we do about it</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      Click any scenario to see the financial impact and the response playbook. These are not failure modes — they are known risks with prepared responses. The goal is to enter execution having already thought through these outcomes.
+    </div>
+    <div class="cf-grid">
+
+      <div class="cf-card active" onclick="toggleCF(this)">
+        <div class="cf-header">
+          <div class="cf-severity severity-high">⚡</div>
+          <div>
+            <div class="cf-title">Competitor launches 6 months early</div>
+            <div class="cf-trigger">Trigger: Major competitor receives FDA approval Month 18 instead of Month 24</div>
+          </div>
+        </div>
+        <div class="cf-body">
+          <div class="cf-impact-row"><span class="cf-impact-label">NPV impact</span><span class="cf-impact-value neg">-$180M</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Year 2 revenue impact</span><span class="cf-impact-value neg">-$95M</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Peak market share impact</span><span class="cf-impact-value neg">-3 to 4 pts</span></div>
+          <div class="cf-response">
+            <div class="cf-response-label">Response playbook</div>
+            Accelerate formulary contracting into defensive position — lock preferred status 6 months earlier if competitive signals emerge. Redeploy 20% of DTC budget to physician education amplifying clinical differentiation. Activate contingency KOL advisory board with direct competitive messaging. Review net price floor — modest concession to maintain access preferred over volume loss.
+          </div>
+        </div>
+      </div>
+
+      <div class="cf-card" onclick="toggleCF(this)">
+        <div class="cf-header">
+          <div class="cf-severity severity-high">📉</div>
+          <div>
+            <div class="cf-title">Formulary coverage misses target by 20 points</div>
+            <div class="cf-trigger">Trigger: Coverage at Month 9 is 55% vs. 75% target — two major PBMs decline preferred placement</div>
+          </div>
+        </div>
+        <div class="cf-body">
+          <div class="cf-impact-row"><span class="cf-impact-label">NPV impact</span><span class="cf-impact-value neg">-$155M</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Year 1 revenue impact</span><span class="cf-impact-value neg">-$55M</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Acceleration impact</span><span class="cf-impact-value neg">Peak delayed ~9 months</span></div>
+          <div class="cf-response">
+            <div class="cf-response-label">Response playbook</div>
+            Activate enhanced patient assistance program to bridge restricted patients — co-pay support extended to non-preferred tier. Redeploy sales force to non-restricted accounts and specialty pharmacy channel. Accelerate value-based contract negotiation with held-out payers with 12-month outcomes data commitment. Re-evaluate contracting strategy at Month 12 P&amp;T cycle.
+          </div>
+        </div>
+      </div>
+
+      <div class="cf-card" onclick="toggleCF(this)">
+        <div class="cf-header">
+          <div class="cf-severity severity-med">💰</div>
+          <div>
+            <div class="cf-title">Payer rebate pressure compresses net price</div>
+            <div class="cf-trigger">Trigger: Achieving 75% formulary coverage requires rebates that push net price to $28K vs. $35K target</div>
+          </div>
+        </div>
+        <div class="cf-body">
+          <div class="cf-impact-row"><span class="cf-impact-label">Revenue/patient impact</span><span class="cf-impact-value neg">-20% per patient</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Peak revenue impact</span><span class="cf-impact-value neg">-$160M annually at peak</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Volume impact</span><span class="cf-impact-value neutral">Neutral to positive</span></div>
+          <div class="cf-response">
+            <div class="cf-response-label">Response playbook</div>
+            Evaluate net price floor against volume trade-off using patient simulation model — the acceleration NPV at $28K net with full access may exceed $35K net with restricted access. Accelerate outcomes data generation to support value-based contract renegotiation in Year 2. Do not concede on price without modeling the access/volume offset.
+          </div>
+        </div>
+      </div>
+
+      <div class="cf-card" onclick="toggleCF(this)">
+        <div class="cf-header">
+          <div class="cf-severity severity-med">🔍</div>
+          <div>
+            <div class="cf-title">Patient identification underperforms</div>
+            <div class="cf-trigger">Trigger: Year 1 patient ID rate is 35% vs. 60% target — EHR integrations delayed, health system partnerships slower than planned</div>
+          </div>
+        </div>
+        <div class="cf-body">
+          <div class="cf-impact-row"><span class="cf-impact-label">Year 1 volume impact</span><span class="cf-impact-value neg">-30 to 35%</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Acceleration impact</span><span class="cf-impact-value neg">Peak delayed ~6 months</span></div>
+          <div class="cf-impact-row"><span class="cf-impact-label">Year 2 recovery potential</span><span class="cf-impact-value neutral">Largely recoverable</span></div>
+          <div class="cf-response">
+            <div class="cf-response-label">Response playbook</div>
+            Shift near-term patient identification to specialty pharmacy data partnerships — faster to activate than EHR integration. Expand disease awareness campaign targeting patients already diagnosed but not treated. Redeploy 15% of sales force effort to patient identification support at top-volume nephrology practices. This scenario is recoverable in Year 2 if prescriber and payer foundations are intact.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Revenue Scenarios Under Counterfactual Conditions</div>
+      <div class="chart-subtitle">Annual net revenue ($M) across four risk scenarios vs. accelerated base case</div>
+      <div class="cf-chart-wrap">
+        <canvas id="cfChart"></canvas>
+      </div>
+      <div class="legend" style="margin-top:14px">
+        <div class="legend-item"><div class="legend-line" style="background:#4056F4"></div> Accelerated base</div>
+        <div class="legend-item"><div class="legend-line" style="background:#DC2626"></div> Competitor early entry</div>
+        <div class="legend-item"><div class="legend-line" style="background:#D97706"></div> Formulary miss</div>
+        <div class="legend-item"><div class="legend-line" style="background:#7F7F7F"></div> Net price compression</div>
+        <div class="legend-item"><div class="legend-line" style="background:#595959; opacity:0.4"></div> No acceleration base</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: CONTROLS -->
+<!-- ============================================================ -->
+<div id="section-controls" class="section-panel">
+  <div class="section-header">
+    <div class="section-tag">Section 6 of 6</div>
+    <div class="section-title">Control System</div>
+    <div class="section-subtitle">The leading indicators that tell us if the acceleration is on track — and when to act</div>
+  </div>
+  <div class="section-body">
+    <div class="info-box">
+      These are not lagging revenue metrics. They are the upstream signals that predict whether the revenue trajectory is on track, 3-6 months before the revenue numbers confirm it. Green means the model is playing out as planned. Yellow means a counterfactual response should be prepared. Red means a response playbook should activate.
+    </div>
+    <div class="control-timeline-toggle">
+      <button class="timeline-btn active" onclick="setTimeline('m3', this)">Month 3</button>
+      <button class="timeline-btn" onclick="setTimeline('m6', this)">Month 6</button>
+      <button class="timeline-btn" onclick="setTimeline('m12', this)">Month 12</button>
+    </div>
+
+    <div class="controls-table">
+      <div class="ct-header">
+        <div>Indicator</div>
+        <div>Target</div>
+        <div>Threshold (Yellow)</div>
+        <div>Threshold (Red)</div>
+        <div>Status</div>
+      </div>
+      <!-- Populated by JS -->
+      <div id="controls-table-body"></div>
+    </div>
+
+    <div class="playbook-card" id="playbook-section" style="display:none">
+      <div class="playbook-title">
+        Response Playbook — Yellow Signals
+        <span class="playbook-tag">ACTIVATE IF YELLOW</span>
+      </div>
+      <div class="playbook-items" id="playbook-items"></div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-title">Control System Logic</div>
+        <div class="chart-subtitle">How leading indicators connect to the revenue outcome — and when each becomes predictive</div>
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-top:16px;">
+          <div style="background:var(--blue-xlight); border:1px solid rgba(64,86,244,0.2); border-radius:6px; padding:14px;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--blue); margin-bottom:6px;">Month 1-3</div>
+            <div style="font-size:12px; font-weight:600; color:var(--blue-dark); margin-bottom:4px;">Sales execution</div>
+            <div style="font-size:11px; color:var(--grey-mid);">Call attainment &amp; early prescriber awareness signal rep deployment quality</div>
+          </div>
+          <div style="background:var(--blue-xlight); border:1px solid rgba(64,86,244,0.2); border-radius:6px; padding:14px;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--blue); margin-bottom:6px;">Month 3-6</div>
+            <div style="font-size:12px; font-weight:600; color:var(--blue-dark); margin-bottom:4px;">Trial conversion</div>
+            <div style="font-size:11px; color:var(--grey-mid);">First Rx rate &amp; formulary access signal whether awareness is converting</div>
+          </div>
+          <div style="background:var(--blue-xlight); border:1px solid rgba(64,86,244,0.2); border-radius:6px; padding:14px;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--blue); margin-bottom:6px;">Month 6-9</div>
+            <div style="font-size:12px; font-weight:600; color:var(--blue-dark); margin-bottom:4px;">Patient retention</div>
+            <div style="font-size:11px; color:var(--grey-mid);">Persistence &amp; refill rates signal whether patients are staying on therapy</div>
+          </div>
+          <div style="background:var(--blue-xlight); border:1px solid rgba(64,86,244,0.2); border-radius:6px; padding:14px;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--blue); margin-bottom:6px;">Month 9-12</div>
+            <div style="font-size:12px; font-weight:600; color:var(--blue-dark); margin-bottom:4px;">Mainstream adoption</div>
+            <div style="font-size:11px; color:var(--grey-mid);">Late-adopter prescriber growth signals move from early adopters to mainstream</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<style>
+/* ---- MODALS ---- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-box {
+  background: white; border-radius: 12px;
+  max-width: 640px; width: 100%;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+}
+.modal-header {
+  background: var(--blue-dark);
+  padding: 22px 28px 18px;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+}
+.modal-tag {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.5); font-weight: 600; margin-bottom: 4px;
+}
+.modal-title { font-size: 17px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 18px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; line-height: 1;
+}
+.modal-close:hover { background: rgba(255,255,255,0.25); }
+.modal-body { padding: 24px 28px; }
+.modal-section { margin-bottom: 20px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--blue); margin-bottom: 8px;
+}
+.modal-table {
+  width: 100%; border-collapse: collapse; font-size: 12px;
+  border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
+}
+.modal-table th {
+  background: var(--grey-light); padding: 7px 12px; text-align: left;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--grey-mid);
+}
+.modal-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--grey-dark); }
+.modal-table tr:last-child td { border-bottom: none; }
+.modal-table tr.hi td { background: var(--blue-xlight); font-weight: 600; color: var(--blue-dark); }
+.modal-table td.neg { color: var(--red); font-weight: 600; }
+.modal-table td.pos { color: var(--green); font-weight: 600; }
+.modal-table td.neutral { color: var(--yellow); font-weight: 600; }
+.modal-assume-list { list-style: none; }
+.modal-assume-list li {
+  font-size: 12px; color: var(--grey-dark); padding: 8px 0;
+  border-bottom: 1px solid var(--border); display: flex; gap: 10px; line-height: 1.5;
+}
+.modal-assume-list li:last-child { border-bottom: none; }
+.modal-warning {
+  background: #FEF9C3; border: 1px solid #FDE68A; border-radius: 6px;
+  padding: 12px 14px; font-size: 12px; color: #92400E; line-height: 1.55;
+}
+.modal-warning strong { font-weight: 600; }
+.modal-insight {
+  background: var(--blue-xlight); border: 1px solid rgba(64,86,244,0.2); border-radius: 6px;
+  padding: 12px 14px; font-size: 12px; color: var(--blue-dark); line-height: 1.55;
+}
+.modal-insight strong { font-weight: 600; }
+.var-item.clickable { cursor: pointer; transition: background 0.12s; }
+.var-item.clickable:hover { background: #F0F4FF; }
+.var-explore-hint {
+  font-size: 10px; color: var(--blue); font-weight: 600;
+  margin-top: 6px; display: flex; align-items: center; gap: 4px;
+}
+</style>
+
+<!-- ============================================================ -->
+<!-- VARIABLE MODALS -->
+<!-- ============================================================ -->
+
+<!-- PAYER ACCESS STRATEGY -->
+<div class="modal-overlay" id="modal-payer" style="display:none" onclick="if(event.target===this)closeModal('modal-payer')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · Critical Sensitivity</div>
+    <div class="modal-title">Payer Access Strategy</div>
+    <button class="modal-close" onclick="closeModal('modal-payer')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: Formulary Coverage vs. NPV Impact</div>
+      <table class="modal-table">
+        <tr><th>Coverage at Month 9</th><th>NPV vs. Target</th><th>Trajectory</th></tr>
+        <tr><td>40%</td><td class="neg">-$210M</td><td>Acceleration not achievable</td></tr>
+        <tr><td>55%</td><td class="neg">-$155M</td><td>Peak shifts to Year 3.5</td></tr>
+        <tr><td>65%</td><td class="neg">-$80M</td><td>Partial acceleration only</td></tr>
+        <tr class="hi"><td>75% (target)</td><td>Baseline</td><td>Year 2.5 peak achievable</td></tr>
+        <tr><td>85%</td><td class="pos">+$45M</td><td>Requires 20%+ net price concession</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>📋</span><span>P&T committees respond to clinical differentiation on standard 90-day review cycles — no major restructuring events at ESI, CVS, or OptumRx in Year 1</span></li>
+        <li><span>💰</span><span>Rebate offers sufficient to reach preferred status at 12 of top-20 PBMs without compressing net price below $30K</span></li>
+        <li><span>🔒</span><span>Step therapy requirements limited to ≤2 prior treatment failures — more restrictive mandates would reduce eligible pool by ~18%</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-warning"><strong>Inflection point:</strong> Below 60% formulary coverage, the Year 2.5 acceleration peak is not achievable regardless of other driver performance. The population model shows that patient access velocity below this threshold creates a ceiling on prescriber trial behavior that sales force effort cannot overcome.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- PATIENT ID PROGRAMS -->
+<div class="modal-overlay" id="modal-patid" style="display:none" onclick="if(event.target===this)closeModal('modal-patid')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · Critical Sensitivity</div>
+    <div class="modal-title">Patient Identification Programs</div>
+    <button class="modal-close" onclick="closeModal('modal-patid')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: Year 1 ID Rate vs. Patient Volume</div>
+      <table class="modal-table">
+        <tr><th>Year 1 ID Rate</th><th>vs. Target Volume</th><th>Year 2 Recovery</th></tr>
+        <tr><td>25%</td><td class="neg">-45% patients</td><td>Largely unrecoverable</td></tr>
+        <tr><td>38% (industry median)</td><td class="neg">-28% patients</td><td>Partial recovery if formulary intact</td></tr>
+        <tr><td>50%</td><td class="neg">-12% patients</td><td>Fully recoverable by Year 2</td></tr>
+        <tr class="hi"><td>60% (target)</td><td>Baseline</td><td>Full acceleration trajectory</td></tr>
+        <tr><td>70%</td><td class="pos">+12% patients</td><td>Requires infrastructure beyond plan</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>🏥</span><span>EHR integration contracts signed with top-10 health systems by Month 3 post-launch — delays push ID rate toward 38-42% range</span></li>
+        <li><span>🔬</span><span>~35% of eligible patients currently undiagnosed — disease awareness campaign surfaces approximately 20% of these in Year 1</span></li>
+        <li><span>💊</span><span>Specialty pharmacy claims data partnership active at launch, enabling real-time patient identification from dispensing data</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-warning"><strong>Inflection point:</strong> Below 40% identification rate, Year 1 revenue shortfall is unlikely to be fully recovered even with strong formulary and prescriber performance in Year 2. The patient identification funnel takes 9-12 months to rebuild once it misses early targets.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- KOL ENGAGEMENT -->
+<div class="modal-overlay" id="modal-kol" style="display:none" onclick="if(event.target===this)closeModal('modal-kol')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · High Sensitivity</div>
+    <div class="modal-title">Medical Affairs &amp; KOL Engagement</div>
+    <button class="modal-close" onclick="closeModal('modal-kol')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: KOL Count vs. Launch Prescriber Awareness</div>
+      <table class="modal-table">
+        <tr><th>Activated KOLs</th><th>Prescriber Awareness at Launch</th><th>Year 2 Revenue Impact</th></tr>
+        <tr><td>200 (industry median)</td><td>45%</td><td class="neg">-$65M vs. target</td></tr>
+        <tr><td>350</td><td>61%</td><td class="neg">-$28M vs. target</td></tr>
+        <tr class="hi"><td>500 (target)</td><td>72%</td><td>Baseline</td></tr>
+        <tr><td>650</td><td>78%</td><td class="pos">+$18M (diminishing returns)</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Population Model Simulates</div>
+      <ul class="modal-assume-list">
+        <li><span>🔗</span><span>CKD prescriber network is tightly clustered — each activated KOL influences ~8-12 nephrologists through co-authorship relationships and conference co-presentation, modeled from actual network structure</span></li>
+        <li><span>⏱️</span><span>KOLs activated pre-launch have 2.3x impact on early trial rate vs. those activated post-launch — the network effect runs before the sales force deploys</span></li>
+        <li><span>📅</span><span>Advisory board participants presenting at ≥2 major nephrology conferences pre-launch is the activation threshold in the model</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-insight"><strong>Model-specific insight:</strong> The population model derives the KOL influence network from co-authorship data and conference attendance overlap in the CKD prescriber population — not from analogous category benchmarks. This means the peer influence propagation path is specific to nephrology, not extrapolated from oncology or other specialty drug launches.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SALES FORCE -->
+<div class="modal-overlay" id="modal-sf" style="display:none" onclick="if(event.target===this)closeModal('modal-sf')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · High Sensitivity</div>
+    <div class="modal-title">Sales Force Deployment</div>
+    <button class="modal-close" onclick="closeModal('modal-sf')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: Attainment vs. Revenue Impact</div>
+      <table class="modal-table">
+        <tr><th>Configuration</th><th>Top-500 Prescriber Reach</th><th>Year 1 Revenue Impact</th></tr>
+        <tr><td>350 reps, 80% attainment</td><td>62%</td><td class="neg">-$55M vs. target</td></tr>
+        <tr><td>480 reps, 82% attainment</td><td>79%</td><td class="neg">-$22M vs. target</td></tr>
+        <tr class="hi"><td>480 reps, 95% attainment (target)</td><td>95%</td><td>Baseline</td></tr>
+        <tr><td>600 reps, 95% attainment</td><td>97%</td><td class="pos">+$8M (strong diminishing returns)</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>🎯</span><span>Top-500 prescribers control 62% of Year 1 volume — 2x call frequency on this segment vs. the next 2,000 is the highest-leverage deployment choice in the model</span></li>
+        <li><span>📉</span><span>Diminishing returns above 3 calls/quarter per prescriber — doubling rep count beyond 480 adds less than 5% incremental volume in the model</span></li>
+        <li><span>🔄</span><span>Rep retention >85% in Year 1 assumed — specialty pharma median is ~78%; attrition to median level would reduce effective attainment by 8-10 points</span></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- PATIENT SUPPORT -->
+<div class="modal-overlay" id="modal-support" style="display:none" onclick="if(event.target===this)closeModal('modal-support')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · Medium Sensitivity</div>
+    <div class="modal-title">Patient Support Programs</div>
+    <button class="modal-close" onclick="closeModal('modal-support')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: First-Fill Abandonment vs. Revenue</div>
+      <table class="modal-table">
+        <tr><th>First-Fill Abandonment</th><th>6-Month Persistence</th><th>Year 2 Revenue Impact</th></tr>
+        <tr><td>8% (industry high end)</td><td>61%</td><td class="neg">-$38M vs. target</td></tr>
+        <tr><td>5% (industry median)</td><td>67%</td><td class="neg">-$18M vs. target</td></tr>
+        <tr class="hi"><td>3% (target)</td><td>72%</td><td>Baseline</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>⚡</span><span>Hub processes first prescription within 5 business days — delays beyond 10 days increase abandonment meaningfully in the patient behavior model</span></li>
+        <li><span>💰</span><span>Patient out-of-pocket cost at preferred tier: &lt;$30/month with co-pay support — the single largest driver of early discontinuation in the model is out-of-pocket cost at non-preferred tier</span></li>
+        <li><span>📞</span><span>Nurse navigator outreach within 14 days of first fill — model shows this reduces 90-day discontinuation by ~40% vs. passive hub programs</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-insight"><strong>Design over funding:</strong> The model shows hub program design quality (response time, navigator proactivity, co-pay structure) has 3x more impact on persistence than hub funding level. A well-designed $40M program outperforms a poorly-designed $80M one.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- PRICING -->
+<div class="modal-overlay" id="modal-pricing" style="display:none" onclick="if(event.target===this)closeModal('modal-pricing')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Influence · Medium Sensitivity · Internal Tension</div>
+    <div class="modal-title">Pricing &amp; Contracting</div>
+    <button class="modal-close" onclick="closeModal('modal-pricing')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">The Price/Access Trade-Off: Model Output</div>
+      <table class="modal-table">
+        <tr><th>Net Price</th><th>Formulary Coverage</th><th>5-Year NPV</th></tr>
+        <tr><td>$35K (target)</td><td>55% (restricted)</td><td class="neg">$265M</td></tr>
+        <tr><td>$32K</td><td>65%</td><td>$320M</td></tr>
+        <tr><td>$30K</td><td>70%</td><td>$360M</td></tr>
+        <tr class="hi"><td>$28K</td><td>75%</td><td class="pos">$380M (+$115M)</td></tr>
+        <tr><td>$23K (floor)</td><td>85%</td><td class="neutral">$330M (access can't offset volume)</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>⚖️</span><span>The access/volume trade-off reverses below $23K net — at that level, per-patient revenue loss cannot be offset by incremental patient volume even with near-complete formulary access</span></li>
+        <li><span>📊</span><span>Rebate structure derived from comparable CKD and specialty chronic disease negotiations — assumes standard PBM rebate-to-access dynamics, not value-based contracting outcomes</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-warning"><strong>Internal tension:</strong> The current plan targets both $35K net price and 75% formulary coverage simultaneously. The model shows these are likely incompatible — achieving both requires payer behavior that is outside the historical range for this category. This trade-off should be an explicit board-level decision, not an assumption.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- COMPETITIVE RESPONSE -->
+<div class="modal-overlay" id="modal-comp-resp" style="display:none" onclick="if(event.target===this)closeModal('modal-comp-resp')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · Critical Sensitivity</div>
+    <div class="modal-title">Competitive Response</div>
+    <button class="modal-close" onclick="closeModal('modal-comp-resp')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Modeled Scenarios: Competitive Entry Timing vs. NPV</div>
+      <table class="modal-table">
+        <tr><th>Competitor Entry</th><th>NPV vs. Base Case</th><th>Peak Year</th></tr>
+        <tr><td>Month 12</td><td class="neg">-$280M</td><td>Year 3.5-4</td></tr>
+        <tr><td>Month 18</td><td class="neg">-$180M</td><td>Year 3</td></tr>
+        <tr class="hi"><td>Month 24 (base case)</td><td>Baseline ($420M)</td><td>Year 2.5</td></tr>
+        <tr><td>Month 30</td><td class="pos">+$65M</td><td>Year 2.5</td></tr>
+        <tr><td>Month 36+</td><td class="pos">+$110M</td><td>Year 2</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Base Case Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>📅</span><span>Lead competitor's Phase 3 data readout on current expected timeline — no expedited pathway (Priority Review, Breakthrough designation) granted</span></li>
+        <li><span>⚗️</span><span>Competitor has a comparable clinical profile and pricing strategy — no head-to-head data disadvantage for NEXIVIR at the time of entry</span></li>
+        <li><span>📡</span><span>Each additional month of exclusivity is worth approximately $18-22M NPV — monitoring PDUFA date announcements is a leading indicator for this variable</span></li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-warning"><strong>Base case is slightly optimistic:</strong> The category median competitive gap is ~18 months, not 24. The 24-month assumption requires the lead competitor to stay on its current regulatory timeline without any acceleration. An early signal of breakthrough designation or expedited review should immediately trigger the counterfactual response playbook.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- PAYER COMMITTEE -->
+<div class="modal-overlay" id="modal-payer-comm" style="display:none" onclick="if(event.target===this)closeModal('modal-payer-comm')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · Critical Sensitivity</div>
+    <div class="modal-title">Payer Committee Decisions</div>
+    <button class="modal-close" onclick="closeModal('modal-payer-comm')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: Formulary Tier vs. Year 1 Revenue</div>
+      <table class="modal-table">
+        <tr><th>Formulary Outcome</th><th>Avg Patient Copay</th><th>Year 1 Revenue</th></tr>
+        <tr><td>Non-preferred + step therapy</td><td>$150-200/month</td><td class="neg">$95M</td></tr>
+        <tr><td>Non-preferred tier</td><td>$80-120/month</td><td class="neg">$130M</td></tr>
+        <tr class="hi"><td>Preferred tier (target)</td><td>&lt;$30/month w/ co-pay</td><td>$180M</td></tr>
+        <tr><td>Preferred + low PA burden</td><td>&lt;$20/month w/ co-pay</td><td class="pos">$200M</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>📋</span><span>Tier placement decisions finalized within 60 days of launch for top-20 payers — delays extend the access-restricted period and compress Year 1 patient volume</span></li>
+        <li><span>🏥</span><span>Non-preferred tier adds $45-60 avg out-of-pocket monthly for the commercially insured population — the model shows this increases first-fill abandonment 3-4x vs. preferred tier</span></li>
+        <li><span>🔒</span><span>Step therapy requirement (≥2 prior treatment failures) limits the eligible pool by approximately 18% of diagnosed patients in the model</span></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- PRESCRIBER ADOPTION -->
+<div class="modal-overlay" id="modal-adoption" style="display:none" onclick="if(event.target===this)closeModal('modal-adoption')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · High Sensitivity</div>
+    <div class="modal-title">Prescriber Adoption Curve</div>
+    <button class="modal-close" onclick="closeModal('modal-adoption')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">How the Population Model Simulates This</div>
+      <div class="modal-insight" style="margin-bottom:12px"><strong>This is where the synthetic population model is most distinctive.</strong> Rather than benchmarking adoption from analogous drug categories, the model simulates peer influence propagation through the actual CKD prescriber network — derived from co-authorship relationships, conference co-presentation data, and practice affiliation.</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: Trial-to-Repeat Conversion Rate</div>
+      <table class="modal-table">
+        <tr><th>Trial-to-Repeat Rate</th><th>Peer Influence Effect</th><th>Mainstream Adoption</th></tr>
+        <tr><td>&lt;25%</td><td>Chain breaks at Month 6-8</td><td class="neg">Stalls at early adopters only</td></tr>
+        <tr><td>30-35%</td><td>Weak propagation</td><td class="neg">Mainstream delayed 6-8 months</td></tr>
+        <tr class="hi"><td>40%+ (model target)</td><td>Full peer network activation</td><td>Mainstream adoption Month 10-14</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Key Network Insight</div>
+      <ul class="modal-assume-list">
+        <li><span>🔗</span><span>Top-500 nephrologists control 62% of volume and are clustered at 8-12 academic centers — a "seed" of 500 early adopters propagates to ~2,200 additional prescribers by Month 12 if RWE is positive</span></li>
+        <li><span>⚠️</span><span>If trial-to-repeat drops below 35%, the peer influence chain breaks and mainstream adoption stalls in Month 8-10 regardless of sales force effort or formulary access</span></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- PERSISTENCE -->
+<div class="modal-overlay" id="modal-persistence" style="display:none" onclick="if(event.target===this)closeModal('modal-persistence')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · High Sensitivity</div>
+    <div class="modal-title">Patient Persistence &amp; Adherence</div>
+    <button class="modal-close" onclick="closeModal('modal-persistence')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Sensitivity: 6-Month Persistence vs. Year 2 Revenue</div>
+      <table class="modal-table">
+        <tr><th>6-Month Persistence</th><th>Primary Driver</th><th>Year 2 Revenue Impact</th></tr>
+        <tr><td>55%</td><td>High non-preferred copay</td><td class="neg">-$52M vs. target</td></tr>
+        <tr><td>62%</td><td>Moderate hub underdelivery</td><td class="neg">-$28M vs. target</td></tr>
+        <tr class="hi"><td>72% (target)</td><td>Full hub + co-pay program</td><td>Baseline</td></tr>
+        <tr><td>80%</td><td>Exceptional program design</td><td class="pos">+$22M</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Leading Indicator</div>
+      <div class="modal-insight">The 30-day refill rate in Month 1-2 is a 4-5 month leading indicator for the 6-month persistence rate. If 30-day refills are below 82%, the model flags this as an early warning that 6-month persistence will land below the 68% threshold — well before the revenue numbers confirm it.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- RWE -->
+<div class="modal-overlay" id="modal-rwe" style="display:none" onclick="if(event.target===this)closeModal('modal-rwe')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · Medium Sensitivity</div>
+    <div class="modal-title">Real-World Evidence Emergence</div>
+    <button class="modal-close" onclick="closeModal('modal-rwe')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Modeled Impact by Scenario</div>
+      <table class="modal-table">
+        <tr><th>RWE Signal (Month 9-12)</th><th>Effect</th><th>Year 3 Revenue Impact</th></tr>
+        <tr><td>Adverse event rate &gt;25% above trial</td><td>Label update process (6-9 months)</td><td class="neg">-$80M to -$140M</td></tr>
+        <tr><td>AE rate within 15-25% of trial</td><td>Neutral — no acceleration or delay</td><td class="neutral">Minimal</td></tr>
+        <tr class="hi"><td>Within 15% of trial (base case)</td><td>Mainstream adoption on schedule</td><td>Baseline</td></tr>
+        <tr><td>Positive outcomes data published</td><td>Late-adopter wave 3 months early</td><td class="pos">+$35-50M Year 3</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>🔬</span><span>Real-world adverse event rate within 15% of clinical trial rate — consistent with mechanism of action and the CKD patient population modeled</span></li>
+        <li><span>📅</span><span>Primary impact is Year 2+ — this variable does not materially affect the Year 1 acceleration target</span></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- HEALTH SYSTEM PROTOCOLS -->
+<div class="modal-overlay" id="modal-protocols" style="display:none" onclick="if(event.target===this)closeModal('modal-protocols')">
+<div class="modal-box">
+  <div class="modal-header">
+    <div class="modal-tag">Variables We Don't Influence · Medium Sensitivity</div>
+    <div class="modal-title">Health System Protocols</div>
+    <button class="modal-close" onclick="closeModal('modal-protocols')">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="modal-section-label">Impact by Protocol Type</div>
+      <table class="modal-table">
+        <tr><th>Protocol Event</th><th>Expected Timing</th><th>Patient Population Unlocked</th></tr>
+        <tr><td>Nephrology society guideline inclusion</td><td>Month 18-24</td><td class="pos">~180,000 additional eligible patients</td></tr>
+        <tr><td>Top-20 IDN EMR order set placement</td><td>Month 12-18</td><td class="pos">Patient ID effectiveness +8-12 pts</td></tr>
+        <tr><td>Medicare Advantage protocol update</td><td>Month 24-30</td><td class="pos">~95,000 additional eligible patients</td></tr>
+      </table>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">What the Model Assumes</div>
+      <ul class="modal-assume-list">
+        <li><span>📋</span><span>Guideline committee review initiated at launch — KOL advisory board members are voting members on relevant nephrology society committees</span></li>
+        <li><span>⏳</span><span>Lowest near-term impact of all variables — guideline cycle is 18-24 months — but highest Year 2+ leverage per dollar of effort</span></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<script>
+// ============================================================
+// MODAL BEHAVIOR
+// ============================================================
+function openModal(id) {
+  const el = document.getElementById('modal-' + id);
+  if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+}
+function closeModal(id) {
+  // Accept either 'payer' or 'modal-payer'
+  const elId = id.startsWith('modal-') ? id : 'modal-' + id;
+  const el = document.getElementById(elId);
+  if (el) { el.style.display = 'none'; document.body.style.overflow = ''; }
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay').forEach(m => { m.style.display = 'none'; });
+    document.body.style.overflow = '';
+  }
+});
+
+// ============================================================
+// NAV
+// ============================================================
+function showSection(id, el) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'explorer') { initExplorerChart(); initSliderLinks(); }
+  if (id === 'counterfactuals') initCFChart();
+}
+
+// ============================================================
+// CHART: OBJECTIVE
+// ============================================================
+const YEARS = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'];
+const BASE_REV = [100, 280, 560, 800, 800];
+const ACCEL_REV = [140, 460, 780, 800, 800];
+
+const objCtx = document.getElementById('objectiveChart').getContext('2d');
+new Chart(objCtx, {
+  type: 'line',
+  data: {
+    labels: YEARS,
+    datasets: [
+      {
+        label: 'Accelerated strategy',
+        data: ACCEL_REV,
+        borderColor: '#4056F4',
+        backgroundColor: 'rgba(64,86,244,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#4056F4',
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: 'Base case (no acceleration)',
+        data: BASE_REV,
+        borderColor: '#595959',
+        borderDash: [6,4],
+        borderWidth: 1.5,
+        pointRadius: 3,
+        pointBackgroundColor: '#595959',
+        fill: false,
+        tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: { label: ctx => ' $' + ctx.parsed.y + 'M' }
+    }},
+    scales: {
+      y: { beginAtZero: true, max: 900, grid: { color: '#F0F0F0' },
+        ticks: { callback: v => '$' + v + 'M', font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ============================================================
+// CHART: PLAN
+// ============================================================
+const planCtx = document.getElementById('planChart').getContext('2d');
+new Chart(planCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8'],
+    datasets: [
+      { label: 'Formulary Access', data: [5, 15, 35, 55, 70, 80, 85, 88], backgroundColor: '#4056F4' },
+      { label: 'KOL Activation', data: [8, 18, 28, 35, 40, 42, 43, 44], backgroundColor: '#2D42C8' },
+      { label: 'Patient ID Programs', data: [0, 2, 8, 20, 35, 48, 55, 60], backgroundColor: '#1C3080' },
+      { label: 'Sales Force', data: [0, 5, 18, 32, 45, 52, 56, 58], backgroundColor: '#7F91F8' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 16 } },
+      tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' contribution index' } }
+    },
+    scales: {
+      y: { stacked: false, beginAtZero: true, grid: { color: '#F0F0F0' },
+        ticks: { font: { size: 11 } } },
+      x: { stacked: false, grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ============================================================
+// ZONE CALIBRATION DATA
+// ============================================================
+const ZONES = {
+  formulary: {
+    benchmarkLabel: 'Industry median: ~52% (comparable specialty launches)',
+    thresholds: [65, 80], // achievable ≤65, stretch ≤80, exceptional >80
+    direction: 'higher',
+    assumptions: {
+      achievable: 'Within historical range for comparable specialty launches. Standard contracting approach with moderate rebate concessions should be sufficient.',
+      stretch: 'Requires strong clinical differentiation, aggressive contracting, and payer willingness to grant preferred status — above typical launch outcomes for this category.',
+      exceptional: 'Near-complete payer capitulation. Historically requires significant net price concessions or outcomes-based guarantees rarely offered at launch. High risk of internal tension between access and margin targets.'
+    }
+  },
+  sf: {
+    benchmarkLabel: 'Industry median: ~82% (specialty launches, Year 1)',
+    thresholds: [88, 100],
+    direction: 'higher',
+    assumptions: {
+      achievable: 'Standard rep deployment with normal HCP access rates and call productivity. Achievable without exceptional execution.',
+      stretch: 'Requires above-average rep retention in Year 1, strong territory alignment, and consistent HCP receptivity — achievable but not the typical outcome.',
+      exceptional: 'Essentially zero rep attrition, perfect call productivity, elevated HCP access. Historically rare in Year 1 of a specialty launch, particularly in competitive nephrology.'
+    }
+  },
+  comp: {
+    benchmarkLabel: 'Category median: ~18 months (not a variable we can influence)',
+    thresholds: [20, 14], // comp ≥20 = achievable, 14-19 = stretch, <14 = exceptional risk
+    direction: 'lower', // lower value = worse
+    assumptions: {
+      achievable: 'Competitor on standard regulatory timeline without expedited pathway — consistent with current intelligence on lead competitor Phase 3 status.',
+      stretch: 'Compressed window suggests competitor may have received Priority Review or breakthrough designation. Raises execution urgency significantly across all variables we can influence.',
+      exceptional: 'Near-term competitive entry likely within launch year. Market share window severely constrained — strategy requires rapid formulary penetration and prescriber activation before competitor lands.'
+    }
+  },
+  patid: {
+    benchmarkLabel: 'Industry median: ~38% (specialty chronic disease launches)',
+    thresholds: [50, 65],
+    direction: 'higher',
+    assumptions: {
+      achievable: 'Specialty pharmacy data partnerships active; standard disease awareness campaign. Achievable without exceptional infrastructure.',
+      stretch: 'Requires EHR integrations live within 6 months, top-20 health system partnerships signed, and active patient advocacy channel — above what most launches achieve in Year 1.',
+      exceptional: 'Near-complete penetration of diagnosed population in Year 1. Demands infrastructure investment and partnerships rarely deployed at this scale at launch. Population model supports the volume but questions the execution timeline.'
+    }
+  }
+};
+
+function getZoneForSlider(id, value) {
+  const z = ZONES[id];
+  if (z.direction === 'lower') {
+    if (value >= z.thresholds[0]) return 'achievable';
+    if (value >= z.thresholds[1]) return 'stretch';
+    return 'exceptional';
+  } else {
+    if (value <= z.thresholds[0]) return 'achievable';
+    if (value <= z.thresholds[1]) return 'stretch';
+    return 'exceptional';
+  }
+}
+
+const ZONE_LABELS = {
+  achievable: 'Within historical range',
+  stretch: 'Stretch target',
+  exceptional: 'Exceptional — rarely achieved'
+};
+
+function updateZone(id, value) {
+  const zone = getZoneForSlider(id, value);
+  const badge = document.getElementById('zone-' + id);
+  if (badge) {
+    badge.textContent = ZONE_LABELS[zone];
+    badge.className = 'zone-badge zone-' + zone;
+  }
+  const assume = document.getElementById('assume-' + id);
+  if (assume) assume.textContent = ZONES[id].assumptions[zone];
+}
+
+function updateScenarioAssessment(formulary, sf, comp, patid) {
+  const zones = [
+    getZoneForSlider('formulary', formulary),
+    getZoneForSlider('sf', sf),
+    getZoneForSlider('comp', comp),
+    getZoneForSlider('patid', patid)
+  ];
+  const exceptional = zones.filter(z => z === 'exceptional').length;
+  const stretch = zones.filter(z => z === 'stretch').length;
+  const achievable = zones.filter(z => z === 'achievable').length;
+
+  let level, color, text;
+
+  if (exceptional >= 2) {
+    level = 'High Credibility Risk';
+    color = '#DC2626';
+    text = 'This scenario requires exceptional performance across ' + exceptional + ' drivers simultaneously. The population model can generate this revenue trajectory — but it represents a convergence of best-case conditions that is historically rare. Presenting this to a skeptical CFO requires being explicit about what has to go right simultaneously, and why you believe it will.';
+  } else if (exceptional === 1 || stretch >= 3) {
+    level = 'Aggressive';
+    color = '#D97706';
+    text = 'This scenario is achievable but requires above-historical performance across most drivers. The population model supports this range given the underlying CKD population dynamics, but it assumes strong Year 1 execution with limited adverse market events. The most important question: which single driver failure creates the most damage to the trajectory?';
+  } else if (stretch >= 1) {
+    level = 'Credible Stretch';
+    color = '#B45309';
+    text = 'One or more drivers require above-historical performance, but the overall combination is defensible. The population model grounds the outcome in realistic market behavior — this is a reasonable planning scenario, with clear acknowledgment of where the stretch lies and what you are doing to close the gap.';
+  } else {
+    level = 'Well-Grounded';
+    color = '#16A34A';
+    text = 'All drivers are within the historical range for comparable specialty launches. The population model supports this outcome without requiring exceptional conditions. A credible base case — the question is whether this level of execution is sufficient to capture the full competitive window.';
+  }
+
+  const levelEl = document.getElementById('sa-level');
+  const textEl = document.getElementById('sa-text');
+  if (levelEl) { levelEl.textContent = level; levelEl.style.color = color; }
+  if (textEl) textEl.textContent = text;
+}
+
+// ============================================================
+// SCENARIO EXPLORER
+// ============================================================
+let explorerChart = null;
+
+function calcRevenue(formulary, sf, comp, patid) {
+  // Multipliers relative to base accelerated scenario
+  const fMult = 0.4 + (formulary / 75) * 0.6; // formulary is most important
+  const sfMult = 0.7 + (sf / 95) * 0.3;
+  const compMult = comp >= 24 ? 1.0 : 0.6 + (comp / 24) * 0.4;
+  const pidMult = 0.6 + (patid / 60) * 0.4;
+  const combined = fMult * sfMult * compMult * pidMult;
+
+  // Base accelerated: [140, 460, 780, 800, 800]
+  const base = [140, 460, 780, 800, 800];
+  return base.map((v, i) => {
+    const scaled = v * combined;
+    // Cap at 800 and minimum at base no-accel
+    const noAccel = BASE_REV[i];
+    return Math.round(Math.max(noAccel * 0.7, Math.min(900, scaled)));
+  });
+}
+
+// ============================================================
+// MODEL LINKS — causal variable interdependencies
+// ============================================================
+const MODEL_LINKS = [
+  {
+    from: 'formulary',
+    to: 'sf',
+    coeff: 0.24,
+    label: 'Formulary access enables sales force conversion — high coverage removes the primary objection at the point of prescribing'
+  },
+  {
+    from: 'comp',
+    to: 'formulary',
+    coeff: 0.30,
+    label: 'Competitive entry gives payers a negotiating alternative — earlier entry constrains the formulary terms you can lock in pre-launch'
+  }
+];
+
+let prevSliderVals = {};
+let applyingLinks = false;
+let linkTimers = {};
+let sliderLinksInitialized = false;
+
+function initSliderLinks() {
+  if (sliderLinksInitialized) return;
+  sliderLinksInitialized = true;
+  ['formulary', 'sf', 'comp', 'patid'].forEach(id => {
+    const el = document.getElementById('slider-' + id);
+    prevSliderVals[id] = parseInt(el.value);
+    el.addEventListener('input', function() {
+      if (applyingLinks) return;
+      const current = parseInt(this.value);
+      const delta = current - prevSliderVals[id];
+      prevSliderVals[id] = current;
+      if (Math.abs(delta) >= 1) applyModelLinks(id, delta);
+    });
+  });
+}
+
+function applyModelLinks(changedId, delta) {
+  MODEL_LINKS.forEach(link => {
+    if (link.from !== changedId) return;
+
+    const targetEl = document.getElementById('slider-' + link.to);
+    const min = parseInt(targetEl.min);
+    const max = parseInt(targetEl.max);
+    const currentVal = parseInt(targetEl.value);
+    const nudge = Math.round(delta * link.coeff);
+    if (nudge === 0) return;
+
+    const newVal = Math.max(min, Math.min(max, currentVal + nudge));
+    if (newVal === currentVal) return;
+
+    animateSliderTo(link.to, newVal, 420, link.label, nudge);
+  });
+}
+
+function animateSliderTo(sliderId, targetVal, duration, linkLabel, nudge) {
+  const el = document.getElementById('slider-' + sliderId);
+  const startVal = parseInt(el.value);
+  const diff = targetVal - startVal;
+  const startTime = performance.now();
+
+  applyingLinks = true;
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 2); // ease-out quad
+    const val = Math.round(startVal + diff * eased);
+    el.value = val;
+    updateSliderDisplay(sliderId, val);
+
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.value = targetVal;
+      prevSliderVals[sliderId] = targetVal;
+      updateSliderDisplay(sliderId, targetVal);
+      applyingLinks = false;
+      updateExplorer();
+    }
+  }
+
+  requestAnimationFrame(step);
+  showLinkNote(sliderId, linkLabel, nudge > 0);
+}
+
+function updateSliderDisplay(sliderId, val) {
+  const suffixes = { formulary: '%', sf: '%', comp: '', patid: '%' };
+  const dispEl = document.getElementById('val-' + sliderId);
+  if (dispEl) dispEl.textContent = val + (suffixes[sliderId] || '');
+}
+
+function showLinkNote(sliderId, label, isUp) {
+  const group = document.getElementById('slider-' + sliderId).closest('.slider-group');
+
+  // Clear any existing note and timer for this slider
+  const existing = group.querySelector('.model-link-note');
+  if (existing) existing.remove();
+  if (linkTimers[sliderId]) clearTimeout(linkTimers[sliderId]);
+
+  group.classList.add('slider-linked');
+
+  const dir = isUp ? '▲' : '▼';
+  const dirClass = isUp ? 'up' : 'down';
+  const note = document.createElement('div');
+  note.className = 'model-link-note';
+  note.innerHTML = `<span class="mln-icon">⬡</span><span><span class="mln-dir ${dirClass}">${dir} Model link</span> — ${label}</span>`;
+  group.appendChild(note);
+
+  linkTimers[sliderId] = setTimeout(() => {
+    note.classList.add('fading');
+    group.classList.remove('slider-linked');
+    setTimeout(() => note.remove(), 550);
+  }, 3500);
+}
+
+function initExplorerChart() {
+  if (explorerChart) return;
+  const ctx = document.getElementById('explorerChart').getContext('2d');
+  explorerChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [
+        {
+          label: 'Current scenario',
+          data: ACCEL_REV.slice(),
+          borderColor: '#4056F4',
+          backgroundColor: 'rgba(64,86,244,0.1)',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: '#4056F4',
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: 'No acceleration base',
+          data: BASE_REV,
+          borderColor: '#595959',
+          borderDash: [5,4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y + 'M' } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 950, grid: { color: '#F0F0F0' },
+          ticks: { callback: v => '$' + v + 'M', font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+function updateExplorer() {
+  const formulary = parseInt(document.getElementById('slider-formulary').value);
+  const sf = parseInt(document.getElementById('slider-sf').value);
+  const comp = parseInt(document.getElementById('slider-comp').value);
+  const patid = parseInt(document.getElementById('slider-patid').value);
+
+  document.getElementById('val-formulary').textContent = formulary + '%';
+  document.getElementById('val-sf').textContent = sf + '%';
+  document.getElementById('val-comp').textContent = comp;
+  document.getElementById('val-patid').textContent = patid + '%';
+
+  updateZone('formulary', formulary);
+  updateZone('sf', sf);
+  updateZone('comp', comp);
+  updateZone('patid', patid);
+  updateScenarioAssessment(formulary, sf, comp, patid);
+
+  const rev = calcRevenue(formulary, sf, comp, patid);
+  const cumRev = rev.reduce((a, b) => a + b, 0);
+  const baseCum = BASE_REV.reduce((a, b) => a + b, 0);
+  const accelCum = ACCEL_REV.reduce((a, b) => a + b, 0);
+  const npv = Math.round((cumRev - baseCum) * 0.78); // approx discount factor
+  const baseNPV = Math.round((accelCum - baseCum) * 0.78);
+
+  // Peak year
+  let peakYear = 'Year 4+';
+  if (rev[1] >= 750) peakYear = 'Year 2';
+  else if (rev[2] >= 750) peakYear = 'Year 2.5-3';
+  else if (rev[3] >= 750) peakYear = 'Year 3.5-4';
+
+  // Update UI
+  document.getElementById('result-npv').textContent = '$' + npv + 'M';
+  document.getElementById('result-peak').textContent = peakYear;
+  document.getElementById('result-cumrev').textContent = '$' + (cumRev/1000).toFixed(2) + 'B';
+  document.getElementById('result-y2').textContent = '$' + rev[1] + 'M';
+
+  const npvDelta = npv - baseNPV;
+  const npvEl = document.getElementById('result-npv-delta');
+  npvEl.textContent = (npvDelta >= 0 ? '▲ +$' : '▼ -$') + Math.abs(npvDelta) + 'M vs. base accelerated';
+  npvEl.className = 'oc-delta ' + (npvDelta >= 0 ? 'pos' : 'neg');
+
+  const y2Delta = rev[1] - ACCEL_REV[1];
+  const y2El = document.getElementById('result-y2-delta');
+  y2El.textContent = (y2Delta >= 0 ? '▲ +$' : '▼ -$') + Math.abs(y2Delta) + 'M vs. accelerated base';
+  y2El.className = 'oc-delta ' + (y2Delta >= 0 ? 'pos' : 'neg');
+
+  const cumEl = document.getElementById('result-cumrev-delta');
+  const cumDelta = cumRev - baseCum;
+  cumEl.textContent = (cumDelta >= 0 ? '▲ +$' : '▼ -$') + Math.abs(cumDelta) + 'M vs. no-acceleration';
+  cumEl.className = 'oc-delta ' + (cumDelta >= 0 ? 'pos' : 'neg');
+
+  if (explorerChart) {
+    explorerChart.data.datasets[0].data = rev;
+    explorerChart.update('none');
+  }
+}
+
+function loadScenario(name, btn) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const scenarios = {
+    aggressive:    { formulary: 88, sf: 105, comp: 36, patid: 72 },
+    base_accel:    { formulary: 75, sf: 95,  comp: 24, patid: 60 },
+    conservative:  { formulary: 62, sf: 82,  comp: 18, patid: 44 },
+    base_noplan:   { formulary: 52, sf: 78,  comp: 18, patid: 35 }
+  };
+  const s = scenarios[name];
+  document.getElementById('slider-formulary').value = s.formulary;
+  document.getElementById('slider-sf').value = s.sf;
+  document.getElementById('slider-comp').value = s.comp;
+  document.getElementById('slider-patid').value = s.patid;
+  updateExplorer();
+}
+
+// ============================================================
+// COUNTERFACTUALS
+// ============================================================
+function toggleCF(card) {
+  const wasActive = card.classList.contains('active');
+  document.querySelectorAll('.cf-card').forEach(c => c.classList.remove('active'));
+  if (!wasActive) card.classList.add('active');
+}
+
+let cfChart = null;
+function initCFChart() {
+  if (cfChart) return;
+  const ctx = document.getElementById('cfChart').getContext('2d');
+  cfChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [
+        { label: 'Accelerated base', data: ACCEL_REV, borderColor: '#4056F4', borderWidth: 2.5, pointRadius: 3, fill: false, tension: 0.3 },
+        { label: 'Competitor early entry', data: [140, 300, 520, 650, 680], borderColor: '#DC2626', borderWidth: 1.8, pointRadius: 2, fill: false, tension: 0.3 },
+        { label: 'Formulary miss (-20pts)', data: [95, 330, 640, 800, 800], borderColor: '#D97706', borderWidth: 1.8, pointRadius: 2, fill: false, tension: 0.3 },
+        { label: 'Net price compression', data: [112, 368, 624, 640, 640], borderColor: '#7F7F7F', borderWidth: 1.8, pointRadius: 2, fill: false, tension: 0.3 },
+        { label: 'No acceleration', data: BASE_REV, borderColor: '#595959', borderDash: [5,3], borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': $' + ctx.parsed.y + 'M' } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 900, grid: { color: '#F0F0F0' },
+          ticks: { callback: v => '$' + v + 'M', font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// CONTROLS DASHBOARD
+// ============================================================
+const controlData = {
+  m3: [
+    { metric: 'Sales force call attainment', sub: 'vs. call plan target', target: '90%+', yellow: '75-89%', red: '<75%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Prescriber awareness rate', sub: 'Top 2,000 nephrologists', target: '65%+', yellow: '50-64%', red: '<50%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'First Rx conversion rate', sub: 'Aware prescribers who have written ≥1 Rx', target: '22%+', yellow: '14-21%', red: '<14%', status: 'yellow', statusLabel: 'Watch' },
+    { metric: 'Formulary access — commercial', sub: 'Non-restricted commercial lives', target: '40%+', yellow: '28-39%', red: '<28%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Hub enrollment rate', sub: '% of Rx going through hub', target: '80%+', yellow: '65-79%', red: '<65%', status: 'green', statusLabel: 'On Track' }
+  ],
+  m6: [
+    { metric: 'Formulary access — commercial', sub: 'Non-restricted commercial lives', target: '62%+', yellow: '48-61%', red: '<48%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Active prescriber count', sub: 'Written ≥2 Rxs in past 60 days', target: '1,800+', yellow: '1,200-1,799', red: '<1,200', status: 'yellow', statusLabel: 'Watch' },
+    { metric: '6-month persistence rate', sub: 'Patients still on therapy at Month 6', target: '72%+', yellow: '60-71%', red: '<60%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Payer PA approval rate', sub: '% of prior authorizations approved', target: '82%+', yellow: '70-81%', red: '<70%', status: 'red', statusLabel: 'Alert' },
+    { metric: 'Competitor intelligence signal', sub: 'Estimated months to major competitor launch', target: '20+ months', yellow: '14-19 months', red: '<14 months', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Patient ID program yield', sub: '% eligible patients identified vs. target', target: '45%+', yellow: '30-44%', red: '<30%', status: 'yellow', statusLabel: 'Watch' }
+  ],
+  m12: [
+    { metric: 'Formulary coverage — total', sub: 'All commercial + Medicare Part D coverage', target: '72%+', yellow: '58-71%', red: '<58%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Monthly new patient starts', sub: 'New patients starting therapy', target: '850+', yellow: '620-849', red: '<620', status: 'green', statusLabel: 'On Track' },
+    { metric: '12-month persistence rate', sub: 'Patients still on therapy at Month 12', target: '58%+', yellow: '46-57%', red: '<46%', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Late-adopter prescriber growth', sub: 'New prescribers writing in Month 10-12 vs. Month 1-3', target: '2.5x+', yellow: '1.8-2.4x', red: '<1.8x', status: 'yellow', statusLabel: 'Watch' },
+    { metric: 'Real-world outcomes signal', sub: 'Adverse event rate vs. clinical trial rate', target: 'Within 15%', yellow: '15-25% higher', red: '>25% higher', status: 'green', statusLabel: 'On Track' },
+    { metric: 'Year 1 revenue vs. plan', sub: 'Cumulative net revenue vs. accelerated plan', target: '90%+ of plan', yellow: '75-89%', red: '<75%', status: 'green', statusLabel: 'On Track' }
+  ]
+};
+
+const playbookData = {
+  m3: [],
+  m6: [
+    { icon: '📞', text: 'Active prescriber count at Watch: deploy targeted telesales to accounts with 1 Rx only — goal is driving second prescription within 30 days' },
+    { icon: '🏥', text: 'PA approval rate at Alert: activate PA appeals task force; pull specific payer names and escalate to managed care team; prepare outcomes data dossier for P&T resubmission' },
+    { icon: '👥', text: 'Patient ID yield at Watch: fast-track specialty pharmacy data partnership to identify patients in claims data; do not wait for EHR integrations' }
+  ],
+  m12: [
+    { icon: '📈', text: 'Late-adopter growth at Watch: late adopters require peer-to-peer influence, not sales calls — activate second-tier KOL program with regional conference presence' }
+  ]
+};
+
+function setTimeline(tl, btn) {
+  document.querySelectorAll('.timeline-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderControls(tl);
+}
+
+function renderControls(tl) {
+  const data = controlData[tl];
+  const body = document.getElementById('controls-table-body');
+  body.innerHTML = data.map(row => `
+    <div class="ct-row">
+      <div><div class="ct-metric">${row.metric}</div><div class="ct-sub">${row.sub}</div></div>
+      <div class="ct-cell target">${row.target}</div>
+      <div class="ct-cell">${row.yellow}</div>
+      <div class="ct-cell">${row.red}</div>
+      <div><span class="status-badge status-${row.status}"><span class="status-dot"></span>${row.statusLabel}</span></div>
+    </div>
+  `).join('');
+
+  const playbook = playbookData[tl];
+  const pbSection = document.getElementById('playbook-section');
+  const pbItems = document.getElementById('playbook-items');
+  if (playbook.length > 0) {
+    pbSection.style.display = 'block';
+    pbItems.innerHTML = playbook.map(p => `
+      <div class="playbook-item"><span class="playbook-item-icon">${p.icon}</span><span>${p.text}</span></div>
+    `).join('');
+  } else {
+    pbSection.style.display = 'none';
+  }
+}
+
+// Init
+renderControls('m3');
+</script>
+</body>
+</html>

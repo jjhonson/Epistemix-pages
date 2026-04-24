@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Launch Intelligence | Epistemix</title>
+<style>
+:root {
+  --blue: #4056F4;
+  --blue-dark: #1C3080;
+  --blue-mid: #2D42C8;
+  --blue-light: #EEF1FE;
+  --blue-xlight: #F5F7FF;
+  --grey-dark: #404040;
+  --grey-mid: #595959;
+  --grey-light: #F0F0F0;
+  --border: #E0E0E0;
+  --green: #16A34A;
+  --white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+  color: var(--grey-dark);
+  background: #FAFAFA;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ---- SECTIONS ---- */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0;
+}
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 48px;
+  width: 100%;
+}
+.container-wide {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 48px;
+  width: 100%;
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-wordmark {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--blue-dark);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  color: var(--grey-mid);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--blue); }
+.nav-cta {
+  background: var(--blue);
+  color: white !important;
+  padding: 6px 16px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+body { padding-top: 52px; }
+
+/* ---- SECTION 1: OPENING ---- */
+#opening {
+  background: var(--blue-dark);
+  color: white;
+  min-height: calc(100vh - 52px);
+}
+.opening-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.opening-headline {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  color: white;
+  margin-bottom: 28px;
+  max-width: 720px;
+}
+.opening-headline span { color: rgba(255,255,255,0.45); }
+.opening-body {
+  font-size: 18px;
+  color: rgba(255,255,255,0.75);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+.opening-scroll {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+.scroll-arrow { font-size: 16px; }
+
+/* ---- SECTION 2: VALUE CHAIN ---- */
+#chain {
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.section-headline {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--blue-dark);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.section-body {
+  font-size: 16px;
+  color: var(--grey-mid);
+  max-width: 620px;
+  margin-bottom: 52px;
+  line-height: 1.65;
+}
+
+.chain-wrap { position: relative; }
+.chain-diagram {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+.chain-stage {
+  flex: 1;
+  background: var(--grey-light);
+  border-radius: 10px 10px 0 0;
+  padding: 24px 24px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.chain-stage.active {
+  background: var(--blue-dark);
+  color: white;
+}
+.chain-stage.dim { opacity: 0.6; }
+.chain-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: #A8B4C8;
+  font-size: 22px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 50px;
+}
+.stage-num {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--grey-mid);
+  margin-bottom: 6px;
+}
+.chain-stage.active .stage-num { color: rgba(255,255,255,0.5); }
+.stage-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--grey-dark);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.chain-stage.active .stage-title { color: white; }
+.stage-desc {
+  font-size: 12px;
+  color: var(--grey-mid);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.chain-stage.active .stage-desc { color: rgba(255,255,255,0.7); }
+
+/* Tool ecosystem tags */
+.stage-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+  margin: 0 -24px 14px;
+}
+.chain-stage.active .stage-divider { background: rgba(255,255,255,0.15); }
+.stage-ecosystem-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--grey-mid);
+  margin-bottom: 8px;
+}
+.chain-stage.active .stage-ecosystem-label { color: rgba(255,255,255,0.45); }
+.stage-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding-bottom: 20px;
+}
+.stage-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.07);
+  color: var(--grey-dark);
+  font-weight: 500;
+}
+.chain-stage.active .stage-tag {
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+}
+.stage-tag.gap-tag {
+  background: transparent;
+  border: 1px dashed #C0C0C0;
+  color: var(--grey-mid);
+  font-style: italic;
+}
+.chain-stage.active .stage-tag.gap-tag {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
+}
+.entry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--blue);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-bottom: 16px;
+  align-self: flex-start;
+}
+
+/* Return arc */
+.chain-return {
+  padding: 0 8px;
+  margin: 0;
+}
+.chain-return-svg {
+  width: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* Epistemix bridge statement */
+.chain-bridge {
+  background: var(--blue-xlight);
+  border: 1px solid rgba(64,86,244,0.2);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.chain-bridge-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.chain-bridge-text {
+  font-size: 14px;
+  color: var(--blue-dark);
+  line-height: 1.6;
+}
+.chain-bridge-text strong { font-weight: 600; }
+
+/* ---- SECTION 3: CAPABILITY ---- */
+#capability {
+  background: var(--blue-dark);
+  border-bottom: none;
+}
+#capability .section-label { color: rgba(255,255,255,0.45); }
+#capability .section-headline { color: white; }
+#capability .section-body { color: rgba(255,255,255,0.65); max-width: 680px; }
+.capability-intro {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+.capability-intro-text {
+  font-size: 17px;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.65;
+  font-weight: 400;
+}
+.capability-intro-text strong { font-weight: 700; color: white; }
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.capability-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 24px;
+}
+.cap-icon {
+  font-size: 22px;
+  margin-bottom: 14px;
+  display: block;
+}
+.cap-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+.cap-body {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+}
+.cap-contrast {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  line-height: 1.5;
+}
+.capability-populations {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.pop-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+}
+.pop-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pop-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+.pop-tag.ready { background: rgba(22,163,74,0.25); color: #86EFAC; }
+.pop-tag.soon { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+
+/* ---- SECTION 4: THE PRODUCT ---- */
+#product {
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+/* ---- DESIGN PRINCIPLES ---- */
+#principles {
+  background: #F4F5F8;
+  border-bottom: 1px solid var(--border);
+}
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.principle-card {
+  background: #F4F5F8;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.principle-card:hover {
+  background: #ECEEF4;
+}
+.principle-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--blue);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.principle-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+}
+.principle-body {
+  font-size: 13px;
+  color: var(--grey-mid);
+  line-height: 1.55;
+}
+
+.product-header { margin-bottom: 48px; }
+.product-components {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.component-card {
+  background: var(--blue-xlight);
+  border: 1px solid rgba(64,86,244,0.2);
+  border-radius: 10px;
+  padding: 22px;
+}
+.comp-num {
+  width: 28px; height: 28px;
+  background: var(--blue);
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.comp-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+.comp-body { font-size: 12px; color: var(--grey-mid); line-height: 1.55; }
+.comp-source {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(64,86,244,0.15);
+  font-size: 11px;
+  color: var(--blue-mid);
+  font-weight: 500;
+  line-height: 1.45;
+  display: flex;
+  gap: 5px;
+  align-items: flex-start;
+}
+.comp-source-icon { flex-shrink: 0; }
+
+.product-outcome {
+  background: var(--blue-dark);
+  border-radius: 10px;
+  padding: 32px 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 28px;
+}
+.po-item {}
+.po-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.po-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.35;
+}
+
+/* ---- SECTION 5: DIFFERENTIATORS ---- */
+#differentiation {
+  background: #FAFAFA;
+  border-bottom: 1px solid var(--border);
+}
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+}
+.diff-table thead tr {
+  background: var(--grey-dark);
+}
+.diff-table thead th {
+  padding: 14px 22px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.7);
+}
+.diff-table thead th.highlight-col {
+  background: var(--blue);
+  color: white;
+}
+.diff-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+.diff-table tbody tr:last-child { border-bottom: none; }
+.diff-table tbody td {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--grey-dark);
+  vertical-align: top;
+}
+.diff-table tbody td.dim {
+  color: var(--grey-mid);
+}
+.diff-table tbody td.highlight-col {
+  background: var(--blue-xlight);
+  font-weight: 500;
+  color: var(--blue-dark);
+}
+.diff-table tbody td.row-label {
+  font-weight: 600;
+  color: var(--grey-dark);
+  font-size: 13px;
+}
+.diff-table tbody tr:hover td { background: #FAFAFA; }
+.diff-table tbody tr:hover td.highlight-col { background: #E8EDFE; }
+
+.key-insight {
+  margin-top: 28px;
+  background: white;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 6px;
+  padding: 20px 24px;
+  font-size: 15px;
+  color: var(--grey-dark);
+  line-height: 1.6;
+}
+.key-insight strong { font-weight: 600; color: var(--blue-dark); }
+
+/* ---- SECTION 6: CTA ---- */
+#demo {
+  background: var(--blue-dark);
+  min-height: auto;
+  padding: 100px 0;
+}
+#demo .container { text-align: center; }
+.demo-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.demo-headline {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.demo-body {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  max-width: 540px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+}
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: var(--blue-dark);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.demo-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+.demo-btn-arrow { font-size: 16px; }
+.demo-note {
+  margin-top: 18px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ---- FOOTER ---- */
+footer {
+  background: #111;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-word { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
+.footer-note { font-size: 12px; color: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-wordmark">Epistemix</div>
+  <ul class="nav-links">
+    <li><a href="#chain">The Value Chain</a></li>
+    <li><a href="#capability">What We Bring</a></li>
+    <li><a href="#principles">Design Principles</a></li>
+    <li><a href="#product">The Product</a></li>
+    <li><a href="#differentiation">Why Different</a></li>
+    <li><a href="launch-intelligence-mockup.html" class="nav-cta">See the Package</a></li>
+  </ul>
+</nav>
+
+<!-- SECTION 1: OPENING -->
+<section id="opening">
+  <div class="container">
+    <div class="opening-label">Epistemix &nbsp;·&nbsp; Strategy Packaging</div>
+    <div class="opening-headline">The organizations that<br><span>execute strategy well</span><br>see it more clearly.</div>
+    <div class="opening-body">
+      They understand which variables drive the outcome they're after, what the realistic range of futures looks like, and what it takes to keep the organization on course as conditions change. That clarity is what gets resources committed, builds alignment across the people who have to execute, and makes adaptation possible before problems compound.
+    </div>
+    <div class="opening-body" style="font-size:15px; margin-top:-20px; margin-bottom:40px; color:rgba(255,255,255,0.55);">
+      Epistemix builds a synthetic population of your actual market and runs it forward. Not a forecast, not a benchmark extrapolation — a map of possible futures: which ones are reachable, what variables separate the good ones from the bad ones, and what it takes to get there.
+    </div>
+    <div class="opening-scroll">
+      <span class="scroll-arrow">↓</span> Scroll to understand the problem
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: VALUE CHAIN -->
+<section id="chain">
+  <div class="container-wide">
+    <div class="container" style="padding:0; max-width:100%">
+      <div class="section-label">The Value Chain</div>
+      <div class="section-headline">Each stage of strategy<br>has established tools.<br>None of them connect.</div>
+      <div class="section-body">
+        Strategy consulting, data science, and execution tools are all mature categories. But they serve Stage 1 and Stage 3 independently, and the models built for one rarely have any connection to the other. Epistemix is built to run through all three — a synthetic population of the specific market in question, grounded in the actual structure of the decision, that stays live from the moment resources are committed through the full execution cycle. We start at Stage 2 because that is where the model gets built, and where a first engagement can be scoped at a scale proportionate to a single decision.
+      </div>
+    </div>
+
+    <div class="chain-wrap">
+      <div class="chain-diagram">
+
+        <div class="chain-stage dim">
+          <div class="stage-num">Stage 1</div>
+          <div class="stage-title">Strategy Creation</div>
+          <div class="stage-desc">Identifying the direction, evaluating options, making the strategic decision. Well served by established players.</div>
+          <div class="stage-divider"></div>
+          <div class="stage-ecosystem-label">Who lives here</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Strategy consultants</span>
+            <span class="stage-tag">Market research firms</span>
+            <span class="stage-tag">Data science &amp; demand modeling</span>
+            <span class="stage-tag">Scenario planning</span>
+            <span class="stage-tag">Internal strategy teams</span>
+          </div>
+        </div>
+
+        <div class="chain-arrow">→</div>
+
+        <div class="chain-stage active">
+          <div class="stage-num">Stage 2</div>
+          <div class="stage-title">Strategy Activation</div>
+          <div class="stage-desc">Building the understanding, alignment, and commitment that get a strategy moving. Resources authorized. People oriented around a clear system for what success looks like and how to measure it.</div>
+          <div class="stage-divider"></div>
+          <div class="stage-ecosystem-label">Who lives here</div>
+          <div class="stage-tags">
+            <span class="stage-tag">Launch excellence consultancies</span>
+            <span class="stage-tag">Implementation &amp; change mgmt</span>
+            <span class="stage-tag">Sales force effectiveness</span>
+            <span class="stage-tag gap-tag">Excel scenario models</span>
+            <span class="stage-tag gap-tag">PowerPoint narratives</span>
+          </div>
+          <div class="entry-badge">★ &nbsp;Epistemix entry point</div>
+        </div>
+
+        <div class="chain-arrow">→</div>
+
+        <div class="chain-stage dim">
+          <div class="stage-num">Stage 3</div>
+          <div class="stage-title">Strategy Operation</div>
+          <div class="stage-desc">Executing against the plan with ongoing visibility into whether the intended outcome is becoming more or less likely, along with the signals to adapt when conditions change.</div>
+          <div class="stage-divider"></div>
+          <div class="stage-ecosystem-label">Who lives here</div>
+          <div class="stage-tags">
+            <span class="stage-tag">BI &amp; reporting platforms</span>
+            <span class="stage-tag">Execution &amp; OKR tools</span>
+            <span class="stage-tag">Financial planning software</span>
+            <span class="stage-tag">Data science &amp; analytics</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="chain-return">
+        <svg class="chain-return-svg" viewBox="0 0 880 66" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Curved arc from Stage 3 right side → under → Stage 1 left side -->
+          <path d="M 868,6 C 868,58 12,58 12,6"
+                fill="none" stroke="#A8B4C8" stroke-width="2"/>
+          <!-- Arrowhead at left end (pointing up-left back toward Stage 1) -->
+          <polygon points="6,6 19,2 18,12" fill="#A8B4C8"/>
+          <!-- Label centered on the arc -->
+          <text x="440" y="56" text-anchor="middle"
+                font-size="12" fill="#8C96A8"
+                font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                font-weight="400" letter-spacing="0.2">
+            Operating visibility informs the next strategic cycle
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="chain-bridge">
+      <div class="chain-bridge-icon">◈</div>
+      <div class="chain-bridge-text">
+        <strong>Where Epistemix fits:</strong> Across all three stages — but we enter at Stage 2. This stage has real players: launch excellence consultancies, implementation firms, change management specialists. What they bring is process, frameworks, and people. What Epistemix brings is a model. A synthetic population that encodes the strategic logic — the specific market, the specific variables, the specific range of conditions — so it can be tracked as execution unfolds and carried forward into the next planning cycle. The difference is not whether the stage is served. It is whether the strategy is encoded in a form that lasts.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: CAPABILITY -->
+<section id="capability">
+  <div class="container">
+    <div class="section-label">What We Bring</div>
+    <div class="section-headline">A capability that doesn't<br>exist anywhere else<br>in this space.</div>
+    <div class="section-body">
+      Strategy consultants bring pattern-matching and external credibility. Data platforms bring analytical tools. Neither produces what Epistemix produces: a working model of how a specific population responds to a specific strategic decision, across a range of conditions, before any resources are committed.
+    </div>
+
+    <div class="capability-intro">
+      <div class="capability-intro-text">
+        Epistemix has built <strong>synthetic populations</strong>: computational representations of real human populations with the demographic, behavioral, and clinical variation that determines how decisions actually play out. These are not data warehouses. They are not historical analyses. They are dynamic models that can be run forward, simulating what happens when an organization makes a decision, under the range of conditions that matter, before committing to it.
+      </div>
+    </div>
+
+    <div class="capability-grid">
+      <div class="capability-card">
+        <span class="cap-icon">◎</span>
+        <div class="cap-title">Model the future, not just the past</div>
+        <div class="cap-body">Synthetic populations model behavior from the underlying structure of the population, not from what happened historically. That means genuinely novel decisions, in genuinely novel contexts, can be modeled. You don't need a historical precedent for the specific bet you're making.</div>
+        <div class="cap-contrast">Consultants pattern-match to analogous situations. Data science fits models to past data. Neither works when the decision is genuinely new.</div>
+      </div>
+      <div class="capability-card">
+        <span class="cap-icon">◈</span>
+        <div class="cap-title">A range of futures, not a single forecast</div>
+        <div class="cap-body">The output isn't a point estimate. It's a distribution of outcomes across the full variation of a real population, showing which variables determine which future you end up in, which ones you can influence, and which ones you can only track. Mapping possible futures rather than predicting one.</div>
+        <div class="cap-contrast">Financial models produce a single projection. Sensitivity analysis produces a range of financial outcomes. Neither models how the population actually behaves across conditions.</div>
+      </div>
+      <div class="capability-card">
+        <span class="cap-icon">⬡</span>
+        <div class="cap-title">A model you can interrogate, not a document you can read</div>
+        <div class="cap-body">Because the population model is computational, it can be adjusted and re-run. Variables can be changed. Scenarios can be explored. Questions that come up in the room can be answered from the model, not from verbal hedging or a follow-up analysis scheduled for next week.</div>
+        <div class="cap-contrast">A consultant deck is a document. When the question changes, the deck can't answer it. The model can.</div>
+      </div>
+    </div>
+
+    <div class="capability-populations">
+      <div class="pop-label">Populations available</div>
+      <div class="pop-tags">
+        <span class="pop-tag ready">US Healthcare &amp; Pharma</span>
+        <span class="pop-tag ready">US Insurance &amp; PBM</span>
+        <span class="pop-tag soon">UK &nbsp;·&nbsp; End of summer 2026</span>
+        <span class="pop-tag soon">Canada &nbsp;·&nbsp; Q1 2027</span>
+        <span class="pop-tag soon">Singapore &nbsp;·&nbsp; Q2 2027</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: DESIGN PRINCIPLES -->
+<section id="principles">
+  <div class="container">
+    <div class="section-label">What the Product Has to Do</div>
+    <div class="section-headline">Six constraints.<br>Some of them pull<br>against each other.</div>
+    <div class="section-body">
+      The product has to make the modeling credible without making the buyer study it. It has to feel like a finished product without losing the specificity that makes it irreplaceable. These constraints shaped every design decision in what follows.
+    </div>
+    <div class="principles-grid">
+
+      <div class="principle-card">
+        <div class="principle-num">1</div>
+        <div class="principle-title">Model credibility is visible, not explained</div>
+        <div class="principle-body">Evidence of rigorous modeling is present throughout the product. A data scientist reviewing it should not be able to dismiss it as dressed-up Excel. A business buyer should not need to understand the methodology to trust the output.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">2</div>
+        <div class="principle-title">Population-specific, not benchmark-based</div>
+        <div class="principle-body">Every output is derived from this client's specific market and population — not industry averages, not analogous historical situations. This specificity is what makes internal replication practically impossible and what separates the product from a consultant's templated framework.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">3</div>
+        <div class="principle-title">The outcome owner can use it in the room</div>
+        <div class="principle-body">The product is designed for the person who owns the result — not a report they hand to an analytics team for interpretation. The scenario explorer, the counterfactuals, the variable sensitivity views are tools for an executive to pick up in a board meeting or CFO conversation.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">4</div>
+        <div class="principle-title">It answers the adversarial question</div>
+        <div class="principle-body">Hard questions from skeptics — "what if adoption is 20% lower than projected?" "what if the competitive response is faster than expected?" — are answered from the model, in the room, in real time. Not scheduled as a follow-up analysis. This is the clearest point of separation from both consulting engagements and internal analytics.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">5</div>
+        <div class="principle-title">Consistent structure, bespoke content</div>
+        <div class="principle-body">The framework is the same across every engagement — same sections, same sequence, same logic. The outputs are specific to this client's population and decision. Consistency makes it feel like a product. Specificity makes it feel like it couldn't have been built without Epistemix.</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-num">6</div>
+        <div class="principle-title">It stays live after the engagement ends</div>
+        <div class="principle-body">The product is not a presentation. It is an artifact the organization keeps and continues to use. Once execution begins, the synthetic population becomes a reference point — tracking whether the strategy is playing out as modeled and flagging divergence before revenue numbers confirm it.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: THE PRODUCT -->
+<section id="product">
+  <div class="container">
+    <div class="product-header">
+      <div class="section-label">The Launch Intelligence</div>
+      <div class="section-headline">Six components. Each one<br>built against the constraints above.</div>
+      <div class="section-body">
+        The source lines on each card name which capability it draws from and why that changes what the component can do.
+      </div>
+    </div>
+
+    <div class="product-components">
+      <div class="component-card">
+        <div class="comp-num">1</div>
+        <div class="comp-title">Strategic Objective</div>
+        <div class="comp-body">The intended outcome, the financial case, and the trajectory you're committing to. The anchor for everything else, clear enough that any stakeholder can see what success looks like and why it matters.</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">2</div>
+        <div class="comp-title">Variable Map</div>
+        <div class="comp-body">The forces acting on the outcome: what you control and what you don't. Relationships between variables are derived from the synthetic population model, not assumed from experience.</div>
+        <div class="comp-source"><span class="comp-source-icon">◎</span> Variable interactions reflect how this population actually behaves</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">3</div>
+        <div class="comp-title">Strategic Plan</div>
+        <div class="comp-body">The interventions you're committing to, mapped to the variables each one moves. Expected outcomes are quantified by the population model, grounded rather than inferred from frameworks.</div>
+        <div class="comp-source"><span class="comp-source-icon">◎</span> Outcomes are modeled, not estimated from analogous situations</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">4</div>
+        <div class="comp-title">Scenario Explorer</div>
+        <div class="comp-body">Adjust a variable and the population model re-runs, showing financial impact across the range of conditions that matter. Questions that come up in the room get answered from the model, in the room.</div>
+        <div class="comp-source"><span class="comp-source-icon">◈ ⬡</span> Range-of-outcomes model, interactive in real time</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">5</div>
+        <div class="comp-title">Counterfactuals</div>
+        <div class="comp-body">What happens when the variables you don't control move against you. Each scenario is a model run under different conditions, with financial impact modeled rather than estimated, and a response playbook prepared in advance.</div>
+        <div class="comp-source"><span class="comp-source-icon">◈</span> Each scenario is a simulation, not a manual estimate</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">6</div>
+        <div class="comp-title">Control System</div>
+        <div class="comp-body">Leading indicators derived from the population model: the variables that actually drive the outcome, with expected ranges built in. Months of early warning before revenue numbers confirm what's working.</div>
+        <div class="comp-source"><span class="comp-source-icon">◎ ◈</span> Indicators and expected ranges derived from the model</div>
+      </div>
+    </div>
+
+    <div class="product-outcome">
+      <div class="po-item">
+        <div class="po-label">The deliverable</div>
+        <div class="po-value">An interactive artifact your organization keeps and uses, not a consulting engagement you can't take into the room</div>
+      </div>
+      <div class="po-item">
+        <div class="po-label">Time to delivery</div>
+        <div class="po-value">4 to 6 weeks to a board-ready launch intelligence</div>
+      </div>
+      <div class="po-item">
+        <div class="po-label">What happens after</div>
+        <div class="po-value">The model stays live. The same framework tracks execution and informs the next strategic cycle.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: DIFFERENTIATORS -->
+<section id="differentiation">
+  <div class="container-wide">
+    <div class="section-label">Why This Is Different</div>
+    <div class="section-headline">The only approach<br>that runs forward.</div>
+    <div class="section-body">
+      Consultants work from benchmarks and analogous situations. Internal analytics works from your historical data. Epistemix builds a synthetic population of your actual market and runs it forward, under the range of conditions that matter, before resources are committed.
+    </div>
+
+    <table class="diff-table">
+      <thead>
+        <tr>
+          <th style="width:130px">Dimension</th>
+          <th>Strategy Consultancy</th>
+          <th>Internal Data &amp; Analytics</th>
+          <th class="highlight-col">Epistemix Launch Intelligence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">What you get</td>
+          <td class="dim">Their recommendation, based on pattern-matching across clients</td>
+          <td class="dim">Models fit to your historical data and past patterns</td>
+          <td class="highlight-col">A model of your strategy, built from your direction and population</td>
+        </tr>
+        <tr>
+          <td class="row-label">Evidence base</td>
+          <td class="dim">Benchmarks from analogous situations</td>
+          <td class="dim">Your historical data, limited when the decision has no precedent</td>
+          <td class="highlight-col">Synthetic population modeling: no historical precedent required</td>
+        </tr>
+        <tr>
+          <td class="row-label">The deliverable</td>
+          <td class="dim">A static deck, designed for one presentation moment</td>
+          <td class="dim">Dashboards and reports, backward-looking</td>
+          <td class="highlight-col">An interactive artifact: variables adjust, model re-runs, in the room</td>
+        </tr>
+        <tr>
+          <td class="row-label">Ownership</td>
+          <td class="dim">The consultant's. Access ends when the engagement does.</td>
+          <td class="dim">Your team's tools, built for analysis rather than activation</td>
+          <td class="highlight-col">Yours. The model stays live through execution.</td>
+        </tr>
+        <tr>
+          <td class="row-label">Ongoing value</td>
+          <td class="dim">Episodic: a new engagement each time conditions change</td>
+          <td class="dim">Continuous but backward-looking</td>
+          <td class="highlight-col">Continuous and forward-looking: leading indicators, not lagging results</td>
+        </tr>
+        <tr>
+          <td class="row-label">Where it starts</td>
+          <td class="dim">From uncertainty; you need an outside view</td>
+          <td class="dim">From historical data, limited for genuinely novel decisions</td>
+          <td class="highlight-col">From a direction: we build understanding, commitment, and controls behind it</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="key-insight">
+      <strong>The thing neither alternative can do:</strong> when someone asks "what if adoption is 20% lower than projected?" you answer from the model, in the room. Consultants schedule a follow-up. Your data team runs a new analysis. Neither is the same as answering in real time.
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: CTA -->
+<section id="demo">
+  <div class="container">
+    <div class="demo-label">See It In Action</div>
+    <div class="demo-headline">A launch intelligence<br>built for a real launch.</div>
+    <div class="demo-body">
+      NEXIVIR: a drug launch in chronic kidney disease. The strategic objective is accelerating time to peak sales. Every section of the package is live and interrogable.
+    </div>
+    <a href="launch-intelligence-mockup.html" class="demo-btn">
+      Open the Launch Intelligence <span class="demo-btn-arrow">→</span>
+    </a>
+    <div class="demo-note">Interactive mockup &nbsp;·&nbsp; Illustrative data &nbsp;·&nbsp; Epistemix confidential</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-word">Epistemix</div>
+  <div class="footer-note">Confidential &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; For discussion only</div>
+</footer>
+
+</body>
+</html>
