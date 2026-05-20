@@ -15,194 +15,134 @@
       padding: 48px 24px 80px;
     }
 
-    .container { max-width: 880px; margin: 0 auto; }
+    .container { max-width: 900px; margin: 0 auto; }
 
-    /* ── Header ── */
     .wordmark {
       font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
       text-transform: uppercase; color: #4056F4; margin-bottom: 28px;
     }
 
     h1 { font-size: 26px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
-
     .updated { font-size: 12px; color: #aaaabc; margin-bottom: 28px; }
 
     /* ── Intro ── */
     .intro-block {
       background: #fff;
       border: 1px solid #e0e0ec;
-      border-left: 3px solid #4056F4;
+      border-left: 4px solid #4056F4;
       border-radius: 8px;
       padding: 22px 26px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-
-    .intro-block p {
-      font-size: 13.5px; line-height: 1.8; color: #3a3a55; margin-bottom: 10px;
-    }
-
+    .intro-block p { font-size: 13.5px; line-height: 1.8; color: #3a3a55; margin-bottom: 10px; }
     .intro-block p:last-child { margin-bottom: 0; }
     .intro-block strong { font-weight: 600; color: #1a1a2e; }
 
-    /* ── Overall summary ── */
+    /* ── Summary card ── */
     .summary-card {
       background: #fff;
       border: 1px solid #e0e0ec;
       border-radius: 10px;
       padding: 22px 26px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-
     .summary-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 8px;
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 10px; flex-wrap: wrap; gap: 8px;
     }
-
     .summary-label {
       font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
       text-transform: uppercase; color: #4056F4;
     }
-
-    .summary-count {
-      font-size: 22px; font-weight: 700; color: #1a1a2e;
-    }
-
+    .summary-count { font-size: 22px; font-weight: 700; color: #1a1a2e; }
     .summary-count span { font-size: 13px; font-weight: 400; color: #888899; margin-left: 4px; }
-
     .overall-bar-track {
       height: 8px; background: #ebebf5; border-radius: 4px; overflow: hidden; margin-bottom: 20px;
     }
-
     .overall-bar-fill {
-      height: 100%; background: linear-gradient(90deg, #4056F4, #6a7ff8);
-      border-radius: 4px;
+      height: 100%; background: linear-gradient(90deg, #4056F4, #6a7ff8); border-radius: 4px;
     }
 
-    /* Layer mini-chips in summary */
-    .layer-chips {
+    /* Domain chips grid — 4 columns */
+    .domain-chips {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
     }
+    @media (max-width: 700px) { .domain-chips { grid-template-columns: repeat(2, 1fr); } }
 
-    @media (max-width: 580px) {
-      .layer-chips { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .layer-chip {
+    .domain-chip {
       background: #f8f8fc;
       border: 1px solid #e8e8f0;
       border-radius: 7px;
       padding: 10px 12px;
     }
+    .dc-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+    .dc-name { font-size: 10.5px; font-weight: 600; color: #444460; }
+    .dc-count { font-size: 10.5px; color: #aaaabc; }
+    .dc-bar-track { height: 4px; background: #e0e0ec; border-radius: 2px; overflow: hidden; }
+    .dc-bar-fill { height: 100%; border-radius: 2px; }
 
-    .lc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 6px;
+    .summary-hint {
+      font-size: 11px; color: #aaaabc; margin-top: 14px;
+      display: flex; align-items: center; gap: 6px;
     }
+    .legend-dot { display: inline-flex; gap: 10px; }
+    .ld { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #888899; }
+    .ld-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-    .lc-name {
-      font-size: 11px; font-weight: 600; color: #444460;
-    }
-
-    .lc-count {
-      font-size: 11px; color: #aaaabc;
-    }
-
-    .lc-bar-track {
-      height: 4px; background: #e0e0ec; border-radius: 2px; overflow: hidden;
-    }
-
-    .lc-bar-fill {
-      height: 100%; border-radius: 2px;
-    }
-
-    /* ── Priority list ── */
+    /* ── Priority card ── */
     .priority-card {
-      background: #fff;
-      border: 1px solid #e0e0ec;
-      border-radius: 10px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
+      background: #fff; border: 1px solid #e0e0ec; border-radius: 10px;
+      padding: 20px 24px; margin-bottom: 20px;
     }
-
     .section-label {
       font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
       text-transform: uppercase; color: #4056F4; margin-bottom: 14px;
     }
-
-    .priority-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 24px;
-    }
-
-    @media (max-width: 580px) {
-      .priority-grid { grid-template-columns: 1fr; }
-    }
-
+    .priority-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
+    @media (max-width: 600px) { .priority-grid { grid-template-columns: 1fr; } }
     .priority-item {
       display: flex; gap: 10px; align-items: baseline;
-      padding: 7px 0;
-      border-bottom: 1px solid #f4f4f8;
+      padding: 7px 0; border-bottom: 1px solid #f4f4f8;
       font-size: 12.5px; color: #1a1a2e; line-height: 1.4;
     }
-
     .priority-item:last-child { border-bottom: none; }
+    .p-num { font-size: 11px; font-weight: 700; color: #4056F4; flex-shrink: 0; width: 14px; }
 
-    .p-num {
-      font-size: 11px; font-weight: 700; color: #4056F4; flex-shrink: 0; width: 14px;
+    /* ── Domain cards ── */
+    .domain {
+      background: #fff; border: 1px solid #e0e0ec;
+      border-radius: 10px; margin-bottom: 14px; overflow: hidden;
     }
 
-    /* ── Layer cards ── */
-    .layer {
-      background: #fff;
-      border: 1px solid #e0e0ec;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      overflow: hidden;
+    .domain-header {
+      padding: 14px 22px; border-bottom: 1px solid #f0f0f6;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 14px; align-items: center;
     }
 
-    .layer-header {
-      padding: 14px 22px;
-      border-bottom: 1px solid #f0f0f6;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 12px;
-      align-items: center;
+    .domain-badge {
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #4056F4; white-space: nowrap;
     }
 
-    .layer-num {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: #4056F4; flex-shrink: 0;
-    }
+    .domain-title-group {}
+    .domain-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+    .domain-sub { font-size: 11.5px; color: #aaaabc; margin-top: 2px; }
 
-    .layer-title-group {}
+    .domain-progress-group { text-align: right; flex-shrink: 0; min-width: 110px; }
+    .domain-progress-label { font-size: 11px; color: #888899; margin-bottom: 5px; }
+    .domain-bar-track { height: 5px; background: #ebebf5; border-radius: 3px; overflow: hidden; }
+    .domain-bar-fill { height: 100%; border-radius: 3px; }
 
-    .layer-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
-
-    .layer-sub { font-size: 11.5px; color: #aaaabc; margin-top: 1px; }
-
-    .layer-progress-group {
-      text-align: right; flex-shrink: 0; min-width: 120px;
-    }
-
-    .layer-progress-label {
-      font-size: 11px; color: #888899; margin-bottom: 5px;
-    }
-
-    .layer-bar-track {
-      height: 5px; background: #ebebf5; border-radius: 3px; overflow: hidden;
-    }
-
-    .layer-bar-fill {
-      height: 100%; border-radius: 3px;
+    /* Sub-section dividers within a domain */
+    .subsection-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.10em;
+      text-transform: uppercase; color: #888899;
+      padding: 10px 22px 6px;
+      border-bottom: 1px solid #f4f4f8;
+      background: #fafafa;
     }
 
     /* ── Item rows ── */
@@ -212,127 +152,59 @@
     .item-header {
       display: grid;
       grid-template-columns: 10px 1fr auto;
-      gap: 14px;
-      align-items: center;
+      gap: 14px; align-items: center;
       padding: 12px 22px;
       cursor: pointer;
       transition: background 0.12s;
     }
-
     .item-header:hover { background: #f9f9fd; }
     .item-header.open { background: #f5f5fb; }
 
-    .status-dot {
-      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-    }
-
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .dot-done    { background: #22c55e; }
     .dot-partial { background: #f59e0b; }
     .dot-todo    { background: #d0d0e0; }
 
     .item-center {}
-
     .item-name {
       font-size: 13px; font-weight: 500; color: #1a1a2e; margin-bottom: 5px;
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
     }
-
     .item-name a.doc-link {
       color: #4056F4; text-decoration: none; font-size: 11px;
-      background: #eef0fe; border-radius: 4px; padding: 2px 6px;
+      background: #eef0fe; border-radius: 4px; padding: 2px 7px;
       font-weight: 600; white-space: nowrap;
     }
-
     .item-name a.doc-link:hover { background: #d8dcfc; }
 
-    /* Progress bar */
-    .progress-row {
-      display: flex; align-items: center; gap: 10px;
-    }
-
-    .progress-track {
-      flex: 1; height: 6px; background: #ebebf5; border-radius: 3px; overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%; border-radius: 3px; transition: width 0.3s;
-    }
-
+    .progress-row { display: flex; align-items: center; gap: 10px; }
+    .progress-track { flex: 1; height: 6px; background: #ebebf5; border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
     .fill-done    { background: #22c55e; }
     .fill-partial { background: #f59e0b; }
     .fill-todo    { background: #e0e0ec; }
+    .progress-label { font-size: 11px; color: #aaaabc; white-space: nowrap; flex-shrink: 0; min-width: 52px; text-align: right; }
 
-    .progress-label {
-      font-size: 11px; color: #aaaabc; white-space: nowrap; flex-shrink: 0; min-width: 40px; text-align: right;
-    }
-
-    /* Toggle */
     .toggle-icon {
-      font-size: 10px; color: #c0c0d0; transition: transform 0.18s;
-      flex-shrink: 0; padding: 4px;
+      font-size: 10px; color: #c0c0d0; transition: transform 0.18s; flex-shrink: 0; padding: 4px;
     }
-
     .item-header.open .toggle-icon { transform: rotate(90deg); color: #4056F4; }
 
-    /* Detail panel */
     .item-detail {
       display: none;
-      padding: 12px 22px 16px 46px;
-      background: #f8f8fc;
-      border-top: 1px solid #eeeeF6;
+      padding: 10px 22px 14px 46px;
+      font-size: 12.5px; line-height: 1.7; color: #555570;
+      border-top: 1px solid #f4f4f8;
+      background: #fafafa;
     }
-
     .item-detail.open { display: block; }
 
-    .item-note {
-      font-size: 12px; color: #777788; line-height: 1.65;
-      margin-bottom: 10px;
+    .deferred-note {
+      font-size: 12px; color: #aaaabc; font-style: italic;
+      padding: 10px 22px; border-top: 1px solid #f4f4f8;
     }
 
-    .subtasks { list-style: none; }
-
-    .subtasks li {
-      font-size: 12px; line-height: 1.5;
-      padding: 3.5px 0;
-      display: flex; align-items: baseline; gap: 8px;
-    }
-
-    .st-icon { flex-shrink: 0; font-size: 11px; width: 14px; text-align: center; }
-
-    .st-done    { color: #555568; }
-    .st-todo    { color: #999aaa; }
-    .st-blocked { color: #b45309; }
-
-    .st-done    .st-icon { color: #22c55e; }
-    .st-todo    .st-icon { color: #c8c8d8; }
-    .st-blocked .st-icon { color: #f59e0b; }
-
-    /* Sub-task links */
-    .subtasks li a {
-      color: #4056F4; text-decoration: none; font-size: 11px;
-      background: #eef0fe; border-radius: 3px; padding: 1px 5px;
-      margin-left: 4px; font-weight: 600;
-    }
-
-    .subtasks li a:hover { background: #d8dcfc; }
-
-    .footer { margin-top: 32px; font-size: 12px; color: #aaaabc; text-align: center; }
-
-    /* legend */
-    .legend {
-      display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
-    }
-
-    .legend-item {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; color: #666680;
-    }
-
-    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-    .legend-hint {
-      margin-left: auto; font-size: 11px; color: #aaaabc; font-style: italic;
-    }
+    .footer { margin-top: 48px; font-size: 11px; color: #aaaabc; text-align: center; }
   </style>
 </head>
 <body>
@@ -340,904 +212,798 @@
 
   <div class="wordmark">Epistemix</div>
   <h1>Selling Capability Dashboard</h1>
-  <p class="updated">Last updated: May 19, 2026 &nbsp;·&nbsp; Target: $10.1M CARR by April 2027</p>
+  <p class="updated">Updated May 19, 2026 &nbsp;·&nbsp; 8 domains &nbsp;·&nbsp; $10.1M CARR target by April 2027</p>
 
   <!-- Intro -->
   <div class="intro-block">
-    <p>Getting to <strong>$10.1M in committed recurring revenue by April 2027</strong> requires more than pipeline — it requires a machine any seller can run. Right now, too much of the commercial motion lives in people's heads: how to frame the problem, how to price, what to show, how to handle the hard questions. That works with two sellers. It breaks the moment you scale.</p>
-    <p>This dashboard tracks the six capability layers — tooling, content, and process — that need to exist in writing and in tools before the motion is repeatable and teachable. <strong>Hiring is tracked separately.</strong> Foundation first: gaps in early layers create rework in later ones.</p>
+    <p>Reaching <strong>$10.1M CARR</strong> requires a commercial machine with eight distinct capabilities working together. This dashboard tracks what's built, what's partially built, and what's still missing across the full stack — from the foundational strategy decisions to the infrastructure that makes it repeatable.</p>
+    <p>This is not a project list. It is a picture of selling capability. Each gap is a ceiling on how far the team can scale before hitting it. The priority order below reflects which gaps constrain revenue soonest.</p>
   </div>
 
-  <!-- Summary card -->
+  <!-- Summary -->
   <div class="summary-card">
     <div class="summary-top">
-      <span class="summary-label">Overall build progress</span>
-      <div style="font-size:12px; color:#888899;">Click any row below to see components &nbsp;▸</div>
-    </div>
-    <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:8px;">
-      <span class="summary-count">55 of 113 <span>tasks complete &nbsp;·&nbsp; 49%</span></span>
+      <div class="summary-label">Overall progress</div>
+      <div class="summary-count">10 of 48 <span>capabilities complete &nbsp;·&nbsp; 21%</span></div>
     </div>
     <div class="overall-bar-track">
-      <div class="overall-bar-fill" style="width:49%"></div>
+      <div class="overall-bar-fill" style="width:21%"></div>
     </div>
-
-    <div class="layer-chips">
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L1 — Foundation</span>
-          <span class="lc-count">14 / 22</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:64%"></div>
-        </div>
+    <div class="domain-chips">
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Strategy</span><span class="dc-count">2/5</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-partial" style="width:40%"></div></div>
       </div>
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L2 — Messaging</span>
-          <span class="lc-count">3 / 14</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:21%"></div>
-        </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Market Presence</span><span class="dc-count">0/5</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-todo" style="width:0%"></div></div>
       </div>
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L3 — Stories &amp; Demos</span>
-          <span class="lc-count">17 / 26</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:65%"></div>
-        </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Content &amp; Enablement</span><span class="dc-count">4/11</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-partial" style="width:36%"></div></div>
       </div>
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L4 — Collateral</span>
-          <span class="lc-count">8 / 13</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:62%"></div>
-        </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Pipeline Creation</span><span class="dc-count">0/5</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-todo" style="width:0%"></div></div>
       </div>
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L5 — Sales Process</span>
-          <span class="lc-count">10 / 24</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:42%"></div>
-        </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Sales Execution</span><span class="dc-count">1/5</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-partial" style="width:20%"></div></div>
       </div>
-      <div class="layer-chip">
-        <div class="lc-header">
-          <span class="lc-name">L6 — Partners</span>
-          <span class="lc-count">3 / 14</span>
-        </div>
-        <div class="lc-bar-track">
-          <div class="lc-bar-fill fill-partial" style="width:21%"></div>
-        </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Revenue Ops</span><span class="dc-count">2/7</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-partial" style="width:29%"></div></div>
       </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Partner &amp; Channel</span><span class="dc-count">1/6</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-partial" style="width:17%"></div></div>
+      </div>
+      <div class="domain-chip">
+        <div class="dc-header"><span class="dc-name">Customer Success</span><span class="dc-count">0/4</span></div>
+        <div class="dc-bar-track"><div class="dc-bar-fill fill-todo" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="summary-hint">
+      <div class="legend-dot">
+        <span class="ld"><span class="ld-dot" style="background:#22c55e"></span>Done</span>
+        <span class="ld"><span class="ld-dot" style="background:#f59e0b"></span>Partial</span>
+        <span class="ld"><span class="ld-dot" style="background:#d0d0e0"></span>Not started</span>
+      </div>
+      &nbsp;·&nbsp; Blue chips link to the work product &nbsp;·&nbsp; Click any row to expand
     </div>
   </div>
 
   <!-- Priority list -->
   <div class="priority-card">
-    <div class="section-label">What to build next — by revenue impact</div>
+    <div class="section-label">Build next — highest revenue impact in 90 days</div>
     <div class="priority-grid">
-      <div class="priority-item"><span class="p-num">1</span><span>Consumption benchmarks from Todd — makes pricing usable in a deal conversation</span></div>
-      <div class="priority-item"><span class="p-num">2</span><span>Sales guardrails finalized — unblocks confident deal qualification</span></div>
-      <div class="priority-item"><span class="p-num">3</span><span>Working demos (Tim) — stop-loss first; health plan blocked until Jun-Jul</span></div>
-      <div class="priority-item"><span class="p-num">4</span><span>Generic pharma deck — Tim and Sasha need this before selling at scale</span></div>
-      <div class="priority-item"><span class="p-num">5</span><span>Standard email sequences — pharma and PBM first</span></div>
-      <div class="priority-item"><span class="p-num">6</span><span>HubSpot relationship pipeline — warm contacts falling through the cracks</span></div>
-      <div class="priority-item"><span class="p-num">7</span><span>Sales plays documented — turns selling motion into something teachable</span></div>
-      <div class="priority-item"><span class="p-num">8</span><span>Sales Playbook Module 2 complete — reference doc Tim and next AE need</span></div>
+      <div class="priority-item"><span class="p-num">1</span>Consumption benchmarks from Todd — unblocks pricing in deals</div>
+      <div class="priority-item"><span class="p-num">2</span>Sales guardrails finalized — unblocks confident deal qualification</div>
+      <div class="priority-item"><span class="p-num">3</span>Working demos (Tim) — stop-loss first; health plan depends on Disease Enrichments v1</div>
+      <div class="priority-item"><span class="p-num">4</span>Vertical messaging — pharma commercial done; health plan and employer still needed</div>
+      <div class="priority-item"><span class="p-num">5</span>Email sequences — pharma and PBM required before outbound at scale</div>
+      <div class="priority-item"><span class="p-num">6</span>HubSpot relationship pipeline — warm intros falling through the cracks</div>
+      <div class="priority-item"><span class="p-num">7</span>Sales plays documented — turns institutional knowledge into something teachable</div>
+      <div class="priority-item"><span class="p-num">8</span>Comp and quota structure — needed before next AE hire</div>
     </div>
   </div>
 
-  <!-- Legend -->
-  <div class="legend">
-    <div class="legend-item"><span class="legend-dot dot-done"></span> Done</div>
-    <div class="legend-item"><span class="legend-dot dot-partial"></span> Partial</div>
-    <div class="legend-item"><span class="legend-dot dot-todo"></span> Not started</div>
-    <span class="legend-hint">Blue chips link to the work product</span>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════
-       LAYER 1 — Commercial Foundation
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 1</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Commercial Foundation</div>
-        <div class="layer-sub">The spine — everything else derives from this</div>
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 1 — Strategy and Positioning
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 1</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Strategy and Positioning</div>
+        <div class="domain-sub">The foundational decisions everything else is built on</div>
       </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">14 of 22 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:64%"></div>
-        </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">2 of 5 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-partial" style="width:40%"></div></div>
       </div>
     </div>
 
-    <!-- Strategic narrative -->
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-done"></div>
         <div class="item-center">
-          <div class="item-name">
-            Strategic narrative
-            <a class="doc-link" href="https://docs.google.com/document/d/1ZTjJzwAX0Lu5vdiue7Imh0L5Y3UPhPbKmfi1ECQfMUU/edit" target="_blank" onclick="event.stopPropagation()">Google Doc ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">4 of 4</span>
-          </div>
+          <div class="item-name">Strategic narrative <a class="doc-link" href="https://docs.google.com/document/d/1ZTjJzwAX0Lu5vdiue7Imh0L5Y3UPhPbKmmi1ECQfMUU/edit" target="_blank" onclick="event.stopPropagation()">Google Doc ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">V2 complete. Shared with John and Andrew. Positive feedback received from Andrew and Campbell.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> V1 foundation document written</li>
-          <li class="st-done"><span class="st-icon">✓</span> V2 narrative refined and edited</li>
-          <li class="st-done"><span class="st-icon">✓</span> Shared with John for alignment</li>
-          <li class="st-done"><span class="st-icon">✓</span> External feedback received (Andrew, Campbell)</li>
-        </ul>
-      </div>
+      <div class="item-detail">V2 complete. Shared with John and Andrew — positive feedback. Combined format: opening narrative (outward-facing) followed by six foundation sections. This is the spine for all messaging, decks, and positioning work.</div>
     </div>
 
-    <!-- ICP -->
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-done"></div>
         <div class="item-center">
-          <div class="item-name">
-            ICP definition
-            <a class="doc-link" href="https://www.notion.so/epistemix/3115dfbc1f3681f49af5fde9cd21f217" target="_blank" onclick="event.stopPropagation()">Notion ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">3 of 3</span>
-          </div>
+          <div class="item-name">ICP and segmentation <a class="doc-link" href="https://www.notion.so/epistemix/Sales-Home-3125dfbc1f36817b8d61fd2cb6c7611b" target="_blank" onclick="event.stopPropagation()">Notion ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Three primary segments defined (Pharma/Life Sciences, Payer/Insurer, PBM)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Buyer roles and entry criteria per segment</li>
-          <li class="st-done"><span class="st-icon">✓</span> Published to Notion Sales Playbook</li>
-        </ul>
-      </div>
+      <div class="item-detail">Three segments defined (pharma, payer/PBM, health system/employer) with buyer roles at each. Lives in Sales Playbook Module 1. Enough to sell from.</div>
     </div>
 
-    <!-- Three-stage framework -->
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">Three-stage commercial framework</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">3 of 3</span>
-          </div>
+          <div class="item-name">Competitive positioning</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:50%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Stage 1 / 2A / 2 / 3 defined and distinguished. Maps the commercial selling motion to the product roadmap timeline.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Stage 1 / 2A / 2 / 3 defined and distinguished</li>
-          <li class="st-done"><span class="st-icon">✓</span> Each stage mapped to pricing model</li>
-          <li class="st-done"><span class="st-icon">✓</span> Each stage mapped to product roadmap timeline</li>
-        </ul>
-      </div>
+      <div class="item-detail">3Cs competitive brief written. ABM vs. Alternatives technical deck built and with John for review. Missing: structured battlecards by named competitor (consultancies, data platforms, point solutions). Needed as deals get more competitive.</div>
     </div>
 
-    <!-- Pricing -->
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Pricing architecture</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:40%"></div></div>
-            <span class="progress-label">2 of 5</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:40%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Model and rationale defined. Consumption benchmarks from Todd still needed before the credit bundle can be sized and the model used in a live deal conversation.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Model structure defined (enterprise license + credit bundle + overage + data add-ons)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Competitive benchmarks researched (Snowflake, Arcadia, consulting)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Consumption benchmarks from Todd (credit bundle sizing)</li>
-          <li class="st-todo"><span class="st-icon">○</span> All six open pricing decisions resolved</li>
-          <li class="st-todo"><span class="st-icon">○</span> External-facing pricing language (SOW and deal conversation reference)</li>
-        </ul>
-      </div>
+      <div class="item-detail">Consumption model and credit bundle structure defined. The logic is sound. Blocked on Todd's consumption unit benchmarks — without those, we can't size credit bundles confidently in a deal conversation. This is Priority 1.</div>
     </div>
 
-    <!-- Sales guardrails -->
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">Sales guardrails (A/B/C framework)</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div>
-            <span class="progress-label">1 of 3</span>
-          </div>
+          <div class="item-name">Sales guardrails and qualification criteria</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:35%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Every out-of-scope sale delays Polaris V1. The team needs a shared written answer to "is this deal in scope?" before Tim and Sasha are selling independently.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> A/B/C spectrum framework drafted</li>
-          <li class="st-todo"><span class="st-icon">○</span> Todd roadmap input incorporated</li>
-          <li class="st-todo"><span class="st-icon">○</span> John alignment and sign-off</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Roadmap translation -->
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
-        <div class="item-center">
-          <div class="item-name">Roadmap-to-commercial translation</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:25%"></div></div>
-            <span class="progress-label">1 of 4</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">Pittsburgh session May 21-22 with Todd is the forcing function. Output: demo priorities mapped to roadmap deliverability, shared language for Tim and Sasha.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Pittsburgh agenda built</li>
-          <li class="st-todo"><span class="st-icon">○</span> Pittsburgh session completed (May 21-22)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Demo priorities mapped to roadmap deliverability timeline</li>
-          <li class="st-todo"><span class="st-icon">○</span> Shared language document published for Tim and Sasha</li>
-        </ul>
-      </div>
+      <div class="item-detail">Draft exists at Working/Positioning/Sales-Guardrails-Working-Draft.md. Still needs: Todd input on what the platform can reliably deliver (so we don't oversell), and John alignment on where to draw the line on deal qualification. Priority 2.</div>
     </div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       LAYER 2 — Messaging
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 2</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Messaging</div>
-        <div class="layer-sub">What we say to whom, and in what context</div>
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 2 — Market Presence
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 2</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Market Presence</div>
+        <div class="domain-sub">How the market knows Epistemix exists before a salesperson shows up</div>
       </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">3 of 14 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:21%"></div>
-        </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">0 of 5 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-todo" style="width:0%"></div></div>
       </div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">Category narrative</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">1 of 1</span>
-          </div>
+          <div class="item-name">Brand identity</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:35%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> "Why now, why simulation" argument — covered by Strategic Narrative V2</li>
-        </ul>
+      <div class="item-detail">Peter Nowell retainer active. Denver session (Apr 27) complete. Deliverables: style guide, color palette, typography, deck template bones. Retainer amendment to follow. Colors and voice are directionally established but not formally documented.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Website</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:20%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Homepage mockup built as interactive prototype (Working/Homepage-Mockup.html). Explores brand story, product framing, and audience positioning. Not production — no CMS, no complete copywriting, no development scope defined. Pricing page concept also built.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Conference and events</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:30%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">2026 calendar built (11 confirmed, 4 evaluating, 7 to consider). Events attended. No systematic pipeline tracking from events — attendance is not connected to CRM follow-up in a structured way. Speaking opportunities identified but not secured.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Content and thought leadership</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No documented program. No content calendar. No published articles, case studies, or point-of-view pieces. This is a meaningful inbound and credibility gap — particularly for a category-creation story that benefits from education-led demand.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">PR and analyst relations</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Not started. Gartner category recognition (hyper-synthetic data) exists but no active analyst relationship. No PR program, no earned media. Series B will create a window — prep before announcement.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 3 — Sales Content and Enablement
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 3</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Sales Content and Enablement</div>
+        <div class="domain-sub">Materials, stories, and training that make the selling motion effective</div>
+      </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">4 of 11 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-partial" style="width:36%"></div></div>
       </div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">Story and demo library <a class="doc-link" href="https://docs.google.com/document/d/1y6O8OyTxDOnbpdxzxwTW4SfLVn3Wkuf9VXt6au6NflY/edit" target="_blank" onclick="event.stopPropagation()">Google Doc ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">14 entries across 9 categories (A–I). Challenger structure, ROI framing. Reviewed by Sasha; Tim is in it. Categories: customer insight, competitive, data/methodology, commercial outcomes, clinical, policy, operational, financial, partner/investor.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">Company one-pager <a class="doc-link" href="../Collateral/Epistemix-One-Pager-Apr2026.pdf" target="_blank" onclick="event.stopPropagation()">PDF ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Current as of April 2026. In OneDrive Sales Collateral library.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">Technical and partner materials</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">General advisor intro deck (for Lee and Don) complete. Snowflake cheat sheet complete. Both in OneDrive Sales Collateral library.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">Sales Playbook — Module 1 (What to Know) <a class="doc-link" href="https://www.notion.so/epistemix/Sales-Home-3125dfbc1f36817b8d61fd2cb6c7611b" target="_blank" onclick="event.stopPropagation()">Notion ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Company &amp; Mission, Market &amp; ICP, Sales Process, Product &amp; Solutions, Competitive Intelligence — all substantially written. The reference document for anyone ramping into a selling role.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Vertical messaging</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div>
-            <span class="progress-label">2 of 6</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:40%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">No vertical has a fully standardized, reusable module set. Pharma injectable and PBM are furthest along.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Pharma — injectable/specialty (LAI, HIV framing)</li>
-          <li class="st-done"><span class="st-icon">✓</span> PBM/formulary</li>
-          <li class="st-todo"><span class="st-icon">○</span> Health plan/payer</li>
-          <li class="st-todo"><span class="st-icon">○</span> Employer/benefits and carriers</li>
-          <li class="st-todo"><span class="st-icon">○</span> Health system</li>
-          <li class="st-todo"><span class="st-icon">○</span> Insurance/reinsurance</li>
-        </ul>
-      </div>
+      <div class="item-detail">Pharma commercial module built (May 2026) — reusable intro, problem framing, proof sequence. Pharma injectable and PBM furthest along (sourced from existing decks). Health plan, employer/carrier, health system, insurance/reinsurance — partial or thin. No vertical is fully standardized as a reusable module set.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
-        <div class="item-center">
-          <div class="item-name">Standard email sequences</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 4</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">Nothing written for any vertical. Required before outbound can run at any scale.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Pharma commercial — first outreach and follow-up</li>
-          <li class="st-todo"><span class="st-icon">○</span> PBM/formulary — first outreach and follow-up</li>
-          <li class="st-todo"><span class="st-icon">○</span> Health plan — first outreach and follow-up</li>
-          <li class="st-todo"><span class="st-icon">○</span> Re-engagement sequence (generic)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
-        <div class="item-center">
-          <div class="item-name">Objection handling guide</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 3</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">Lives in Jason and John's heads. Needs documentation before Tim and Sasha are in solo conversations.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Competitive objections (vs. consultants, vs. data platforms, vs. doing nothing)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Pricing and ROI objections</li>
-          <li class="st-todo"><span class="st-icon">○</span> Timing objections ("why not wait for Polaris")</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════
-       LAYER 3 — Stories and Demos
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 3</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Stories and Demos</div>
-        <div class="layer-sub">Evidence it works, and working examples of what it does</div>
-      </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">17 of 26 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:65%"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
-        <div class="item-center">
-          <div class="item-name">
-            Story/Demo Library
-            <a class="doc-link" href="https://docs.google.com/document/d/1y6O8OyTxDOnbpdxzxwTW4SfLVn3Wkuf9VXt6au6NflY/edit" target="_blank" onclick="event.stopPropagation()">Google Doc ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:83%"></div></div>
-            <span class="progress-label">5 of 6</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">14 entries, Challenger structure, ROI framing across nine categories. Sasha reviewed with comments. Tim reviewing this week.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Library structure and categories built (A-I)</li>
-          <li class="st-done"><span class="st-icon">✓</span> 14 entries written with Challenger structure and ROI framing</li>
-          <li class="st-done"><span class="st-icon">✓</span> Sasha review complete with comments</li>
-          <li class="st-done"><span class="st-icon">✓</span> Tim reviewing this week</li>
-          <li class="st-done"><span class="st-icon">✓</span> Aligned to commercial priorities</li>
-          <li class="st-todo"><span class="st-icon">○</span> Demo build order confirmed post-Pittsburgh</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
-        <div class="item-center">
-          <div class="item-name">Case study library</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:67%"></div></div>
-            <span class="progress-label">8 of 12</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">8 modules complete and in the Content Library. 4 placeholders remain — source decks needed.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Miami-Dade (28,000+ patients, 3 adoption drivers)</li>
-          <li class="st-done"><span class="st-icon">✓</span> CVS PrEP/LAI patient journey</li>
-          <li class="st-done"><span class="st-icon">✓</span> Cleveland Clinic ($82M benefit optimization)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Clinical Trial Sites (~$500K ROI per patient)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Senator Pan / SB 277</li>
-          <li class="st-done"><span class="st-icon">✓</span> Google Fiber ("won 35% of the market")</li>
-          <li class="st-done"><span class="st-icon">✓</span> Clubhouse (predicted saturation 8 months early)</li>
-          <li class="st-done"><span class="st-icon">✓</span> COVID Vaccination / Allegheny County</li>
-          <li class="st-todo"><span class="st-icon">○</span> Indiana COVID — Governor briefings (strongest government story)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Michigan Health Pulse — real-time statewide deployment</li>
-          <li class="st-todo"><span class="st-icon">○</span> Global Events — CES, Super Bowl (cross-industry breadth)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Allegheny County Cardiovascular — SDOH intervention modeling</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
-        <div class="item-center">
-          <div class="item-name">Working demos (Tim builds)</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:5%"></div></div>
-            <span class="progress-label">0 of 4</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">Stop-loss is first priority — Tim just started. Health plan demos blocked until Disease Enrichments v1 (Jun-Jul). Remaining order confirmed post-Pittsburgh.</p>
-        <ul class="subtasks">
-          <li class="st-blocked"><span class="st-icon">▸</span> Stop-loss demo — first priority, Tim building</li>
-          <li class="st-blocked"><span class="st-icon">▸</span> Health plan/payer demo — blocked on Disease Enrichments v1 (Jun-Jul)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Pharma commercial demo</li>
-          <li class="st-todo"><span class="st-icon">○</span> PBM/formulary demo</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
-        <div class="item-center">
-          <div class="item-name">POC process</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">4 of 4</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Generic three-step variant</li>
-          <li class="st-done"><span class="st-icon">✓</span> PBM/health plan variant</li>
-          <li class="st-done"><span class="st-icon">✓</span> Four-step platform variant</li>
-          <li class="st-done"><span class="st-icon">✓</span> Gilead extend variant</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════
-       LAYER 4 — Collateral
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 4</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Collateral</div>
-        <div class="layer-sub">The assets that go in front of prospects</div>
-      </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">8 of 13 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:62%"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
-        <div class="item-center">
-          <div class="item-name">
-            Company one-pager
-            <a class="doc-link" href="../Collateral/Epistemix-Company-Overview-2026-04.pdf" target="_blank" onclick="event.stopPropagation()">PDF ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">3 of 3</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Written and edited</li>
-          <li class="st-done"><span class="st-icon">✓</span> Designed and branded</li>
-          <li class="st-done"><span class="st-icon">✓</span> Current as of April 2026</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Vertical decks</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div>
-            <span class="progress-label">2 of 6</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Generic pharma (AE-ready, adaptable per account) is the highest priority gap — needed before Tim and Sasha can sell without rebuilding per account.</p>
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Pharma/carriers — L&A, HR/Benefits, LTC (Unum, 13 slides) <a href="https://epistemix-my.sharepoint.com/:p:/p/jason_jhonson/IQD2DtQIb3zRR4pmYB6BZwD7AcaU2TqAuxM8pcygpTETC8w?e=EF3YFZ" target="_blank">SharePoint ↗</a></li>
-          <li class="st-done"><span class="st-icon">✓</span> PBM (Prime Therapeutics synthetic population, 4 slides) <a href="https://epistemix-my.sharepoint.com/:p:/p/jason_jhonson/IQA9zOWSlD2xTZ8IJR6ZiK8iAf5rmyrXI6AqWn8zluPRfZI?e=uKtSlc" target="_blank">SharePoint ↗</a></li>
-          <li class="st-todo"><span class="st-icon">○</span> Generic pharma — AE-ready, adaptable per account</li>
-          <li class="st-todo"><span class="st-icon">○</span> Health plan/payer</li>
-          <li class="st-todo"><span class="st-icon">○</span> Employer/benefits</li>
-          <li class="st-todo"><span class="st-icon">○</span> Insurance/reinsurance</li>
-        </ul>
-      </div>
+      <div class="item-detail">Done: L&amp;A/Unum (13 slides, HR/Benefits/LTC framing) and PBM/Prime Therapeutics (4 slides, synthetic population). With John for approval. Still needed: health plan, employer/benefits, insurance/reinsurance, generic pharma (AE-ready, adaptable). Until all verticals exist, Tim and Sasha rebuild per account.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">Partner and advisor materials</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">2 of 2</span>
-          </div>
+          <div class="item-name">Case study library</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:67%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> General intro deck (Lee and Don)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Snowflake partner cheat sheet</li>
-        </ul>
-      </div>
+      <div class="item-detail">8 of 12 complete: Miami-Dade, CVS PrEP/LAI, Cleveland Clinic, Clinical Trial Sites, Senator Pan, Google Fiber, Clubhouse, COVID/Allegheny. 4 placeholders still need source decks: Indiana COVID (Governor briefings), Michigan Health Pulse, Global Events (CES/Super Bowl), Allegheny Cardiovascular.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">Technical decks</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:50%"></div></div>
-            <span class="progress-label">1 of 2</span>
-          </div>
+          <div class="item-name">AE onboarding and ramp</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:50%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> ABM vs. Alternatives — built, with John for review before customer use</li>
-          <li class="st-todo"><span class="st-icon">○</span> Synthetic population explainer (standalone, not tied to a specific account)</li>
-        </ul>
+      <div class="item-detail">Tim's 90-day plan built and in use (Working/Team/Tim-First-90-Days.md). John's April 28 feedback incorporated. Not yet generalized into a repeatable ramp program for the next AE hire. Should include: what to read, what to shadow, what to present back, when to solo.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Outbound email sequences</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
       </div>
+      <div class="item-detail">Nothing written for any vertical. Needed: first outreach, follow-up (no reply), re-engagement (gone cold). Pharma and PBM are the highest-priority verticals given current deal activity. Without these, outbound requires rebuilding every email from scratch. Priority 5.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Objection handling guide</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Not documented. Common objections — "we have IQVIA", "how is this different from a model we build ourselves", "our data science team can do this", "how do we validate the model" — are handled differently by different people. Needs to be standardized.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Ongoing training and coaching</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No program or cadence. At current team size (Tim + Sasha) this is manageable. Will become a gap when the team grows — should be designed before the next hire, not after.</div>
     </div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       LAYER 5 — Sales Process
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 5</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Sales Process</div>
-        <div class="layer-sub">The motion that makes it repeatable and teachable</div>
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 4 — Pipeline Creation
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 4</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Pipeline Creation</div>
+        <div class="domain-sub">How qualified opportunities enter the funnel</div>
       </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">10 of 24 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:42%"></div>
-        </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">0 of 5 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-todo" style="width:0%"></div></div>
       </div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">
-            Sales Playbook — Module 1: What to Know
-            <a class="doc-link" href="https://www.notion.so/epistemix/3115dfbc1f3681d0b800d277815df48f" target="_blank" onclick="event.stopPropagation()">Notion ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">5 of 5</span>
-          </div>
+          <div class="item-name">Outbound motion</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:25%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Company &amp; Mission</li>
-          <li class="st-done"><span class="st-icon">✓</span> Market &amp; ICP</li>
-          <li class="st-done"><span class="st-icon">✓</span> Sales Process &amp; Qualification (MEDDPICC)</li>
-          <li class="st-done"><span class="st-icon">✓</span> Product &amp; Solutions</li>
-          <li class="st-done"><span class="st-icon">✓</span> Competitive Intelligence</li>
-        </ul>
-      </div>
+      <div class="item-detail">Playbook Module 2 prospecting section is partial — targeting logic exists but no documented sequences, cadence, or daily/weekly outbound rhythm. Tim is prospecting but without a repeatable structure. Needs: account tiering, contact targeting criteria, sequence templates, activity targets.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
-          <div class="item-name">
-            Sales Playbook — Module 2: What to Do
-            <a class="doc-link" href="https://www.notion.so/epistemix/3115dfbc1f36812fa57bd1f94ad5e38e" target="_blank" onclick="event.stopPropagation()">Notion ↗</a>
-          </div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div>
-            <span class="progress-label">1 of 3</span>
-          </div>
+          <div class="item-name">Event-sourced pipeline</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:30%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> CRM &amp; HubSpot</li>
-          <li class="st-todo"><span class="st-icon">○</span> Prospecting &amp; Pipeline ("How We Sell" drafted but not yet published to Notion)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Client Engagement (stub only)</li>
-        </ul>
-      </div>
+      <div class="item-detail">Calendar is built and events are attended. Gap: no structured pre-event targeting (who to meet), in-event capture (how to log contacts), or post-event follow-up (CRM entry + sequence). Events generate conversations that don't convert to pipeline because the follow-up process doesn't exist.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
+        <div class="status-dot dot-todo"></div>
         <div class="item-center">
-          <div class="item-name">Sales Playbook — Module 3: What to Achieve</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 2</span>
-          </div>
+          <div class="item-name">Network and referral process</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Quota and revenue targets by role</li>
-          <li class="st-todo"><span class="st-icon">○</span> Compensation structure</li>
-        </ul>
+      <div class="item-detail">John's network is the primary pipeline source today and it is entirely ad hoc. No documented process for: systematically mapping warm relationships, asking for introductions, tracking referral status, or closing the loop with referrers. This is the highest-yield gap to close at current stage.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Inbound pipeline</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No production website. No content program. UCB inbound was a notable exception — inbound generally is not a functioning channel. Dependent on Market Presence (Domain 2) being built first.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Partner-sourced pipeline</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No operational partner channel. Snowflake marketplace listing not yet live. Databricks relationship not started. Consulting/distribution channel (themindco) not activated. Partner-sourced pipeline is zero today.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 5 — Sales Execution
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 5</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Sales Execution</div>
+        <div class="domain-sub">How you move an opportunity from first meeting to close</div>
+      </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">1 of 5 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-partial" style="width:20%"></div></div>
       </div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">POC process</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Module complete with four variants: generic three-step (default), PBM/health plan three-step, four-step platform version, and Gilead extend variant. In Content Library.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Working demos</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:15%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Stop-loss identified as Tim's first demo build priority. Health plan demos depend on Disease Enrichments v1 (expected Jun-Jul). Full priority list to be confirmed post-Pittsburgh session. No working demos currently available for the majority of target verticals.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Proposal and pricing process</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:40%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Pricing model and credit bundle structure exist. What's missing: a documented proposal format, a standard SOW template, and a process for moving from verbal agreement to signed contract. Each deal currently involves bespoke document assembly.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Sales Playbook — Module 2 (What to Do) <a class="doc-link" href="https://www.notion.so/epistemix/Sales-Home-3125dfbc1f36817b8d61fd2cb6c7611b" target="_blank" onclick="event.stopPropagation()">Notion ↗</a></div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:45%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">CRM &amp; HubSpot section: reasonably complete. Prospecting &amp; Pipeline: partial — "How We Sell" philosophy drafted but not published. Client Engagement: stub only. This is the reference document Tim and the next AE will live in.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Defined sales plays</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Candidates identified: pharma commercial launch, PBM/formulary access, health plan population management, reinsurance/actuarial, consulting channel. None are written. A sales play defines: who to target, how to open, what to say, what to show, what next step to drive. Without plays, the selling motion is institutional knowledge — it lives in Jason and John, not the org.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 6 — Revenue Operations
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 6</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Revenue Operations</div>
+        <div class="domain-sub">Systems and infrastructure that make it measurable and repeatable</div>
+      </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">2 of 7 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-partial" style="width:29%"></div></div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-done"></div>
         <div class="item-center">
           <div class="item-name">HubSpot — deal pipeline</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:33%"></div></div>
-            <span class="progress-label">1 of 3</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Sprint 1 complete (Operations Company)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Sprint 2 requirements defined</li>
-          <li class="st-todo"><span class="st-icon">○</span> Sprint 2 built</li>
-        </ul>
-      </div>
+      <div class="item-detail">Active. Sprint 1 complete (Emily O'Toole / Operations Company). Deal stages, properties, and pipeline structure configured. Sprint 2 requirements not yet defined.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
-        <div class="item-center">
-          <div class="item-name">HubSpot — relationship pipeline</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 3</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">Investor intros, advisor introductions, and warm contacts are not tracked separately from deals. Relationships are falling through the cracks.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Requirements defined (stages, fields, views for intro tracking)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Pipeline built in HubSpot</li>
-          <li class="st-todo"><span class="st-icon">○</span> All current intros and warm contacts logged and staged</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
-        <div class="item-center">
-          <div class="item-name">Sales plays (3-5 defined plays)</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 5</span>
-          </div>
-        </div>
-        <span class="toggle-icon">▶</span>
-      </div>
-      <div class="item-detail">
-        <p class="item-note">The selling motion currently lives in Jason and John's heads. Documenting plays is what makes it teachable to Tim and the next AE.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Pharma commercial (new launch, time to peak sales)</li>
-          <li class="st-todo"><span class="st-icon">○</span> PBM/formulary</li>
-          <li class="st-todo"><span class="st-icon">○</span> Health plan/payer</li>
-          <li class="st-todo"><span class="st-icon">○</span> Insurance/reinsurance</li>
-          <li class="st-todo"><span class="st-icon">○</span> Consulting channel (themindco → Deloitte model)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-done"></span>
+        <div class="status-dot dot-done"></div>
         <div class="item-center">
           <div class="item-name">Weekly pipeline cadence</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div>
-            <span class="progress-label">3 of 3</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Sales Sync format defined and running weekly</li>
-          <li class="st-done"><span class="st-icon">✓</span> Pre-read template built</li>
-          <li class="st-done"><span class="st-icon">✓</span> Weekly priorities email format established</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════
-       LAYER 6 — Partner and Channel
-  ════════════════════════════════════════ -->
-  <div class="layer">
-    <div class="layer-header">
-      <span class="layer-num">Layer 6</span>
-      <div class="layer-title-group">
-        <div class="layer-title">Partner and Channel</div>
-        <div class="layer-sub">Routes to market beyond direct selling</div>
-      </div>
-      <div class="layer-progress-group">
-        <div class="layer-progress-label">3 of 14 tasks</div>
-        <div class="layer-bar-track">
-          <div class="layer-bar-fill fill-partial" style="width:21%"></div>
-        </div>
-      </div>
+      <div class="item-detail">Sales Sync running. Pre-read format established. Weekly rhythm is in place for pipeline review and next-step accountability.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Territory and account segmentation</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:25%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">ICP defined and segmented by vertical. No formal territory model — no account tiering, no rep-level account assignment, no coverage logic. As the team grows beyond two reps, territory design becomes necessary to avoid conflict and ensure coverage.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
+        <div class="item-center">
+          <div class="item-name">Tooling stack</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:20%"></div></div><div class="progress-label">Partial</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">HubSpot is live and active. Not yet configured: email sequencing tool, data enrichment (contact/account data), intent data, call recording/coaching. These are table stakes for a scaled outbound motion.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">HubSpot — relationship pipeline</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Not built. Investor introductions and advisor introductions are not tracked separately from active deals — warm relationships fall through the cracks between contacts and deals. Priority 6.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Pipeline reporting and forecasting</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No formal forecast process beyond the weekly sync. No rolling forecast, no coverage ratio targets, no stage-weighted pipeline view. As pipeline grows, flying blind on coverage becomes a risk — especially heading into a Series B where investors will ask.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Compensation and quota structure</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Not started. Playbook Module 3 (What to Achieve) not written. No documented quota targets, commission structure, accelerators, or performance expectations for Tim or Sasha. Needed before next AE hire — comp design should precede the offer. Priority 8.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 7 — Partner and Channel
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 7</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Partner and Channel</div>
+        <div class="domain-sub">Three partner types — different motions, different economics, different assets</div>
+      </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">1 of 6 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-partial" style="width:17%"></div></div>
+      </div>
+    </div>
+
+    <div class="subsection-label">Technology and Integration — marketplace, co-sell, technical integration</div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Snowflake</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:50%"></div></div>
-            <span class="progress-label">2 of 4</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:50%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Partner cheat sheet built</li>
-          <li class="st-done"><span class="st-icon">✓</span> Marketplace listing built</li>
-          <li class="st-todo"><span class="st-icon">○</span> Jonathan Wolf outreach (pending John sign-off on cheat sheet)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Marketplace listing live</li>
-        </ul>
-      </div>
+      <div class="item-detail">Cheat sheet complete (in Sales Collateral). Marketplace listing built but not live. Outreach to Jonathan Wolf pending. Next steps: get listing live, activate co-sell motion, define what a partner-sourced Snowflake deal looks like.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Databricks</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 3</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:15%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Intro meeting pending (Dejan). No pitch materials built yet.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> Intro meeting completed</li>
-          <li class="st-todo"><span class="st-icon">○</span> Partnership pitch materials built</li>
-          <li class="st-todo"><span class="st-icon">○</span> Co-sell motion defined</li>
-        </ul>
-      </div>
+      <div class="item-detail">Intro meeting pending. No pitch materials built. Relationship is at the earliest stage — not yet a real partnership. Needs: intro meeting, assess fit, define the co-sell thesis, build materials if the fit is confirmed.</div>
     </div>
+
+    <div class="subsection-label">Consulting and Distribution — referral, embedded delivery, channel economics</div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-todo"></span>
+        <div class="status-dot dot-todo"></div>
         <div class="item-center">
-          <div class="item-name">Consultancy channel</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div>
-            <span class="progress-label">0 of 3</span>
-          </div>
+          <div class="item-name">themindco → Deloitte channel</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <p class="item-note">Strategy defined. themindco is the practice run before a Deloitte-style engagement.</p>
-        <ul class="subtasks">
-          <li class="st-todo"><span class="st-icon">○</span> themindco GTM materials built</li>
-          <li class="st-todo"><span class="st-icon">○</span> themindco engagement completed</li>
-          <li class="st-todo"><span class="st-icon">○</span> Deloitte approach developed</li>
-        </ul>
-      </div>
+      <div class="item-detail">Strategy defined — themindco as the entry point into Deloitte practice. No materials built, no active outreach. This is the highest-potential distribution channel if activated: consulting firms embed Epistemix in client engagements at scale.</div>
     </div>
 
     <div class="item">
       <div class="item-header" onclick="toggle(this)">
-        <span class="status-dot dot-partial"></span>
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Consulting partner program</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No defined terms, tiering, or economics for consulting/distribution partners. Before activating any consulting channel relationship, need: partner agreement template, referral/resell economics, co-delivery model, and enablement materials for partner staff.</div>
+    </div>
+
+    <div class="subsection-label">Advisor and Network — individual referral relationships</div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-done"></div>
+        <div class="item-center">
+          <div class="item-name">Active advisor materials</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-done" style="width:100%"></div></div><div class="progress-label">Done</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">General advisor intro deck complete (for Lee and Don). In OneDrive Sales Collateral library.</div>
+    </div>
+
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-partial"></div>
         <div class="item-center">
           <div class="item-name">Advisor program</div>
-          <div class="progress-row">
-            <div class="progress-track"><div class="progress-fill fill-partial" style="width:25%"></div></div>
-            <span class="progress-label">1 of 4</span>
-          </div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-partial" style="width:20%"></div></div><div class="progress-label">Partial</div></div>
         </div>
-        <span class="toggle-icon">▶</span>
+        <div class="toggle-icon">▶</div>
       </div>
-      <div class="item-detail">
-        <ul class="subtasks">
-          <li class="st-done"><span class="st-icon">✓</span> Two-model framework drafted (deliverable vs. access/introductions)</li>
-          <li class="st-todo"><span class="st-icon">○</span> Terms finalized with John</li>
-          <li class="st-todo"><span class="st-icon">○</span> Priority target list built</li>
-          <li class="st-todo"><span class="st-icon">○</span> Active advisor recruitment underway</li>
-        </ul>
-      </div>
+      <div class="item-detail">Two-model framework drafted (Working/Team/Advisor-Program-Working-Notes.md). No finalized terms, no active recruitment. Needs: defined comp model (equity vs. cash vs. hybrid), engagement expectations, legal template, and a list of target advisors to recruit.</div>
     </div>
   </div>
 
-  <div class="footer">Epistemix confidential &mdash; May 2026</div>
+  <!-- ═══════════════════════════════════════════
+       DOMAIN 8 — Customer Success
+  ═══════════════════════════════════════════ -->
+  <div class="domain">
+    <div class="domain-header">
+      <div class="domain-badge">Domain 8</div>
+      <div class="domain-title-group">
+        <div class="domain-title">Customer Success</div>
+        <div class="domain-sub">Intentionally deferred — listed to make the gap visible</div>
+      </div>
+      <div class="domain-progress-group">
+        <div class="domain-progress-label">0 of 4 complete</div>
+        <div class="domain-bar-track"><div class="domain-bar-fill fill-todo" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="deferred-note">These become GTM capabilities once deals are closing at scale. The gap is real but the sequencing is deliberate — build pipeline and close capacity first.</div>
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Client onboarding</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No documented onboarding process. What does a client's first 30 days look like? Who owns it? What are the milestones? This is currently ad hoc and delivery-led.</div>
+    </div>
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Success metrics and QBRs</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No defined success metrics by client type, no QBR cadence, no structured review process. Without this, expansion conversations are reactive rather than driven by demonstrated value.</div>
+    </div>
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Reference and case study program</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">Case study content exists (8 modules) but there is no formal reference program — no structured ask, no reference client list, no managed reference process for deals. References are the highest-value sales asset at enterprise scale.</div>
+    </div>
+    <div class="item">
+      <div class="item-header" onclick="toggle(this)">
+        <div class="status-dot dot-todo"></div>
+        <div class="item-center">
+          <div class="item-name">Expansion plays</div>
+          <div class="progress-row"><div class="progress-track"><div class="progress-fill fill-todo" style="width:0%"></div></div><div class="progress-label">Not started</div></div>
+        </div>
+        <div class="toggle-icon">▶</div>
+      </div>
+      <div class="item-detail">No documented expansion motion. The Stage 2 to Stage 3 commercial framework exists (land and expand) but the plays that drive expansion within an account are not written.</div>
+    </div>
+  </div>
+
+  <div class="footer">Epistemix confidential &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Not for distribution</div>
 
 </div>
 
