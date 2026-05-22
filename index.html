@@ -12,61 +12,59 @@
       color: #1a1a2e;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
+      padding: 64px 24px;
     }
 
     .container {
-      max-width: 680px;
+      max-width: 720px;
       width: 100%;
+      margin: 0 auto;
     }
 
     .wordmark {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #4056F4;
       margin-bottom: 40px;
     }
 
-    h1 {
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 1.25;
-      margin-bottom: 12px;
-      color: #ffffff;
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: #1a1a2e;
     }
 
     .intro {
       font-size: 15px;
       line-height: 1.6;
       color: #666680;
+      margin-bottom: 56px;
+    }
+
+    .section {
       margin-bottom: 48px;
     }
 
     .section-header {
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #aaaabc;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
+      margin-bottom: 6px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #e8e8ec;
     }
 
-    .section {
-      margin-bottom: 40px;
-    }
-
     .section-note {
-      font-size: 12px;
+      font-size: 13px;
       color: #aaaabc;
-      margin-bottom: 16px;
-      margin-top: -8px;
+      margin-top: 10px;
+      margin-bottom: 20px;
     }
 
     .card {
@@ -74,10 +72,11 @@
       text-decoration: none;
       border: 1px solid #e0e0ec;
       border-radius: 8px;
-      padding: 24px 28px;
-      margin-bottom: 16px;
+      padding: 22px 26px;
+      margin-bottom: 12px;
       background: #f8f8fc;
       transition: border-color 0.15s, background 0.15s;
+      position: relative;
     }
 
     .card:hover {
@@ -87,18 +86,19 @@
 
     .card-label {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #4056F4;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
     }
 
     .card-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
       color: #1a1a2e;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      padding-right: 24px;
     }
 
     .card-desc {
@@ -108,16 +108,37 @@
     }
 
     .arrow {
-      float: right;
+      position: absolute;
+      top: 22px;
+      right: 22px;
       color: #4056F4;
-      font-size: 18px;
-      margin-top: -2px;
+      font-size: 16px;
+    }
+
+    .badge-new {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: white;
+      background: #4056F4;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-left: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
     }
 
     .footer {
-      margin-top: 48px;
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid #e8e8ec;
       font-size: 12px;
       color: #aaaabc;
+      display: flex;
+      justify-content: space-between;
     }
   </style>
 </head>
@@ -126,70 +147,86 @@
 
     <div class="wordmark">Epistemix</div>
 
-    <h1 style="color: #1a1a2e;">Working materials</h1>
-    <p class="intro">Internal prototypes and planning documents. Not for distribution.</p>
+    <h1 class="page-title">Working materials</h1>
+    <p class="intro">Internal prototypes, planning documents, and concept pages. Not for distribution.</p>
 
-    <!-- Section 1: Live Trackers -->
+    <!-- Live Trackers -->
     <div class="section">
       <div class="section-header">Live Trackers</div>
-      <p class="section-note">Running status on the build — updated as work is completed.</p>
+      <p class="section-note">Running status on the build, updated as work is completed.</p>
 
       <a class="card" href="Selling-Capability-Dashboard.html">
-        <span class="arrow">→</span>
+        <span class="arrow">&#8594;</span>
         <div class="card-label">GTM Build</div>
         <div class="card-title">Selling capability dashboard</div>
-        <div class="card-desc">Six-layer status tracker for the commercial machine — foundation, messaging, stories, collateral, process, and partner/channel. What's done, what's partial, and what's next on the path to $10.1M CARR.</div>
+        <div class="card-desc">Six-layer status tracker for the commercial machine: foundation, messaging, stories, collateral, process, and partner/channel. What is done, what is partial, and what is next on the path to $10.1M CARR.</div>
       </a>
     </div>
 
-    <!-- Section 2: Strategy & Planning -->
+    <!-- Strategy & Planning -->
     <div class="section">
       <div class="section-header">Strategy &amp; Planning</div>
       <p class="section-note">Internal frameworks and foundations documents.</p>
 
-      <a class="card" href="GTM-Foundations-Diagram.html">
-        <span class="arrow">→</span>
+      <a class="card" href="../Reference/GTM-Foundations-Diagram.html">
+        <span class="arrow">&#8594;</span>
         <div class="card-label">GTM Strategy</div>
-        <div class="card-title">GTM foundations</div>
-        <div class="card-desc">How the strategic narrative, brand platform, and product marketing relate to each other — and what outputs they enable. The foundational map for how Epistemix goes to market.</div>
+        <div class="card-title">GTM foundations diagram</div>
+        <div class="card-desc">How the strategic narrative, brand platform, and product marketing relate to each other, and what outputs they enable. The foundational map for how Epistemix goes to market.</div>
       </a>
     </div>
 
-    <!-- Section 3: Prototypes & Concepts -->
+    <!-- Website & Product Pages -->
+    <div class="section">
+      <div class="section-header">Website &amp; Product Pages</div>
+      <p class="section-note">Product page concepts and website mockups. One page per suite as modules are developed.</p>
+
+      <a class="card" href="Website/people-strategy-suite.html">
+        <span class="arrow">&#8594;</span>
+        <div class="card-label">Product Page <span class="badge-new">New</span></div>
+        <div class="card-title">People Strategy Suite</div>
+        <div class="card-desc">External-facing product page for the People Suite, targeting Chief People Officers. Covers the four workforce pressures, the CPO-as-strategic-leader framing, the three modules (network selection, point solution evaluation, risk stratification), the data flywheel, and ICP.</div>
+      </a>
+
+      <a class="card" href="Brand/Homepage-Mockup.html">
+        <span class="arrow">&#8594;</span>
+        <div class="card-label">Website</div>
+        <div class="card-title">Homepage concept</div>
+        <div class="card-desc">A homepage mockup exploring how Epistemix could present its brand story, product framing, and audience positioning on the web.</div>
+      </a>
+
+      <a class="card" href="Pricing/Pricing-Page-Mockup.html">
+        <span class="arrow">&#8594;</span>
+        <div class="card-label">Website</div>
+        <div class="card-title">Pricing page concept</div>
+        <div class="card-desc">A pricing page mockup showing the Starter / Growth / Enterprise credit-bucket model, data add-ons, professional services, usage estimator, and FAQ.</div>
+      </a>
+    </div>
+
+    <!-- Prototypes & Concepts -->
     <div class="section">
       <div class="section-header">Prototypes &amp; Concepts</div>
-      <p class="section-note">Messaging explorations, product demos, and brand concepts.</p>
+      <p class="section-note">Messaging explorations, product demos, and pitch narratives.</p>
 
       <a class="card" href="strategy-package-pitch.html">
-        <span class="arrow">→</span>
+        <span class="arrow">&#8594;</span>
         <div class="card-label">GTM</div>
         <div class="card-title">Launch Intelligence — pitch narrative</div>
         <div class="card-desc">The strategic rationale for Launch Intelligence: the three-stage value chain, entry point thesis, design principles, and product components. Structured as a leave-behind.</div>
       </a>
 
       <a class="card" href="strategy-package-mockup.html">
-        <span class="arrow">→</span>
+        <span class="arrow">&#8594;</span>
         <div class="card-label">Product</div>
         <div class="card-title">Launch Intelligence — interactive demo</div>
         <div class="card-desc">Interactive prototype of the Launch Intelligence tool: strategic objective, variable map, tactic plan, sensitivity explorer, and operating dashboard. Built around a drug launch scenario.</div>
       </a>
-
-      <a class="card" href="Homepage-Mockup.html">
-        <span class="arrow">→</span>
-        <div class="card-label">Brand</div>
-        <div class="card-title">Website concept</div>
-        <div class="card-desc">A homepage mockup exploring how Epistemix could present its brand story, product framing, and audience positioning on the web.</div>
-      </a>
-
-      <a class="card" href="Pricing-Page-Mockup.html">
-        <span class="arrow">→</span>
-        <div class="card-label">Brand</div>
-        <div class="card-title">Pricing page concept</div>
-        <div class="card-desc">A pricing page mockup showing the Starter / Growth / Enterprise credit-bucket model, data add-ons, professional services, usage estimator, and FAQ. Companion to the website concept.</div>
-      </a>
     </div>
 
-    <div class="footer">Epistemix confidential &mdash; May 2026</div>
+    <div class="footer">
+      <span>Epistemix confidential</span>
+      <span>May 2026</span>
+    </div>
 
   </div>
 </body>
