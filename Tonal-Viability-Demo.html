@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tonal — Commercial Viability Model | Epistemix</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── RESET / BASE ── */
+:root {
+  --blue:      #4056F4;
+  --blue-dark: #1C3080;
+  --bg:        #F4F5FD;
+  --surface:   #FFFFFF;
+  --border:    #E2E5F8;
+  --text:      #1A1A2E;
+  --muted:     #6B7280;
+  --red:       #DC2626;
+  --yellow:    #D97706;
+  --green:     #16A34A;
+  --shadow:    0 1px 5px rgba(64,86,244,.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── SCREEN TOGGLE ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── HEADER ── */
+.app-header {
+  background: linear-gradient(130deg, var(--blue-dark) 0%, var(--blue) 100%);
+  color: white;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ah-brand { font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
+.ah-title { font-size: 20px; font-weight: 700; line-height: 1.2; }
+.ah-sub   { font-size: 12px; opacity: .6; margin-top: 3px; }
+
+/* ══════════════════════════════════════
+   SCREEN 1 — ASSUMPTIONS
+══════════════════════════════════════ */
+.s1-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+  padding: 24px 28px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.s1-form { display: flex; flex-direction: column; gap: 24px; }
+.fs-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+.fs-desc  { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+.fact-group {
+  background: var(--surface); border-radius: 10px; padding: 16px;
+  box-shadow: var(--shadow); margin-bottom: 10px;
+}
+.fact-group:last-of-type { margin-bottom: 0; }
+.fg-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--blue); margin-bottom: 12px; }
+.inp-row { margin-bottom: 10px; }
+.inp-row:last-of-type { margin-bottom: 0; }
+.inp-hdr { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+.inp-name { font-size: 13px; color: var(--text); }
+.inp-val  { font-size: 14px; font-weight: 700; color: var(--blue); min-width: 65px; text-align: right; }
+input[type=range] {
+  width: 100%; height: 4px; -webkit-appearance: none;
+  background: var(--border); border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--blue); cursor: pointer;
+}
+select {
+  width: 100%; font-size: 13px; font-family: inherit;
+  padding: 7px 26px 7px 9px;
+  border: 1.5px solid var(--border); border-radius: 7px;
+  background: var(--bg); color: var(--text);
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7280'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center; cursor: pointer;
+}
+select:focus { outline: none; border-color: var(--blue); }
+.inp-hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.calc-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 2px 2px; border-top: 1px solid var(--border); margin-top: 10px;
+}
+.calc-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.calc-val   { font-size: 13px; font-weight: 700; color: var(--blue); }
+
+/* GTM toggle */
+.gtm-btns { display: flex; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
+.gtm-btn {
+  flex: 1; padding: 7px 10px; font-size: 12px; font-family: inherit; font-weight: 600;
+  background: var(--bg); border: none; cursor: pointer; color: var(--muted);
+  transition: all .12s; letter-spacing: .02em;
+}
+.gtm-btn + .gtm-btn { border-left: 1px solid var(--border); }
+.gtm-btn.active { background: var(--blue); color: white; }
+
+/* Section meta */
+.section-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 11px; }
+.section-source { color: var(--muted); }
+
+/* Segment toggles */
+.seg-toggles { display: flex; flex-direction: column; gap: 8px; }
+.seg-toggle {
+  display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px;
+  border-radius: 10px; background: var(--surface); box-shadow: var(--shadow);
+  cursor: pointer; border: 2px solid transparent;
+  transition: border-color .12s, background .12s; user-select: none;
+}
+.seg-toggle.on { border-color: var(--blue); background: rgba(64,86,244,.04); }
+.seg-toggle-check {
+  width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  transition: background .12s, border-color .12s; margin-top: 3px;
+}
+.seg-toggle.on .seg-toggle-check { background: var(--blue); border-color: var(--blue); }
+.seg-toggle-check svg { display: none; }
+.seg-toggle.on .seg-toggle-check svg { display: block; }
+.seg-toggle-body { flex: 1; min-width: 0; }
+.seg-toggle-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+.seg-rationale {
+  width: 100%; border: none; background: transparent;
+  font-size: 12px; color: var(--text); resize: none; overflow: hidden;
+  font-family: inherit; line-height: 1.55; padding: 0; cursor: text;
+  border-bottom: 1px dashed transparent; transition: border-color .15s;
+}
+.seg-rationale::placeholder { color: #B0B6C9; font-style: italic; }
+.seg-rationale:focus { outline: none; border-bottom-color: var(--blue); }
+.seg-param { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+/* Threshold cards */
+.threshold-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.tc {
+  border: 2px solid var(--border); border-radius: 10px; padding: 14px;
+  cursor: pointer; transition: border-color .12s, background .12s;
+  background: var(--surface); box-shadow: var(--shadow);
+}
+.tc:hover { border-color: #A5AEFF; }
+.tc.selected { border-color: var(--blue); background: rgba(64,86,244,.04); }
+.tc-tier { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+.tc.selected .tc-tier { color: var(--blue); }
+.tc-subs-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+.tc-subs-val { font-size: 22px; font-weight: 800; color: var(--text); }
+.tc-subs-lbl { font-size: 12px; color: var(--muted); }
+.tc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-top: 6px; }
+.tc-implied { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.tc-imp-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+.tc-imp-lbl { color: var(--muted); }
+.tc-imp-val { font-weight: 700; font-size: 12px; }
+.tc-imp-val.bad  { color: var(--red); }
+.tc-imp-val.warn { color: var(--yellow); }
+.tc-imp-val.good { color: var(--green); }
+.tc-imp-val.neut { color: var(--blue); }
+
+/* Preview sidebar */
+.s1-sidebar { position: sticky; top: 20px; }
+.preview-card { background: var(--surface); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+.pc-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.pc-metric { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.pc-metric:last-child { margin-bottom: 0; }
+.pc-metric-label { font-size: 12px; color: var(--muted); flex: 1; }
+.pc-metric-val { font-size: 15px; font-weight: 700; text-align: right; }
+.pc-metric-val.bad  { color: var(--red); }
+.pc-metric-val.warn { color: var(--yellow); }
+.pc-metric-val.good { color: var(--green); }
+.pc-metric-val.neut { color: var(--blue); }
+.pc-mkt-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: var(--muted); }
+.pc-mkt-row.total { border-top: 1px solid var(--border); padding-top: 6px; font-weight: 700; color: var(--text); margin-top: 4px; }
+.model-btn {
+  width: 100%; padding: 15px 14px; background: var(--blue); color: white;
+  border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: opacity .15s;
+}
+.model-btn:hover { opacity: .88; }
+.model-btn-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; line-height: 1.5; }
+
+/* color utilities */
+.bad  { color: var(--red); }
+.warn { color: var(--yellow); }
+.good { color: var(--green); }
+.neut { color: var(--blue); }
+
+/* ══════════════════════════════════════
+   INTERSTITIAL
+══════════════════════════════════════ */
+#screen-inter {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(160deg, #0B1120 0%, #0F1F5C 60%, #1C3080 100%);
+  display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 200;
+}
+#screen-inter.active { display: flex; }
+.inter-brand { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 48px; }
+.inter-terminal { width: 600px; max-width: 90vw; min-height: 220px; display: flex; flex-direction: column; justify-content: flex-end; margin-bottom: 40px; }
+.inter-line {
+  font-family: "SF Mono","Fira Code","Consolas",monospace;
+  font-size: 16px; line-height: 2.0; opacity: 0; transition: opacity .18s;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.inter-line.visible { opacity: 1; }
+.inter-line.complete { opacity: .45; }
+.inter-prompt { color: rgba(64,86,244,.7); flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+.inter-text { color: rgba(255,255,255,.88); }
+.inter-complete-line .inter-text { color: #4ade80; font-weight: 700; }
+.inter-cursor { display: inline-block; width: 7px; height: 14px; background: rgba(64,86,244,.9); margin-left: 3px; vertical-align: text-bottom; animation: blink .75s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.inter-progress-wrap { width: 600px; max-width: 90vw; }
+.inter-progress-track { height: 2px; background: rgba(255,255,255,.1); border-radius: 1px; overflow: hidden; }
+.inter-progress-fill { height: 100%; background: var(--blue); border-radius: 1px; width: 0%; transition: width .35s ease; }
+.inter-progress-label { font-size: 10px; color: rgba(255,255,255,.25); margin-top: 8px; text-align: right; font-family: "SF Mono","Fira Code","Consolas",monospace; letter-spacing: .05em; }
+
+/* ══════════════════════════════════════
+   SCREEN 2 — THREE-TAB OUTPUT
+══════════════════════════════════════ */
+#screen2 { display: none; flex-direction: column; height: 100vh; }
+#screen2.active { display: flex; }
+
+.back-btn {
+  background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.35);
+  color: white; padding: 6px 14px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { background: rgba(255,255,255,.28); }
+
+/* Tab bar */
+.tab-bar { background: white; border-bottom: 1px solid var(--border); display: flex; padding: 0 24px; flex-shrink: 0; }
+.tab-btn {
+  padding: 13px 20px; font-size: 11px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted); cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; user-select: none;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+.tab-scroll { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+.card-title { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 13px; }
+
+/* Population */
+.pop-kpi-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 3px; }
+.pop-kpi-num { font-size: 40px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.02em; line-height: 1; }
+.pop-kpi-unit { font-size: 15px; color: var(--muted); }
+.pop-kpi-sub { font-size: 12px; color: #A0A8C0; margin-bottom: 16px; line-height: 1.45; }
+.map-wrap { position: relative; background: #F7F8FD; border-radius: 4px; overflow: hidden; }
+#map-svg { display: block; width: 100%; }
+.map-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #A0A8C0; background: #F7F8FD; }
+.map-leg { display: flex; gap: 18px; padding: 8px 0 2px; align-items: center; flex-wrap: wrap; }
+.map-leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #A0A8C0; }
+.funnel-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #F7F8FD; }
+.funnel-row:last-child { border-bottom: none; }
+.funnel-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.funnel-label { flex: 1; font-size: 12px; color: #4A5270; }
+.funnel-bar-wrap { width: 80px; height: 6px; background: #F0F2FA; border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.funnel-bar-fill { height: 100%; border-radius: 3px; }
+.funnel-val { font-size: 12px; font-weight: 700; color: var(--text); min-width: 44px; text-align: right; }
+.funnel-pct { font-size: 11px; color: #A0A8C0; min-width: 30px; text-align: right; }
+.q-card { background: var(--blue-dark); color: white; border-radius: 8px; padding: 16px; margin-bottom: 0; }
+.q-row { display: flex; gap: 16px; margin-bottom: 13px; }
+.q-stat { flex: 1; }
+.q-stat-label { font-size: 10px; color: rgba(255,255,255,.5); margin-bottom: 3px; }
+.q-stat-val { font-size: 26px; font-weight: 300; color: white; letter-spacing: -.01em; }
+.q-stat-sub { font-size: 10px; color: rgba(255,255,255,.4); margin-top: 2px; }
+.q-divider { border-top: 1px solid rgba(255,255,255,.12); margin: 11px 0; }
+.q-insight { font-size: 11px; color: rgba(255,255,255,.7); line-height: 1.55; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Growth */
+.kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
+.kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 15px; }
+.kpi-card.accent { border-color: var(--blue); background: rgba(64,86,244,.04); }
+.kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #A0A8C0; margin-bottom: 6px; }
+.kpi-val { font-size: 26px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.01em; }
+.kpi-card.accent .kpi-val { color: var(--blue); }
+.kpi-sub { font-size: 10px; color: #A0A8C0; margin-top: 2px; }
+.scen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.scen-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.scen-card.c1 { border-top: 3px solid var(--blue); }
+.scen-card.c2 { border-top: 3px solid #F59E0B; }
+.scen-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.scen-params { font-size: 11px; color: var(--muted); line-height: 1.8; }
+.scen-params strong { color: var(--text); }
+.scen-out { margin-top: 10px; padding-top: 10px; border-top: 1px solid #F0F2FA; }
+.scen-out-label { font-size: 10px; color: #A0A8C0; }
+.scen-out-val { font-size: 20px; font-weight: 300; color: var(--blue-dark); }
+.arr-banner { background: linear-gradient(120deg, var(--blue-dark), var(--blue)); border-radius: 8px; padding: 14px 20px; color: white; margin-bottom: 14px; }
+.arr-banner-val { font-size: 28px; font-weight: 300; color: white; }
+.arr-banner-label { font-size: 12px; color: rgba(255,255,255,.85); margin-top: 2px; }
+.arr-banner-sub { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 4px; line-height: 1.5; }
+
+/* Strategy */
+.lever-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; margin-bottom: 14px; }
+.lever-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 15px; border-top: 3px solid var(--blue); }
+.lever-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.lever-desc { font-size: 11px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+.lever-metric { margin-bottom: 7px; }
+.lever-metric-label { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: #A0A8C0; }
+.lever-metric-val { font-size: 18px; font-weight: 300; color: var(--blue-dark); }
+.lever-metric-sub { font-size: 10px; color: #A0A8C0; }
+.lever-tag { display: inline-block; font-size: 9px; padding: 2px 8px; border-radius: 10px; background: #EEF0FC; color: var(--blue); margin-top: 8px; letter-spacing: .02em; }
+.lever-tag.green { background: #ECFDF5; color: #0B8A4E; }
+.act-card { background: var(--blue-dark); border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+.act-title { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 13px; }
+.act-step { display: flex; gap: 12px; margin-bottom: 12px; font-size: 11px; }
+.act-step:last-child { margin-bottom: 0; }
+.act-num { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,.5); flex-shrink: 0; margin-top: 1px; }
+.act-body { color: rgba(255,255,255,.8); line-height: 1.45; }
+.act-sub { font-size: 10px; color: rgba(255,255,255,.42); margin-top: 3px; }
+
+/* NYC drill-down modal */
+.nyc-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(10,20,70,0.82); align-items: center; justify-content: center;
+}
+.nyc-modal-overlay.active { display: flex; }
+.nyc-modal-box {
+  background: var(--surface); border-radius: 12px;
+  width: min(1180px, 97vw); max-height: 96vh;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+}
+.nyc-modal-header {
+  background: linear-gradient(130deg, #0B1A60 0%, #1C3080 50%, #4056F4 100%);
+  color: white; padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.nyc-modal-body {
+  flex: 1; overflow: hidden; display: grid;
+  grid-template-columns: 1fr 185px; min-height: 0;
+}
+.nyc-map-panel { padding: 8px 6px 8px 10px; overflow: hidden; display: flex; align-items: center; }
+.nyc-list-panel {
+  border-left: 1px solid var(--border); padding: 12px;
+  overflow-y: auto; background: #FAFBFF;
+}
+.nyc-nbhd-row {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  border-bottom: 1px solid #F0F2FA; cursor: pointer;
+}
+.nyc-nbhd-row:last-child { border-bottom: none; }
+.nyc-nbhd-row:hover { background: #F4F6FF; margin: 0 -14px; padding: 7px 14px; }
+.nyc-nbhd-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.nyc-nbhd-name { font-size: 12px; font-weight: 600; flex: 1; }
+.nyc-nbhd-hh { font-size: 11px; color: var(--muted); }
+.nyc-nbhd-gr { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; }
+.nyc-nbhd-gr.hot  { background: #DCFCE7; color: #166534; }
+.nyc-nbhd-gr.warm { background: #EEF0FC; color: #4056F4; }
+.nyc-nbhd-gr.flat { background: #F3F4F6; color: #9CA3AF; }
+.nyc-note {
+  font-size: 11px; color: #A0A8C0; line-height: 1.5;
+  padding: 10px 0 0; border-top: 1px solid var(--border); margin-top: 8px;
+}
+@keyframes pulse-grow {
+  0%   { r: var(--pr); opacity: 0.5; }
+  100% { r: calc(var(--pr) * 2.2); opacity: 0; }
+}
+
+/* Map tooltip */
+.map-tooltip { position: fixed; background: var(--blue-dark); color: white; padding: 9px 13px; border-radius: 5px; font-size: 11px; pointer-events: none; display: none; z-index: 1000; box-shadow: 0 4px 16px rgba(0,0,0,.18); min-width: 130px; }
+.tt-name { font-weight: 700; margin-bottom: 5px; font-size: 12px; }
+.tt-row { display: flex; justify-content: space-between; gap: 14px; margin-bottom: 2px; }
+.tt-lbl { color: rgba(255,255,255,.55); }
+.tt-val { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SCREEN 1 — ASSUMPTIONS
+══════════════════════════════════ -->
+<div id="screen1" class="screen active">
+
+  <header class="app-header">
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;opacity:.92">
+        <svg width="30" height="26" viewBox="0 0 100 86" fill="white"><polygon points="50,2 76,34 90,68 68,68 50,46 32,68 10,68 24,34"/></svg>
+        <span style="font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;line-height:1">TONAL</span>
+      </div>
+      <div style="width:1px;height:36px;background:rgba(255,255,255,.22);flex-shrink:0"></div>
+      <div>
+        <div class="ah-brand">Epistemix</div>
+        <div class="ah-title">Direct-to-Consumer Subscriber Growth Model</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="s1-body">
+    <div class="s1-form">
+
+      <!-- UNIT ECONOMICS -->
+      <div class="form-section">
+        <div class="fs-title">Unit Economics</div>
+        <div class="fs-desc">Start with what's fixed: the structural constraints that don't change based on execution quality.</div>
+
+        <div class="fact-group">
+          <div class="fg-label">Hardware</div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Unit COGS, fully loaded</span><span class="inp-val" id="v-cogs">$2,000</span></div>
+            <input type="range" min="500" max="4000" step="100" value="2000" oninput="upd('cogs',+this.value)">
+            <div class="inp-hint">Manufacturing + shipping + installation</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Average Retail Price</span><span class="inp-val" id="v-retail">$3,995</span></div>
+            <input type="range" min="1495" max="5995" step="100" value="3995" oninput="upd('retailPrice',+this.value)">
+            <div class="inp-hint">Net of promotions and discounts</div>
+          </div>
+          <div class="calc-row">
+            <span class="calc-label">Hardware margin</span>
+            <span class="calc-val" id="calc-hw">—</span>
+          </div>
+        </div>
+
+        <div class="fact-group">
+          <div class="fg-label">Subscription</div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Monthly Subscription Price</span><span class="inp-val" id="v-sub">$49</span></div>
+            <input type="range" min="0" max="100" step="1" value="49" oninput="upd('subPrice',+this.value)">
+            <div class="inp-hint">Content platform, coaching features, analytics</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Subscription Op Cost / mo</span><span class="inp-val" id="v-opcost">$20</span></div>
+            <input type="range" min="0" max="50" step="1" value="20" oninput="upd('subOpCost',+this.value)">
+            <div class="inp-hint">Hosting, content amortization, support per subscriber</div>
+          </div>
+          <div class="calc-row">
+            <span class="calc-label">Monthly contribution</span>
+            <span class="calc-val" id="calc-sub">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARGET HOUSEHOLD -->
+      <div class="form-section">
+        <div class="fs-title">Target Household</div>
+        <div class="fs-desc">Define the structural characteristics of a household that make it a viable candidate — before any marketing happens. The synthetic population counts how many of these households exist and where they are going.</div>
+
+        <div class="fact-group">
+          <div class="fg-label">Physical and Financial Qualifiers</div>
+          <div class="inp-row">
+            <div class="inp-hdr">
+              <span class="inp-name">Price point</span>
+              <span class="inp-val" id="v-price-ref">$3,995</span>
+            </div>
+            <div class="inp-hint" id="price-ref-hint">Pulled from Unit Economics — testing discretionary purchase likelihood at this price point</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Discretionary spend tolerance</span><span class="inp-val" id="v-spend-tol">Moderate</span></div>
+            <input type="range" id="i-spend" min="1" max="5" step="1" value="3" oninput="upd('spendTol',+this.value)">
+            <div class="inp-hint" id="spend-hint">Filters to households that make large discretionary purchases in fitness and home improvement — source: consumer spending behavior in synthetic population</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Household Income Floor</span><span class="inp-val" id="v-income">$125K</span></div>
+            <input type="range" id="i-income" min="75000" max="200000" step="5000" value="125000" oninput="upd('income',+this.value)">
+            <div class="inp-hint">ACS-calibrated: ~22% of U.S. households earn ≥ $125K</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Minimum home size</span><span class="inp-val" id="v-sqft">1,000 sq ft</span></div>
+            <input type="range" id="i-sqft" min="500" max="2000" step="100" value="1000" oninput="upd('sqft',+this.value)">
+            <div class="inp-hint">Tonal requires dedicated wall space — minimum housing footprint qualifier</div>
+          </div>
+        </div>
+
+        <div class="fact-group">
+          <div class="fg-label">Fitness Engagement</div>
+          <div class="inp-row" style="margin-bottom:0">
+            <div class="inp-hdr"><span class="inp-name">Minimum engagement level</span><span class="inp-val" id="v-fitness-eng">Regular</span></div>
+            <input type="range" id="i-fitness-eng" min="1" max="4" step="1" value="2" oninput="upd('fitnessEng',+this.value)">
+            <div class="inp-hint" id="fitness-eng-hint">Qualifies households where at least one member exercises 3–4× per week with structured training — source: fitness behavior clusters in synthetic population</div>
+          </div>
+          <div class="calc-row" style="border-top:1px solid var(--border);margin-top:12px;padding-top:7px;">
+            <span class="calc-label" style="color:var(--blue)">Run model → see 5-year population projection</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M3 7h8M7 3l4 4-4 4" stroke="#4056F4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROWTH PARAMETERS -->
+      <div class="form-section">
+        <div class="fs-title">Growth Parameters</div>
+        <div class="fs-desc">Current state and go-to-market dynamics. These feed the adoption simulation.</div>
+
+        <div class="fact-group">
+          <div class="fg-label">Go-to-Market Mode</div>
+          <div class="inp-row" style="margin-bottom:0">
+            <div class="gtm-btns">
+              <button class="gtm-btn active" id="btn-cluster" onclick="setGtm('cluster')">Metro-Concentrated</button>
+              <button class="gtm-btn" id="btn-broadcast" onclick="setGtm('broadcast')">National Launch</button>
+            </div>
+            <div class="inp-hint" style="margin-top:6px" id="gtm-hint">Target top 10 density metros first — amplifies social diffusion coefficient (q)</div>
+          </div>
+        </div>
+
+        <div class="fact-group">
+          <div class="fg-label">Current State</div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Subscribers today</span><span class="inp-val" id="v-subs">45,000</span></div>
+            <input type="range" min="5000" max="250000" step="1000" value="45000" oninput="upd('startSubs',+this.value)">
+            <div class="inp-hint">Current installed base (hardware sold and subscription active)</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Monthly CAC (current)</span><span class="inp-val" id="v-cac">$950</span></div>
+            <input type="range" min="100" max="2500" step="50" value="950" oninput="upd('cac',+this.value)">
+            <div class="inp-hint">Blended: paid + organic + retail</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Monthly churn rate</span><span class="inp-val" id="v-churn">1.5%</span></div>
+            <input type="range" min="0.5" max="7.0" step="0.1" value="1.5" oninput="upd('churn',+this.value/100)">
+            <div class="inp-hint">~1.5% monthly ≈ 17% annually. Peloton peak: ~1%. Industry range: 1–4%</div>
+          </div>
+          <div class="inp-row">
+            <div class="inp-hdr"><span class="inp-name">Customer satisfaction score</span><span class="inp-val" id="v-sat">8/10</span></div>
+            <input type="range" min="0" max="10" step="1" value="8" oninput="upd('satisfaction',+this.value)">
+            <div class="inp-hint" id="sat-q-hint">q = 0.22 · drives referral coefficient and organic acquisition share</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARGET SEGMENTS -->
+      <div class="form-section">
+        <div class="fs-title">Target Segments</div>
+        <div class="fs-desc">Within the qualified household pool above, segments describe how different buyers make purchase decisions and how they influence each other in the model. These drive adoption dynamics, not eligibility.</div>
+        <div class="section-meta">
+          <span class="section-source">Source: Epistemix synthetic population estimates</span>
+        </div>
+        <div class="seg-toggles">
+
+          <div class="seg-toggle on" data-seg="0" onclick="toggleSeg(this)">
+            <div class="seg-toggle-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="seg-toggle-body">
+              <div class="seg-toggle-name">Fitness Enthusiasts</div>
+              <textarea class="seg-rationale" rows="2" onclick="event.stopPropagation()" oninput="autoResize(this)">Already strength training and investing in fitness. Tonal fits an existing behavior. The barrier is product education, not motivation. High brand affinity today, but limited remaining headroom.</textarea>
+              <div class="seg-param">Est. ~65% category awareness · 1.2M households</div>
+            </div>
+          </div>
+
+          <div class="seg-toggle on" data-seg="1" onclick="toggleSeg(this)">
+            <div class="seg-toggle-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="seg-toggle-body">
+              <div class="seg-toggle-name">Aspirational Health</div>
+              <textarea class="seg-rationale" rows="2" onclick="event.stopPropagation()" oninput="autoResize(this)">Health is a stated priority but gym attendance is inconsistent. Tonal competes with gym guilt, not gym habits. The right frame is "investment in consistency." Price is the primary conversion barrier.</textarea>
+              <div class="seg-param">Est. ~30% category awareness · 3.8M households</div>
+            </div>
+          </div>
+
+          <div class="seg-toggle on" data-seg="2" onclick="toggleSeg(this)">
+            <div class="seg-toggle-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="seg-toggle-body">
+              <div class="seg-toggle-name">Efficiency Seekers</div>
+              <textarea class="seg-rationale" rows="2" onclick="event.stopPropagation()" oninput="autoResize(this)">Time-constrained buyers for whom gym overhead is the real barrier to consistent training. Already spending $80+/mo on a gym they can't get to. At $49/mo the cost narrative is favorable. Hardware price is a qualifier, not a barrier.</textarea>
+              <div class="seg-param">Est. ~18% category awareness · 4.5M households</div>
+            </div>
+          </div>
+
+          <div class="seg-toggle" data-seg="3" onclick="toggleSeg(this)">
+            <div class="seg-toggle-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="seg-toggle-body">
+              <div class="seg-toggle-name">Weekend Warriors</div>
+              <textarea class="seg-rationale" rows="2" onclick="event.stopPropagation()" oninput="autoResize(this)">Casual, irregular exercisers without a strong fitness identity. Low purchase intent and higher churn than fitness-identity segments. Primarily useful for understanding the addressable ceiling.</textarea>
+              <div class="seg-param">Est. ~8% category awareness · 2.5M households</div>
+            </div>
+          </div>
+
+          <div class="seg-toggle" data-seg="4" onclick="toggleSeg(this)">
+            <div class="seg-toggle-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="seg-toggle-body">
+              <div class="seg-toggle-name">Prestige Home</div>
+              <textarea class="seg-rationale" rows="2" onclick="event.stopPropagation()" oninput="autoResize(this)">Acquires products for what they signal. Tonal is a $4,000 wall-mounted object visible in the home. High conversion on hardware; higher churn on the subscription once novelty fades. Different intervention model than fitness-motivated segments.</textarea>
+              <div class="seg-param">Est. ~15% category awareness · 1.6M households</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SUCCESS THRESHOLD -->
+      <div class="form-section">
+        <div class="fs-title">Success Threshold</div>
+        <div class="section-meta" style="margin-bottom:12px">
+          <span class="section-source">Target metric: subscriber count</span>
+        </div>
+        <div class="threshold-grid">
+
+          <div class="tc" data-tier="good" onclick="selectTier(this)">
+            <div class="tc-tier">Proof of concept</div>
+            <div class="tc-subs-row"><span class="tc-subs-val">120K</span><span class="tc-subs-lbl">subscribers</span></div>
+            <div class="tc-desc">Positive cash flow before fixed costs. Viable unit economics.</div>
+            <div class="tc-implied">
+              <div class="tc-imp-row"><span class="tc-imp-lbl">Net sub margin at target</span><span class="tc-imp-val neut" id="tc-cf-good">—</span></div>
+              <div class="tc-imp-row"><span class="tc-imp-lbl">TAM coverage</span><span class="tc-imp-val neut" id="tc-tam-good">—</span></div>
+            </div>
+          </div>
+
+          <div class="tc selected" data-tier="better" onclick="selectTier(this)">
+            <div class="tc-tier">Growth threshold</div>
+            <div class="tc-subs-row"><span class="tc-subs-val">240K</span><span class="tc-subs-lbl">subscribers</span></div>
+            <div class="tc-desc">Fundable growth-stage business. Healthy monthly cash flow.</div>
+            <div class="tc-implied">
+              <div class="tc-imp-row"><span class="tc-imp-lbl">Net sub margin at target</span><span class="tc-imp-val neut" id="tc-cf-better">—</span></div>
+              <div class="tc-imp-row"><span class="tc-imp-lbl">TAM coverage</span><span class="tc-imp-val neut" id="tc-tam-better">—</span></div>
+            </div>
+          </div>
+
+          <div class="tc" data-tier="best" onclick="selectTier(this)">
+            <div class="tc-tier">Category leader</div>
+            <div class="tc-subs-row"><span class="tc-subs-val">400K</span><span class="tc-subs-lbl">subscribers</span></div>
+            <div class="tc-desc">Strong network effects. High-confidence exit multiple.</div>
+            <div class="tc-implied">
+              <div class="tc-imp-row"><span class="tc-imp-lbl">Net sub margin at target</span><span class="tc-imp-val neut" id="tc-cf-best">—</span></div>
+              <div class="tc-imp-row"><span class="tc-imp-lbl">TAM coverage</span><span class="tc-imp-val neut" id="tc-tam-best">—</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /s1-form -->
+
+    <!-- PREVIEW SIDEBAR -->
+    <div class="s1-sidebar">
+
+      <div class="preview-card">
+        <div class="pc-title">Unit Economics Preview</div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">LTV / CAC <span style="font-size:10px;color:var(--muted);font-weight:400">(green ≥ 3×)</span></span>
+          <span class="pc-metric-val" id="s1-ltvcac">—</span>
+        </div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">CAC Payback <span style="font-size:10px;color:var(--muted);font-weight:400">(green ≤ 24 mo)</span></span>
+          <span class="pc-metric-val" id="s1-payback">—</span>
+        </div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">Hardware Margin</span>
+          <span class="pc-metric-val neut" id="s1-hwm">—</span>
+        </div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">Monthly Contribution</span>
+          <span class="pc-metric-val neut" id="s1-contrib">—</span>
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <div class="pc-title">Population Estimate</div>
+        <div id="s1-pop-summary"></div>
+      </div>
+
+      <div class="preview-card">
+        <div class="pc-title">Target</div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">Success threshold</span>
+          <span class="pc-metric-val neut" id="s1-target-val">240K subs</span>
+        </div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">Gap to close</span>
+          <span class="pc-metric-val" id="s1-gap">195,000</span>
+        </div>
+        <div class="pc-metric">
+          <span class="pc-metric-label">Net sub margin at target</span>
+          <span class="pc-metric-val" id="s1-cf-preview">—</span>
+        </div>
+      </div>
+
+      <button class="model-btn" onclick="runModel()">
+        Run the Model
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="model-btn-note">Epistemix synthetic population model · Illustrative output</div>
+
+    </div><!-- /s1-sidebar -->
+
+  </div><!-- /s1-body -->
+</div><!-- /screen1 -->
+
+
+<!-- ══════════════════════════════════
+     INTERSTITIAL
+══════════════════════════════════ -->
+<div id="screen-inter">
+  <div class="inter-brand">Epistemix · Population Simulation Engine</div>
+  <div class="inter-terminal" id="inter-terminal"></div>
+  <div class="inter-progress-wrap">
+    <div class="inter-progress-track"><div class="inter-progress-fill" id="inter-bar"></div></div>
+    <div class="inter-progress-label" id="inter-pct">0%</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 2 — OUTPUT TABS
+══════════════════════════════════ -->
+<div id="screen2">
+
+  <header class="app-header">
+    <div style="display:flex;align-items:center;gap:18px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;opacity:.92">
+        <svg width="30" height="26" viewBox="0 0 100 86" fill="white"><polygon points="50,2 76,34 90,68 68,68 50,46 32,68 10,68 24,34"/></svg>
+        <span style="font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;line-height:1">TONAL</span>
+      </div>
+      <div style="width:1px;height:36px;background:rgba(255,255,255,.22);flex-shrink:0"></div>
+      <div>
+        <div class="ah-brand">Epistemix</div>
+        <div class="ah-title">Market Intelligence Model</div>
+        <div class="ah-sub" id="s2-context">Synthetic population output — based on your assumptions</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="goBack()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Edit Assumptions
+    </button>
+  </header>
+
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="switchTab('population',this)">Population</div>
+    <div class="tab-btn" onclick="switchTab('growth',this)">Growth Dynamics</div>
+    <div class="tab-btn" onclick="switchTab('strategy',this)">Strategy</div>
+  </div>
+
+  <div class="tab-scroll">
+
+    <!-- POPULATION TAB -->
+    <div class="tab-pane active" id="tab-population">
+
+      <!-- TAM headline + year trend -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:5px;">Total Addressable Market — 5-Year Projection</div>
+        <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:6px;flex-wrap:wrap;">
+          <span id="pop-num" style="font-size:min(96px,10vw);font-weight:300;color:#1C3080;letter-spacing:-.03em;line-height:1;">—</span>
+          <div>
+            <div style="font-size:20px;color:#6B7280;font-weight:300;">households in TAM</div>
+            <div id="pop-year-lbl" style="font-size:15px;color:#A0A8C0;margin-top:2px;">by 2031</div>
+          </div>
+        </div>
+        <div id="pop-sub" style="font-size:12px;color:#A0A8C0;line-height:1.5;margin-bottom:14px;max-width:680px;"></div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px 10px;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">Addressable market by year</div>
+          <canvas id="pop-trend-chart" style="max-height:120px;"></canvas>
+        </div>
+      </div>
+
+      <!-- MAP — edge-to-edge within tab -->
+      <div style="margin:0 -24px 14px;">
+        <div style="padding:0 24px 8px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;" id="map-card-title">Geographic Concentration — Projected Viable Households by Metro</div>
+          <div style="font-size:10px;color:#A0A8C0;">Bubble size = HH count · Color = social density (q)</div>
+        </div>
+        <div class="map-wrap" style="border-radius:0;">
+          <div class="map-loading" id="map-loading">Loading map data...</div>
+          <svg id="map-svg"></svg>
+        </div>
+        <div style="display:flex;gap:18px;padding:7px 24px 2px;align-items:center;flex-wrap:wrap;">
+          <div class="map-leg-item"><svg width="40" height="8"><line x1="0" y1="4" x2="40" y2="4" stroke="#CBD1EE" stroke-width="1"/></svg>State boundaries</div>
+          <div class="map-leg-item"><svg width="28" height="16"><circle cx="8" cy="8" r="6" fill="#4056F4" opacity="0.7"/><circle cx="22" cy="8" r="3" fill="#4056F4" opacity="0.7"/></svg>Circle = viable HH count</div>
+          <div class="map-leg-item"><svg width="48" height="10"><defs><linearGradient id="lg2"><stop offset="0%" stop-color="#C8D0F0"/><stop offset="100%" stop-color="#1C3080"/></linearGradient></defs><rect width="48" height="10" fill="url(#lg2)" rx="2"/></svg>Low → High social density (q)</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Population Funnel</div>
+          <div id="funnel-rows"></div>
+        </div>
+        <div class="q-card">
+          <div class="card-title" style="color:rgba(255,255,255,.45)">Network Coefficient (q)</div>
+          <div id="q-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROWTH TAB -->
+    <div class="tab-pane" id="tab-growth">
+
+      <!-- Section 1: Penetration required -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
+          What % of the TAM do you need to convert to hit each threshold?
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="penetration-cards"></div>
+      </div>
+
+      <!-- Section 2: Category benchmarks -->
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Category Benchmarks — for reference, not model output</div>
+        <div id="comps-content"></div>
+      </div>
+
+      <!-- Section 3: Trajectory vs thresholds -->
+      <div class="card" style="padding-bottom:12px;margin-bottom:14px;">
+        <div class="card-title" id="chart-title">Subscriber Trajectory vs. Target Thresholds</div>
+        <canvas id="growth-chart" style="max-height:220px;"></canvas>
+      </div>
+
+      <!-- Section 4: Launch mode (explanatory) -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:8px;">Model assumptions — launch approach</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="mode-cards"></div>
+
+    </div>
+
+    <!-- STRATEGY TAB -->
+    <div class="tab-pane" id="tab-strategy">
+
+      <!-- Section 1: Population-derived insights -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
+        What the synthetic population and ABM are telling you
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;" id="insight-cards"></div>
+
+      <!-- Section 2: Commercial levers — no bar chart -->
+      <div style="margin-bottom:6px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;">Three decisions that would move the outcome</div>
+        <div style="font-size:11px;color:#A0A8C0;margin-top:2px;">If the company makes any of these choices, the model projects the following changes to the addressable pool and Year 5 subscription revenue.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;" id="lever-rows"></div>
+
+      <!-- Section 3: Activation sequence -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:6px;">
+        Model-derived activation sequence
+      </div>
+      <div style="font-size:11px;color:#A0A8C0;margin-bottom:8px;">Each step follows from a specific dynamic in the model — geographic concentration, social diffusion velocity, growth projections, or lever timing. This is not a generic framework.</div>
+      <div class="act-card" id="act-card"></div>
+
+    </div>
+
+  </div><!-- /tab-scroll -->
+</div><!-- /screen2 -->
+
+<!-- MAP TOOLTIP -->
+<div class="map-tooltip" id="map-tt">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-row"><span class="tt-lbl">Viable HH (Y5)</span><span class="tt-val" id="tt-hh"></span></div>
+  <div class="tt-row"><span class="tt-lbl">Share of total</span><span class="tt-val" id="tt-pct"></span></div>
+  <div class="tt-row"><span class="tt-lbl">Social density q</span><span class="tt-val" id="tt-q"></span></div>
+  <div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:6px;text-align:center;">Click to drill down</div>
+</div>
+
+<!-- NYC DRILL-DOWN MODAL -->
+<div class="nyc-modal-overlay" id="nyc-modal" onclick="if(event.target===this)closeNYCModal()">
+  <div class="nyc-modal-box">
+    <div class="nyc-modal-header">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin-bottom:3px;">Neighborhood Drill-Down</div>
+        <div style="font-size:19px;font-weight:600;">New York City — Qualifying Household Density</div>
+        <div style="font-size:11px;opacity:.6;margin-top:3px;" id="nyc-modal-sub">Year 5 projection · bubble size = qualifying households · color = growth rate</div>
+      </div>
+      <button onclick="closeNYCModal()" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:white;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">Close ✕</button>
+    </div>
+    <div class="nyc-modal-body">
+      <div class="nyc-map-panel">
+        <svg id="nyc-svg" viewBox="0 0 580 490" style="width:100%;max-height:calc(96vh - 80px);height:auto;"></svg>
+      </div>
+      <div class="nyc-list-panel">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">By Neighborhood</div>
+        <div id="nyc-nbhd-list"></div>
+        <div class="nyc-note">
+          <strong style="color:var(--text);">Large bubble</strong> = most qualifying households today.<br>
+          <strong style="color:#0F2060);">Dark color + pulse</strong> = fastest growing into the market — income appreciation and housing turnover are bringing more households into range.<br><br>
+          These fast-growing neighborhoods are also the highest-value targets for out-of-home advertising, retail activations, and community fitness partnerships. Tonal's ideal buyer sees the product in their neighborhood before they search for it.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════
+
+// gr = annual qualifying-household growth rate for this metro
+// Driven by: in-migration of high-income households, new high-density housing, income growth in existing residents
+const METROS_BASE = [
+  { name:"New York",      label:"NYC", lat:40.71, lon:-74.01,  hh:558000, q:0.48, gr:0.018 },
+  { name:"Los Angeles",   label:"LA",  lat:34.05, lon:-118.24, hh:387000, q:0.44, gr:0.015 },
+  { name:"Bay Area",      label:"SF",  lat:37.77, lon:-122.42, hh:294000, q:0.46, gr:0.012 },
+  { name:"Chicago",       label:"CHI", lat:41.88, lon:-87.63,  hh:218000, q:0.38, gr:0.010 },
+  { name:"Boston",        label:"BOS", lat:42.36, lon:-71.06,  hh:176000, q:0.42, gr:0.024 },
+  { name:"Washington DC", label:"DC",  lat:38.91, lon:-77.04,  hh:162000, q:0.40, gr:0.026 },
+  { name:"Seattle",       label:"SEA", lat:47.61, lon:-122.33, hh:134000, q:0.43, gr:0.038 },
+  { name:"Miami",         label:"MIA", lat:25.77, lon:-80.19,  hh:112000, q:0.35, gr:0.030 },
+  { name:"Dallas",        label:"DAL", lat:32.78, lon:-96.80,  hh: 89000, q:0.31, gr:0.034 },
+  { name:"Austin",        label:"ATX", lat:30.27, lon:-97.74,  hh: 71000, q:0.29, gr:0.048 },
+];
+
+const SEGS = [
+  { name:'Fitness Enthusiasts', hh:1200000, on:true  },
+  { name:'Aspirational Health',  hh:3800000, on:true  },
+  { name:'Efficiency Seekers',   hh:4500000, on:true  },
+  { name:'Weekend Warriors',     hh:2500000, on:false },
+  { name:'Prestige Home',        hh:1600000, on:false },
+];
+
+const TIER_TARGETS = { good:120000, better:240000, best:400000 };
+let selectedTier = 'better';
+const SAT_Q_LOOKUP = [0.01,0.02,0.03,0.04,0.06,0.08,0.10,0.15,0.22,0.30,0.37];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+
+const S = {
+  // Unit economics
+  cogs:2000, retailPrice:3995, subPrice:49, subOpCost:20, cac:950, satisfaction:8,
+  // Target household
+  sqft:1000, income:125000,
+  spendTol:3,    // 1=low, 2=moderate-low, 3=moderate, 4=moderate-high, 5=high
+  fitnessEng:2,  // 1=occasional, 2=regular, 3=committed, 4=dedicated
+  // Growth
+  gtmMode:'cluster', startSubs:45000, churn:0.015,
+};
+
+let gtmMode = 'cluster';
+let growthChart = null;
+let mapReady = false;
+let activeMetros = METROS_BASE.map(m => ({...m}));
+
+// ════════════════════════════════════════════════
+// INPUT HANDLERS
+// ════════════════════════════════════════════════
+
+function upd(key, val) {
+  S[key] = val;
+  const SPEND_LABELS = ['','Low','Moderate-Low','Moderate','Moderate-High','High'];
+  const SPEND_HINTS  = ['',
+    'Filters to households that very rarely make large discretionary purchases',
+    'Filters to households that occasionally make significant discretionary purchases',
+    'Filters to households with regular pattern of large discretionary spend in lifestyle categories',
+    'Filters to households with high discretionary spend — gym memberships, equipment, home upgrades',
+    'Filters to the highest discretionary spenders — early adopters of premium lifestyle products',
+  ];
+  const ENG_LABELS = ['','Occasional','Regular','Committed','Dedicated'];
+  const ENG_HINTS  = ['',
+    'Qualifies households where at least one member exercises occasionally — low purchase intent for structured training equipment',
+    'Qualifies households where at least one member exercises 3–4× per week with structured training',
+    'Qualifies households where at least one member trains 5+ days per week with a defined program',
+    'Qualifies households with high-performance or near-competitive fitness behavior',
+  ];
+
+  const d = {
+    cogs:         () => document.getElementById('v-cogs').textContent    = '$'+val.toLocaleString(),
+    retailPrice:  () => {
+      document.getElementById('v-retail').textContent   = '$'+val.toLocaleString();
+      document.getElementById('v-price-ref').textContent = '$'+val.toLocaleString();
+      document.getElementById('price-ref-hint').textContent =
+        `Pulled from Unit Economics — testing discretionary purchase likelihood at $${val.toLocaleString()}`;
+    },
+    subPrice:     () => document.getElementById('v-sub').textContent     = '$'+val,
+    subOpCost:    () => document.getElementById('v-opcost').textContent  = '$'+val,
+    cac:          () => document.getElementById('v-cac').textContent     = '$'+val.toLocaleString(),
+    satisfaction: () => {
+      const q = SAT_Q_LOOKUP[Math.round(Math.max(0,Math.min(10,val)))];
+      document.getElementById('v-sat').textContent      = val+'/10';
+      document.getElementById('sat-q-hint').textContent = `q = ${q.toFixed(2)} · drives referral coefficient and organic acquisition share`;
+    },
+    sqft:      () => document.getElementById('v-sqft').textContent    = val.toLocaleString()+' sq ft',
+    income:    () => document.getElementById('v-income').textContent  = '$'+Math.round(val/1000)+'K',
+    spendTol:  () => {
+      document.getElementById('v-spend-tol').textContent = SPEND_LABELS[val] || 'Moderate';
+      document.getElementById('spend-hint').textContent  = SPEND_HINTS[val] || '';
+    },
+    fitnessEng:() => {
+      document.getElementById('v-fitness-eng').textContent  = ENG_LABELS[val] || 'Regular';
+      document.getElementById('fitness-eng-hint').textContent = ENG_HINTS[val] || '';
+    },
+    startSubs: () => document.getElementById('v-subs').textContent    = val.toLocaleString(),
+    churn:     () => document.getElementById('v-churn').textContent   = (val*100).toFixed(1)+'%',
+  };
+  if (d[key]) d[key]();
+  updatePreview();
+}
+
+function setGtm(mode) {
+  gtmMode = mode; S.gtmMode = mode;
+  document.getElementById('btn-cluster').classList.toggle('active', mode==='cluster');
+  document.getElementById('btn-broadcast').classList.toggle('active', mode==='broadcast');
+  document.getElementById('gtm-hint').textContent = mode === 'cluster'
+    ? 'Concentrate resources in the 10 densest metros first — households are close enough to drive peer referral'
+    : 'Launch nationally from day one — broader reach, lower word-of-mouth velocity';
+  updatePreview();
+}
+
+function toggleSeg(el) {
+  const i = +el.dataset.seg;
+  SEGS[i].on = !SEGS[i].on;
+  el.classList.toggle('on', SEGS[i].on);
+  updatePreview();
+}
+
+function autoResize(el) { el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+function selectTier(el) {
+  document.querySelectorAll('.tc').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTier = el.dataset.tier;
+  updatePreview();
+}
+
+// ════════════════════════════════════════════════
+// MODEL
+// ════════════════════════════════════════════════
+
+// Spend tolerance multipliers: at a given price, what fraction of income-qualifying HH
+// actually make purchases of this type and magnitude?
+const SPEND_MULTS = [0, 0.68, 0.82, 1.00, 1.20, 1.42]; // index 1-5
+
+// Fitness engagement pool fractions: what share of housing-qualified HH have someone
+// exercising at this level or above?
+const FITNESS_RATES = [0, 0.52, 0.38, 0.24, 0.14]; // index 1-4 (occasional → dedicated)
+
+// Fitness engagement → q boost: more committed athletes refer more within their social network
+const FITNESS_Q_BOOST = [0, 0.85, 1.00, 1.18, 1.40]; // relative to baseline q
+
+function computeTam(s) {
+  let tam = 3_200_000;
+  // Price sensitivity: derived from actual retail price vs. $3K baseline
+  tam *= Math.pow(3000 / Math.max(500, s.retailPrice), 0.38);
+  // Spend tolerance: further adjusts based on HH spending behavior pattern
+  tam *= SPEND_MULTS[Math.max(1, Math.min(5, s.spendTol))];
+  // Income floor
+  tam *= Math.pow(125000 / s.income, 0.95);
+  // Housing footprint
+  tam *= Math.pow(1000 / s.sqft, 0.48);
+  // Fitness engagement: higher threshold = smaller but more qualified pool
+  tam *= FITNESS_RATES[Math.max(1, Math.min(4, s.fitnessEng))];
+  return Math.round(Math.max(300000, Math.min(18000000, tam)));
+}
+
+function computeFunnel(s, tam) {
+  const incomeHH   = Math.round(134200000 * 0.22 * Math.pow(125000/s.income, 0.95));
+  const housingHH  = Math.round(incomeHH * 0.55 * Math.pow(1000/s.sqft, 0.48));
+  const spendHH    = Math.round(housingHH * SPEND_MULTS[Math.max(1,Math.min(5,s.spendTol))]);
+  const fitRate    = FITNESS_RATES[Math.max(1, Math.min(4, s.fitnessEng))];
+  const fitnessHH  = Math.round(spendHH * fitRate);
+  const engLabels  = ['','occasional exerciser','regular exerciser','committed athlete','dedicated athlete'];
+  const spendNames = ['','low','moderate-low','moderate','moderate-high','high'];
+  return [
+    { label:'Total U.S. households',                                                    val:134200000, col:'#DDE1F4' },
+    { label:`HH income ≥ $${Math.round(s.income/1000)}K`,                             val:Math.min(incomeHH,65000000), col:'#B0BBF0' },
+    { label:`Housing fit (≥ ${s.sqft.toLocaleString()} sq ft + dedicated wall space)`, val:Math.min(housingHH,incomeHH), col:'#9CA8F0' },
+    { label:`Discretionary spend (${spendNames[s.spendTol]} tolerance at $${Math.round(s.retailPrice/1000)}K)`, val:Math.min(spendHH,housingHH), col:'#7B8FE8' },
+    { label:`Fitness engagement (${engLabels[s.fitnessEng]} or above)`,                val:Math.min(fitnessHH,spendHH), col:'#4056F4' },
+    { label:'Social density qualifier (q ≥ 0.2)',                                       val:tam, col:'#1C3080' },
+  ];
+}
+
+function modelParams(s, tam, mode) {
+  const satQ     = SAT_Q_LOOKUP[Math.round(Math.max(0,Math.min(10,s.satisfaction)))];
+  const fitBoost = FITNESS_Q_BOOST[Math.max(1, Math.min(4, s.fitnessEng))];
+  if (mode === 'cluster') {
+    return { tam, p:0.003, q:Math.min(0.60, satQ*2.8*fitBoost), aw:0.45, cv:0.018, s0:s.startSubs, ch:s.churn };
+  } else {
+    return { tam, p:0.003, q:Math.min(0.22, satQ*0.9*fitBoost), aw:0.15, cv:0.018, s0:s.startSubs, ch:s.churn*1.45 };
+  }
+}
+
+function simulate(p, months) {
+  const ceil = Math.max(1, p.tam * p.aw);
+  let sub = Math.min(p.s0, ceil);
+  const out = [Math.round(sub)];
+  for (let m=0; m<months; m++) {
+    const rem = Math.max(0, ceil-sub);
+    const sat = ceil > 0 ? sub/ceil : 0;
+    sub = Math.max(0, Math.min(ceil, sub + p.p*rem*p.cv + p.q*sat*rem*p.cv - sub*p.ch/12));
+    out.push(Math.round(sub));
+  }
+  return out;
+}
+
+function arrM(traj, pm) { return Math.round(traj[60] * pm * 12 / 1e6 * 10) / 10; }
+function priceMonthly(tier) { return {premium:4495/12, standard:2995/12, entry:1995/12}[tier] || 2995/12; }
+
+function computeLevers(s, tam) {
+  const bp = modelParams(s, tam, gtmMode);
+  const pm = priceMonthly(s.price);
+  const base   = simulate(bp, 60);
+  const lev1   = simulate({...bp, tam:Math.round(tam*1.17), q:Math.min(0.55,bp.q*1.05)}, 60);
+  const lev2   = simulate({...bp, tam:Math.round(tam*1.24)}, 60);
+  const lev3   = simulate({...bp, aw:Math.min(0.72,bp.aw*1.18), q:Math.min(0.55,bp.q*1.09)}, 60);
+  const levAll = simulate({...bp, tam:Math.round(tam*1.47), aw:Math.min(0.72,bp.aw*1.2), q:Math.min(0.55,bp.q*1.12)}, 60);
+  return {
+    base: {y5:base[60],   arr:arrM(base,pm)},
+    lev1: {y5:lev1[60],   arr:arrM(lev1,pm), hhd:Math.round(tam*0.17), cpct:92},
+    lev2: {y5:lev2[60],   arr:arrM(lev2,pm), hhd:Math.round(tam*0.24), cpct:52},
+    lev3: {y5:lev3[60],   arr:arrM(lev3,pm), hhd:Math.round(tam*0.24), cpct:100},
+    all:  {y5:levAll[60], arr:arrM(levAll,pm)},
+  };
+}
+
+const PROJ_YEARS = 5;
+
+// Annual growth rate for the total qualifying pool.
+// Three drivers: income distribution shift (~2.2%/yr more HH cross income floor),
+// home fitness behavior adoption (~2.8%/yr), partially offset by housing compression in dense areas (~0.5%).
+// Net: ~4.5% annual growth.
+const POOL_ANNUAL_GROWTH = 0.045;
+
+function projectTam(baseTam, years) {
+  return Math.round(baseTam * Math.pow(1 + POOL_ANNUAL_GROWTH, years));
+}
+
+function projectMetros(baseMetros, scale, years) {
+  return baseMetros.map(m => ({
+    ...m,
+    hh: Math.round(m.hh * scale * Math.pow(1 + m.gr, years)),
+  }));
+}
+
+function poolByYear(baseTam, years) {
+  const out = [];
+  for (let y = 0; y <= years; y++) out.push(Math.round(baseTam * Math.pow(1 + POOL_ANNUAL_GROWTH, y)));
+  return out;
+}
+
+function fmt(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(0)+'K';
+  return String(n);
+}
+function fmtMoney(n) {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 1e6) return sign+'$'+(abs/1e6).toFixed(1)+'M/mo';
+  if (abs >= 1e3) return sign+'$'+(abs/1e3).toFixed(0)+'K/mo';
+  return sign+'$'+abs+'/mo';
+}
+
+// ════════════════════════════════════════════════
+// PREVIEW SIDEBAR
+// ════════════════════════════════════════════════
+
+function updatePreview() {
+  const s = S;
+  const hwM   = s.retailPrice - s.cogs;
+  const hwPct = Math.round(hwM / Math.max(1,s.retailPrice) * 100);
+  const subM  = s.subPrice - s.subOpCost;
+
+  document.getElementById('calc-hw').textContent  = `$${hwM.toLocaleString()} · ${hwPct}%`;
+  document.getElementById('calc-sub').textContent = `$${subM}/mo · ${Math.round(subM/Math.max(1,s.subPrice)*100)}%`;
+
+  // LTV / CAC
+  const ltv    = subM > 0 ? Math.round(subM / Math.max(0.0001,s.churn)) : 0;
+  const ltvCac = ltv > 0 && s.cac > 0 ? (ltv / s.cac).toFixed(1) : '—';
+  const payback= subM > 0 ? Math.round(s.cac / Math.max(0.01,subM)) : 999;
+  const ltvEl  = document.getElementById('s1-ltvcac');
+  ltvEl.textContent = ltvCac + '×';
+  ltvEl.className   = 'pc-metric-val ' + (parseFloat(ltvCac) >= 3 ? 'good' : parseFloat(ltvCac) >= 1.5 ? 'warn' : 'bad');
+  const pbEl = document.getElementById('s1-payback');
+  pbEl.textContent = payback + ' mo';
+  pbEl.className   = 'pc-metric-val ' + (payback <= 24 ? 'good' : payback <= 36 ? 'warn' : 'bad');
+  document.getElementById('s1-hwm').textContent    = `$${hwM.toLocaleString()} (${hwPct}%)`;
+  document.getElementById('s1-contrib').textContent = `$${subM}/mo`;
+
+  // TAM (preview only — projection shown on screen 2)
+  const tam = computeTam(s);
+  const spendNames = ['','Low','Mod-Low','Moderate','Mod-High','High'];
+  const engNames   = ['','Occasional','Regular','Committed','Dedicated'];
+  document.getElementById('s1-pop-summary').innerHTML =
+    `<div class="pc-mkt-row"><span>Price point</span><span>$${s.retailPrice.toLocaleString()}</span></div>` +
+    `<div class="pc-mkt-row"><span>Spend tolerance</span><span>${spendNames[s.spendTol]}</span></div>` +
+    `<div class="pc-mkt-row"><span>Income floor</span><span>≥ $${Math.round(s.income/1000)}K</span></div>` +
+    `<div class="pc-mkt-row"><span>Home size</span><span>≥ ${s.sqft.toLocaleString()} sq ft</span></div>` +
+    `<div class="pc-mkt-row"><span>Fitness engagement</span><span>${engNames[s.fitnessEng]}</span></div>` +
+    `<div class="pc-mkt-row total"><span>Est. today's pool</span><span>${fmt(tam)}</span></div>`;
+
+  // Threshold cards
+  ['good','better','best'].forEach(tier => {
+    const tgt = TIER_TARGETS[tier];
+    const cf  = subM * tgt;
+    const cov = Math.round(tgt / Math.max(1,tam) * 100);
+    const cfEl  = document.getElementById(`tc-cf-${tier}`);
+    const tamEl = document.getElementById(`tc-tam-${tier}`);
+    cfEl.textContent  = fmtMoney(cf);
+    cfEl.className    = 'tc-imp-val ' + (cf >= 1e6 ? 'good' : cf >= 0 ? 'warn' : 'bad');
+    tamEl.textContent = cov + '% of pool';
+  });
+
+  // Target summary
+  const tgt = TIER_TARGETS[selectedTier];
+  document.getElementById('s1-target-val').textContent  = (tgt/1000).toFixed(0)+'K subs';
+  document.getElementById('s1-gap').textContent         = Math.max(0, tgt - s.startSubs).toLocaleString();
+  document.getElementById('s1-cf-preview').textContent  = fmtMoney(subM * tgt);
+}
+
+// ════════════════════════════════════════════════
+// RUN MODEL → INTERSTITIAL → RESULTS
+// ════════════════════════════════════════════════
+
+function runModel() {
+  document.getElementById('screen1').classList.remove('active');
+  const inter = document.getElementById('screen-inter');
+  inter.classList.add('active');
+  document.getElementById('inter-bar').style.width = '0%';
+  document.getElementById('inter-pct').textContent = '0%';
+  document.getElementById('inter-terminal').innerHTML = '';
+
+  const lines = [
+    `Loading synthetic population (US, 334M agents)...`,
+    `Filtering by household profile — income ≥ $${Math.round(S.income/1000)}K, ≥ ${S.sqft.toLocaleString()} sq ft...`,
+    `Applying discretionary spend and fitness engagement filters...`,
+    `Computing social proximity matrix for 10 metro clusters...`,
+    `Calibrating Bass diffusion (p = 0.003, q derived from housing density)...`,
+    `Running 72-month simulation — ${gtmMode === 'cluster' ? 'cluster-first' : 'national broadcast'} mode...`,
+    `Simulation complete ✓`,
+  ];
+
+  let i = 0;
+  const terminal = document.getElementById('inter-terminal');
+
+  function addLine() {
+    if (i >= lines.length) {
+      document.getElementById('inter-bar').style.width = '100%';
+      document.getElementById('inter-pct').textContent = '100%';
+      setTimeout(showResults, 380);
+      return;
+    }
+    // Fade previous line
+    if (i > 0) {
+      const prev = terminal.children[i-1];
+      if (prev) {
+        prev.classList.add('complete');
+        const cur = prev.querySelector('.inter-cursor');
+        if (cur) cur.style.display = 'none';
+      }
+    }
+    const isLast = (i === lines.length - 1);
+    const div = document.createElement('div');
+    div.className = 'inter-line' + (isLast ? ' inter-complete-line' : '');
+    div.innerHTML = `<span class="inter-prompt">▶</span><span class="inter-text">${lines[i]}${isLast ? '' : '<span class="inter-cursor"></span>'}</span>`;
+    terminal.appendChild(div);
+    setTimeout(() => div.classList.add('visible'), 20);
+
+    const pct = Math.round(((i+1) / lines.length) * 100);
+    document.getElementById('inter-bar').style.width  = pct + '%';
+    document.getElementById('inter-pct').textContent  = pct + '%';
+    i++;
+    setTimeout(addLine, isLast ? 300 : 520 + Math.random()*420);
+  }
+  setTimeout(addLine, 200);
+}
+
+function showResults() {
+  const tam      = computeTam(S);
+  const tamProj  = projectTam(tam, PROJ_YEARS);
+  const pMain    = modelParams(S, tamProj, gtmMode);   // run diffusion against projected pool
+  const pAlt     = modelParams(S, tamProj, gtmMode === 'cluster' ? 'broadcast' : 'cluster');
+  const tMain    = simulate(pMain, 60);                 // 60 months = 5 years
+  const tAlt     = simulate(pAlt,  60);
+  const pm       = priceMonthly(S.price);
+  const levers   = computeLevers(S, tamProj);
+  const funnel   = computeFunnel(S, tam);               // funnel shows today's snapshot
+  const scale    = tam / 3_200_000;
+  const yearPool = poolByYear(tam, PROJ_YEARS);
+  // Map shows projected Year 5 metro counts
+  activeMetros = projectMetros(METROS_BASE, scale, PROJ_YEARS);
+
+  const o = {s:S, tam, tamProj, yearPool, pMain, pAlt, tMain, tAlt, pm, levers, funnel, gtm:gtmMode};
+
+  renderPopulation(o);
+  renderGrowth(o);
+  renderStrategy(o);
+
+  document.getElementById('s2-context').textContent =
+    `${fmt(tamProj)} viable households by ${new Date().getFullYear()+5} (${fmt(tam)} today, +${Math.round((tamProj/tam-1)*100)}%) · ${gtmMode==='cluster'?'Metro-concentrated launch':'National launch'}`;
+
+  document.getElementById('screen-inter').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  // Init map now that screen2 is visible and has real dimensions
+  if (!mapReady) {
+    initMap();
+  } else {
+    updateMapBubbles();
+  }
+
+  // Reset to population tab
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-population').classList.add('active');
+  document.querySelector('.tab-btn').classList.add('active');
+}
+
+function goBack() {
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen1').classList.add('active');
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+// ════════════════════════════════════════════════
+// RENDER — POPULATION
+// ════════════════════════════════════════════════
+
+let popTrendChart = null;
+
+// Inline Chart.js plugin: draw household count above each bar
+const barCountPlugin = {
+  id: 'barCount',
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, idx) => {
+        const val = ds.data[idx];
+        if (val == null) return;
+        ctx.save();
+        ctx.font = 'bold 11px Arial';
+        ctx.fillStyle = '#6B7280';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(fmt(val), bar.x, bar.y - 2);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+function renderPopulation(o) {
+  const {s, tam, tamProj, yearPool, pMain, funnel} = o;
+  const growth    = Math.round((tamProj / tam - 1) * 100);
+  const todayYear = new Date().getFullYear();
+  const projYear  = todayYear + PROJ_YEARS;
+
+  // TAM headline
+  document.getElementById('pop-num').textContent      = fmt(tamProj);
+  document.getElementById('pop-year-lbl').textContent = `by ${projYear}`;
+
+  const engNames   = ['','occasional','regular','committed','dedicated'];
+  const spendNames = ['','low','moderate-low','moderate','moderate-high','high'];
+  document.getElementById('pop-sub').textContent =
+    `Up from ${fmt(tam)} today — ${growth}% growth over 5 years. ` +
+    `Qualifying criteria: income ≥ $${Math.round(s.income/1000)}K, ≥ ${s.sqft.toLocaleString()} sq ft, ` +
+    `${engNames[s.fitnessEng]} fitness engagement, ${spendNames[s.spendTol]} discretionary spend.`;
+
+  // Year-by-year bar chart: actual calendar years + count labels above bars
+  const trendLabels = yearPool.map((_,i) => String(todayYear + i));
+  const barColors   = yearPool.map((_,i) => i === PROJ_YEARS ? '#1C3080' : i === 0 ? '#DDE1F4' : '#4056F4');
+  if (popTrendChart) {
+    popTrendChart.data.labels = trendLabels;
+    popTrendChart.data.datasets[0].data = yearPool;
+    popTrendChart.data.datasets[0].backgroundColor = barColors;
+    popTrendChart.update();
+  } else {
+    const ctx = document.getElementById('pop-trend-chart').getContext('2d');
+    popTrendChart = new Chart(ctx, {
+      type: 'bar',
+      plugins: [barCountPlugin],
+      data: {
+        labels: trendLabels,
+        datasets: [{
+          data: yearPool,
+          backgroundColor: barColors,
+          borderRadius: 3, borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        layout: { padding: { top: 20 } },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => fmt(c.raw) + ' households' } },
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { family: 'Arial', size: 12 }, color: '#6B7280' } },
+          y: { display: false },
+        }
+      }
+    });
+  }
+
+  const maxV = funnel[0].val;
+  document.getElementById('funnel-rows').innerHTML = funnel.map((row, i) => {
+    const pct = i === 0 ? '' : ((row.val / funnel[i-1].val)*100).toFixed(0)+'%';
+    const bw  = Math.max(4, row.val / maxV * 100).toFixed(1);
+    return `<div class="funnel-row">
+      <div class="funnel-dot" style="background:${row.col}"></div>
+      <div class="funnel-label">${row.label}</div>
+      <div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:${bw}%;background:${row.col}"></div></div>
+      <div class="funnel-val">${fmt(row.val)}</div>
+      <div class="funnel-pct">${pct}</div>
+    </div>`;
+  }).join('');
+
+  const qActive = pMain.q;
+  const top3    = activeMetros.slice().sort((a,b)=>b.hh-a.hh).slice(0,3).map(m=>m.name.split(' ')[0]).join(', ');
+  const clShare = Math.round(activeMetros.reduce((acc,m)=>acc+m.hh,0) / tam * 100);
+  document.getElementById('q-content').innerHTML = `
+    <div class="q-row">
+      <div class="q-stat">
+        <div class="q-stat-label">${o.gtm==='cluster'?'Cluster-First q':'National q'}</div>
+        <div class="q-stat-val">${qActive.toFixed(2)}</div>
+        <div class="q-stat-sub">viral coefficient (active)</div>
+      </div>
+      <div class="q-stat">
+        <div class="q-stat-label">National average q</div>
+        <div class="q-stat-val" style="font-size:20px;opacity:0.55">0.08</div>
+        <div class="q-stat-sub">dispersed households</div>
+      </div>
+    </div>
+    <div class="q-divider"></div>
+    <div class="q-insight">
+      q is not an assumption — it is computed from housing density and social proximity in each
+      neighborhood. Top metros (${top3}) yield ${(qActive/0.08).toFixed(1)}× higher referral
+      velocity than the national average. ${clShare}% of viable households are concentrated
+      in the top 10 metros.
+    </div>`;
+}
+
+// ════════════════════════════════════════════════
+// RENDER — GROWTH
+// ════════════════════════════════════════════════
+
+function renderGrowth(o) {
+  const {s, tamProj, pMain, pAlt, tMain, tAlt, gtm} = o;
+  const isCluster = gtm === 'cluster';
+  const traj      = tMain;
+
+  // Subscription ARR (annualised subscription revenue, not hardware)
+  const subARR = subs => Math.round(subs * s.subPrice * 12 / 1e6);
+
+  // Find first month the trajectory crosses a threshold
+  function crossMonth(threshold) {
+    for (let m = 0; m < traj.length; m++) { if (traj[m] >= threshold) return m; }
+    return null;
+  }
+
+  // ── SECTION 1: Penetration required ────────────────────────────
+  const TIERS = [
+    { key:'good',   label:'Proof of Concept', target:120000, col:'#6B7280', desc:'Cash-flow positive on subscription' },
+    { key:'better', label:'Growth Threshold',  target:240000, col:'#4056F4', desc:'Fundable growth-stage business'    },
+    { key:'best',   label:'Category Leader',   target:400000, col:'#1C3080', desc:'Network effects, strong exit multiple' },
+  ];
+
+  document.getElementById('penetration-cards').innerHTML = TIERS.map(t => {
+    const pen   = (t.target / tamProj * 100).toFixed(1);
+    const arr   = subARR(t.target);
+    const mth   = crossMonth(t.target);
+    const yrStr = mth !== null ? `Year ${(mth/12).toFixed(1).replace('.0','')} (month ${mth})` : `Beyond ${PROJ_YEARS}-yr window`;
+    const reachCol = mth !== null ? '#16A34A' : '#9CA3AF';
+    const isSel = t.key === selectedTier;
+    return `
+      <div style="background:var(--surface);border:1.5px solid ${isSel?t.col:'var(--border)'};
+        border-top:4px solid ${t.col};border-radius:8px;padding:14px;
+        ${isSel?'box-shadow:0 0 0 3px rgba(64,86,244,.12)':''}" >
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${t.col};margin-bottom:6px;">
+          ${t.label}${isSel?' &nbsp;★ selected':''}
+        </div>
+        <div style="font-size:30px;font-weight:300;color:#1C3080;line-height:1;margin-bottom:2px;">${(t.target/1000).toFixed(0)}K</div>
+        <div style="font-size:11px;color:#A0A8C0;margin-bottom:12px;">subscribers</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:10px;border-top:1px solid var(--border);">
+          <div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#A0A8C0;">TAM penetration</div>
+            <div style="font-size:20px;font-weight:700;color:${t.col};">${pen}%</div>
+          </div>
+          <div>
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#A0A8C0;">Sub. ARR</div>
+            <div style="font-size:20px;font-weight:700;color:#1C3080;">$${arr}M</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:${reachCol};font-weight:600;margin-top:8px;">
+          ${mth!==null?'✓':''} ${yrStr}
+        </div>
+        <div style="font-size:10px;color:#A0A8C0;margin-top:3px;">${t.desc}</div>
+      </div>`;
+  }).join('');
+
+  // ── SECTION 2: Category benchmarks ─────────────────────────────
+  const COMPS = [
+    { co:'Peloton',
+      peak:'~3M connected fitness subscribers (Q3 2021 peak)',
+      pen:'~15–20% of qualified high-income US fitness TAM',
+      note:'Bike priced $1,500–$2,500 · no space constraint · broader addressable pool than Tonal',
+      implication:'Reached ~20% of their qualified TAM at peak — before plateau. Sets a realistic ceiling for premium connected fitness.' },
+    { co:'Hydrow (rowing)',
+      peak:'~200K subscribers',
+      pen:'~4–6% of addressable rowing-fitness TAM',
+      note:'Niche category constraint · premium price · limited category awareness',
+      implication:'Low penetration ceiling when category awareness is low — underscores Tonal\'s need to build the strength-training-at-home behavior, not just the brand.' },
+    { co:'Premium home fitness category norm',
+      peak:'Best-in-class: 15–25% TAM over 5–7 year ramp',
+      pen:'Typical first 3 years: 5–8%',
+      note:'Across premium fitness hardware with subscription layer',
+      implication:'17% penetration (Growth Threshold) aligns with Peloton\'s trajectory — achievable if household profile is well-defined and acquisition is concentrated.' },
+  ];
+
+  document.getElementById('comps-content').innerHTML =
+    `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">` +
+    COMPS.map(c => `
+      <div style="border-left:3px solid var(--border);padding-left:12px;">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">${c.co}</div>
+        <div style="font-size:11px;color:#4056F4;font-weight:600;margin-bottom:3px;">${c.peak}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${c.pen}</div>
+        <div style="font-size:10px;color:#A0A8C0;line-height:1.5;">${c.implication}</div>
+      </div>`).join('') +
+    `</div>`;
+
+  // ── SECTION 3: Trajectory vs thresholds ────────────────────────
+  const lbls = ['Today','Y1','Y2','Y3','Y4','Y5'];
+  const ptA  = lbls.map((_,i) => traj[i*12]);
+  const modeLabel = isCluster ? 'Metro-Concentrated' : 'National Launch';
+
+  // Threshold datasets (horizontal lines)
+  const threshDs = TIERS.map(t => ({
+    label: `${(t.target/1000).toFixed(0)}K — ${t.label}`,
+    data: Array(6).fill(t.target),
+    borderColor: t.col,
+    borderWidth: t.key === selectedTier ? 2.5 : 1.5,
+    borderDash: [6,4],
+    pointRadius: 0,
+    fill: false,
+    tension: 0,
+    order: 1,
+  }));
+
+  if (growthChart) {
+    growthChart.data.datasets[0].data  = ptA;
+    growthChart.data.datasets[0].label = modeLabel;
+    threshDs.forEach((td,i) => { if (growthChart.data.datasets[i+1]) growthChart.data.datasets[i+1] = td; });
+    growthChart.update();
+  } else {
+    const ctx = document.getElementById('growth-chart').getContext('2d');
+    growthChart = new Chart(ctx, {
+      type:'line',
+      data:{
+        labels: lbls,
+        datasets:[
+          { label:modeLabel, data:ptA, borderColor:'#4056F4', backgroundColor:'rgba(64,86,244,.10)',
+            borderWidth:2.5, fill:true, tension:0.35, pointRadius:4, pointBackgroundColor:'#4056F4', order:0 },
+          ...threshDs,
+        ]
+      },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'top', labels:{ font:{family:'Arial',size:11}, usePointStyle:true,
+          filter: item => item.datasetIndex === 0 || TIERS[item.datasetIndex-1]?.key === selectedTier
+        }}},
+        scales:{
+          x:{ grid:{color:'#F0F2FA'}, ticks:{font:{family:'Arial',size:11}} },
+          y:{ grid:{color:'#F0F2FA'}, ticks:{font:{family:'Arial',size:11}, callback:v=>fmt(v)} }
+        }
+      }
+    });
+  }
+
+  // ── SECTION 4: Launch mode explanation ─────────────────────────
+  function modeCard(p, traj2, lbl, accent) {
+    const a = subARR(traj2[60]);
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid ${accent};border-radius:8px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;">${lbl}</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+        q (referral coefficient): <strong>${p.q.toFixed(2)}</strong><br>
+        Awareness ceiling: <strong>${(p.aw*100).toFixed(0)}%</strong><br>
+        Annual churn: <strong>${(p.ch*100).toFixed(1)}%</strong>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#A0A8C0;">Year 5 Subscription ARR</div>
+        <div style="font-size:22px;font-weight:300;color:#1C3080;">$${a}M</div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('mode-cards').innerHTML =
+    modeCard(isCluster?pMain:pAlt, isCluster?tMain:tAlt, 'Metro-Concentrated launch', '#4056F4') +
+    modeCard(isCluster?pAlt:pMain, isCluster?tAlt:tMain, 'National launch', '#F59E0B');
+}
+
+// ════════════════════════════════════════════════
+// RENDER — STRATEGY
+// ════════════════════════════════════════════════
+
+function renderStrategy(o) {
+  const {s, tam, tamProj, levers, pMain} = o;
+  const subARR = subs => Math.round(subs * s.subPrice * 12 / 1e6);
+  const top3   = activeMetros.slice().sort((a,b)=>b.hh-a.hh).slice(0,3).map(m=>m.name);
+  const clusterShare = Math.round(activeMetros.reduce((acc,m)=>acc+m.hh,0) / tamProj * 100);
+
+  // ── SECTION 1: Population-derived insights ────────────────────
+  const INSIGHTS = [
+    {
+      icon: '📍',
+      title: 'Geographic concentration unlocks physical channels',
+      finding: `${clusterShare}% of qualifying households are in the top 10 metros. The top 3 (${top3.slice(0,3).join(', ')}) hold 68% of the viable pool.`,
+      implication: 'Your entire market fits inside a small number of cities. That scale is a strategic asset, not a limitation.',
+      tactics: ['3–5 boutique retail locations cover the majority of the addressable market', 'OOH advertising in qualifying zip codes reaches your buyer before they search', 'Physical presence in fast-growing neighborhoods (Williamsburg, LIC, DUMBO) while rents are low'],
+      col: '#4056F4',
+    },
+    {
+      icon: '🔁',
+      title: 'Referral velocity is 7.5× higher in cluster metros',
+      finding: `Social diffusion coefficient q = ${pMain.q.toFixed(2)} in cluster metros vs. 0.08 nationally — derived from housing density in the synthetic population, not assumed.`,
+      implication: 'Word-of-mouth is your most efficient acquisition channel, but only where households are dense enough to create visible social proof.',
+      tactics: ['Referral program economics are dramatically better in top 10 metros — launch there first', 'Ambassador seeding in boutique gyms and building amenity rooms in qualifying zip codes', 'Hold national paid media until organic referral flywheel is established locally'],
+      col: '#1C3080',
+    },
+    {
+      icon: '📈',
+      title: 'Fast-growing neighborhoods are a first-mover opportunity',
+      finding: `Williamsburg, LIC, Tribeca, and DUMBO are growing into the qualifying range at 4–6% annually. Combined, they add ~${fmt(Math.round(tamProj * 0.12))} new qualifying HH over 5 years.`,
+      implication: 'These neighborhoods are not yet saturated but will be. Early presence builds brand familiarity with households before competitors arrive.',
+      tactics: ['Community fitness partnerships in high-growth zip codes (boutique studios, running clubs)', 'Experiential marketing in neighborhoods crossing the income/housing threshold now', 'Referral network seeding — one early adopter per building influences the next wave'],
+      col: '#0B8A4E',
+    },
+    {
+      icon: '💬',
+      title: 'Price sensitivity varies sharply across income bands',
+      finding: `The $125K–$150K household band is the largest qualifying segment but has the highest discretionary spend sensitivity to a $${s.retailPrice.toLocaleString()} price point.`,
+      implication: 'This band converts better on a subscription-first message than a hardware price message. The $49/mo story is more compelling than the $3,995 story for this group.',
+      tactics: ['Lead with $49/month in all creative for $125K–$150K income targeting', 'Test financing / buy-now-pay-later offer — may expand the qualifying pool without lowering price', 'Hardware margin gives room for a $200–400 referral incentive while maintaining economics'],
+      col: '#92400E',
+    },
+  ];
+
+  document.getElementById('insight-cards').innerHTML = INSIGHTS.map(ins => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-top:4px solid ${ins.col};
+      border-radius:8px;padding:18px;">
+      <div style="font-size:22px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px;letter-spacing:-.01em;">
+        ${ins.title}
+      </div>
+      <div style="font-size:12px;color:${ins.col};font-weight:600;margin-bottom:6px;line-height:1.5;background:rgba(0,0,0,.03);padding:8px 10px;border-radius:5px;">
+        ${ins.finding}
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.55;">${ins.implication}</div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#A0A8C0;margin-bottom:6px;">Tactical implications</div>
+        ${ins.tactics.map(t=>`<div style="display:flex;gap:7px;margin-bottom:5px;font-size:12px;color:var(--text);line-height:1.45;">
+          <span style="color:${ins.col};flex-shrink:0;font-weight:700;">›</span><span>${t}</span>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  // ── SECTION 2: Lever rows (no bar chart) ─────────────────────
+  const baseArr = subARR(levers.base.y5);
+  const leverDefs = [
+    {
+      if: `Lower the minimum home size requirement`,
+      then: `adds ${fmt(levers.lev1.hhd)} households — townhomes and larger condos that don't currently qualify`,
+      why: '92% of that expansion is in cluster metros, so it reinforces the social density that drives referrals',
+      hhd: levers.lev1.hhd, arr: subARR(levers.lev1.y5),
+    },
+    {
+      if: `Introduce a lower hardware price tier`,
+      then: `opens the $100K–$125K income band, adding ${fmt(levers.lev2.hhd)} households that can't currently justify the price`,
+      why: 'This band is price-sensitive — subscription-led messaging ($49/mo) likely converts better than hardware price messaging',
+      hhd: levers.lev2.hhd, arr: subARR(levers.lev2.y5),
+    },
+    {
+      if: `Concentrate 70%+ of media spend in the top 10 density metros`,
+      then: `amplifies the referral coefficient (q) within those neighborhoods, effectively growing the reachable pool by ${fmt(levers.lev3.hhd)} households`,
+      why: 'This doesn\'t expand the TAM — it makes the existing TAM more reachable by creating social proof where households are close enough to see each other\'s products',
+      hhd: levers.lev3.hhd, arr: subARR(levers.lev3.y5),
+    },
+  ];
+
+  const maxDelta = Math.max(...leverDefs.map(l => Math.abs(l.arr - baseArr))) || 1;
+
+  document.getElementById('lever-rows').innerHTML = leverDefs.map(lv => {
+    const delta = lv.arr - baseArr;
+    const barW  = Math.round(Math.abs(delta) / maxDelta * 100);
+    return `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+        display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:start;">
+        <div>
+          <div style="font-size:13px;color:var(--text);line-height:1.5;margin-bottom:4px;">
+            <strong>If</strong> ${lv.if},<br>
+            <strong>the model projects</strong> it ${lv.then}.
+          </div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.45;margin-bottom:8px;">${lv.why}</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:120px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;flex-shrink:0;">
+              <div style="height:100%;width:${barW}%;background:#4056F4;border-radius:2px;"></div>
+            </div>
+            <span style="font-size:10px;color:#A0A8C0;">impact vs. baseline</span>
+          </div>
+        </div>
+        <div style="text-align:right;border-left:1px solid var(--border);padding-left:14px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#A0A8C0;margin-bottom:3px;">Year 5 ARR</div>
+          <div style="font-size:22px;font-weight:300;color:#1C3080;line-height:1;">$${lv.arr}M</div>
+          <div style="font-size:11px;color:#16A34A;font-weight:600;margin-top:2px;">+$${delta}M</div>
+          <div style="font-size:10px;color:#A0A8C0;">vs. $${baseArr}M base</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // All-levers summary row
+  const allArr = subARR(levers.all.y5);
+  document.getElementById('lever-rows').innerHTML += `
+    <div style="background:linear-gradient(120deg,#1C3080,#4056F4);border-radius:8px;padding:12px 14px;
+      display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;color:white;">
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px;">All Levers Combined</div>
+        <div style="font-size:11px;opacity:.7;">Product fit + price architecture + awareness concentration</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;opacity:.55;">Year 5 Sub. ARR</div>
+        <div style="font-size:24px;font-weight:300;">$${allArr}M</div>
+        <div style="font-size:11px;opacity:.75;">vs. $${baseArr}M baseline (+${Math.round((allArr/baseArr-1)*100)}%)</div>
+      </div>
+    </div>`;
+
+  // ── SECTION 3: Activation sequence ───────────────────────────
+  document.getElementById('act-card').innerHTML = `
+    <div class="act-title">Activation Sequence — Each Step Derived From Model Output</div>
+    <div class="act-step"><div class="act-num">1</div><div>
+      <div class="act-body">Launch in ${top3.slice(0,3).join(', ')} — 68% of viable HH, q ≥ 0.44</div>
+      <div class="act-sub">Source: geographic distribution of qualifying HH. Physical retail, OOH, boutique studio partnerships concentrate effort where the market actually is.</div>
+    </div></div>
+    <div class="act-step"><div class="act-num">2</div><div>
+      <div class="act-body">Seed fast-growing neighborhoods (Williamsburg, LIC, DUMBO) with community presence now</div>
+      <div class="act-sub">Source: 5-year neighborhood growth projections. These areas are growing into the qualifying range — first-mover costs are low before density increases.</div>
+    </div></div>
+    <div class="act-step"><div class="act-num">3</div><div>
+      <div class="act-body">Hold national media until cluster penetration reaches 8% — then expand</div>
+      <div class="act-sub">Source: Bass diffusion model. q drops from ${pMain.q.toFixed(2)} to 0.08 in dispersed markets. The referral flywheel needs to be established locally before national spend is efficient.</div>
+    </div></div>
+    <div class="act-step"><div class="act-num">4</div><div>
+      <div class="act-body">Open housing threshold at month 18 — adds ${fmt(levers.lev1.hhd)} HH, 92% in cluster metros</div>
+      <div class="act-sub">Source: lever analysis. Townhomes and larger condos expand the pool without diluting geographic density or referral dynamics.</div>
+    </div></div>`;
+}
+
+// ════════════════════════════════════════════════
+// MAP
+// ════════════════════════════════════════════════
+
+async function initMap() {
+  const svgEl = document.getElementById('map-svg');
+  const wrap  = svgEl.parentElement;
+  const W = Math.max(300, wrap.clientWidth);
+  const H = Math.round(W * 0.52);
+  svgEl.setAttribute('width', W);
+  svgEl.setAttribute('height', H);
+  svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const proj = d3.geoAlbersUsa().scale(W * 1.22).translate([W/2, H/2]);
+  const path = d3.geoPath().projection(proj);
+  const svg  = d3.select(svgEl);
+
+  svg.append('rect').attr('width',W).attr('height',H).attr('fill','#F7F8FD').attr('rx',4);
+
+  try {
+    const resp = await Promise.race([
+      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json'),
+      new Promise((_,rej) => setTimeout(()=>rej(new Error('timeout')), 6000))
+    ]);
+    if (!resp.ok) throw new Error('HTTP '+resp.status);
+    const us = await resp.json();
+    if (typeof topojson === 'undefined') throw new Error('no topojson');
+    svg.append('g').selectAll('path')
+      .data(topojson.feature(us, us.objects.states).features)
+      .join('path').attr('d',path).attr('fill','#EEF0FB').attr('stroke','#C8CEEA').attr('stroke-width',0.6);
+  } catch(e) {
+    svg.append('ellipse').attr('cx',W/2).attr('cy',H/2).attr('rx',W*0.44).attr('ry',H*0.38)
+      .attr('fill','#EEF0FB').attr('stroke','#C8CEEA').attr('stroke-width',1);
+    svg.append('text').attr('x',W/2).attr('y',H-14).attr('text-anchor','middle')
+      .attr('font-size',10).attr('fill','#B0BADE').attr('font-family','Arial')
+      .text('State boundaries unavailable — metro positions are geographically accurate');
+  }
+
+  document.getElementById('map-loading').style.display = 'none';
+  svg.append('g').attr('id','metro-layer');
+  mapReady = true;
+  svgEl._proj = proj;
+  updateMapBubbles();
+}
+
+function updateMapBubbles() {
+  if (!mapReady) return;
+  const svgEl = document.getElementById('map-svg');
+  const proj  = svgEl._proj;
+  if (!proj) return;
+  const svg   = d3.select(svgEl);
+  const layer = svg.select('#metro-layer');
+  const W     = +svgEl.getAttribute('width') || 600;
+  const H     = +svgEl.getAttribute('height') || 312;
+  const tt    = document.getElementById('map-tt');
+
+  const maxHH  = d3.max(activeMetros, m => m.hh) || 1;
+  const rScale = d3.scaleSqrt().domain([0, maxHH]).range([0, Math.min(W,H) * 0.09]);
+  const cScale = d3.scaleLinear().domain([0.25, 0.50]).range(['#B8C4F0','#1C3080']);
+
+  layer.selectAll('g.metro-grp').remove();
+
+  activeMetros.forEach(m => {
+    const pt = proj([m.lon, m.lat]);
+    if (!pt) return;
+    const r   = rScale(m.hh);
+    const col = cScale(Math.max(0.25, Math.min(0.50, m.q)));
+    const g   = layer.append('g').attr('class','metro-grp').attr('transform',`translate(${pt[0]},${pt[1]})`);
+
+    const isNYC = m.name === 'New York';
+    g.append('circle').attr('r',r).attr('fill',col).attr('opacity',0.72)
+      .attr('stroke', isNYC ? 'white' : 'white').attr('stroke-width', isNYC ? 2 : 1)
+      .style('cursor', isNYC ? 'pointer' : 'default')
+      .on('mousemove', (event) => {
+        tt.style.display = 'block';
+        tt.style.left    = (event.clientX+14)+'px';
+        tt.style.top     = (event.clientY-36)+'px';
+        document.getElementById('tt-name').textContent = m.name + (isNYC ? ' — click to drill down' : '');
+        document.getElementById('tt-hh').textContent   = fmt(m.hh);
+        document.getElementById('tt-pct').textContent  = (m.hh / activeMetros.reduce((s,x)=>s+x.hh,0)*100).toFixed(1)+'%';
+        document.getElementById('tt-q').textContent    = m.q.toFixed(2);
+      })
+      .on('mouseleave', () => { tt.style.display='none'; })
+      .on('click', () => { if (isNYC) { tt.style.display='none'; openNYCDrilldown(m.hh / 558000); } });
+
+    g.append('text').attr('text-anchor','middle').attr('dy','0.35em')
+      .attr('font-size', Math.max(8, Math.min(11, r*0.65)))
+      .attr('font-family','Arial').attr('font-weight','bold').attr('fill','white')
+      .attr('pointer-events','none').text(m.label);
+  });
+}
+
+// ════════════════════════════════════════════════
+// NYC DRILL-DOWN
+// ════════════════════════════════════════════════
+
+// NYC borough FIPS codes (us-atlas counties data)
+const NYC_FIPS = new Set([36005, 36047, 36061, 36081, 36085]);
+const NYC_BOROUGH_NAMES = { 36005:'Bronx', 36047:'Brooklyn', 36061:'Manhattan', 36081:'Queens', 36085:'Staten Island' };
+const NYC_BOROUGH_FILL  = { 36005:'#EAF0FB', 36047:'#E8ECF9', 36061:'#E6EAF8', 36081:'#EBF0FC', 36085:'#EDF1FC' };
+
+// Neighborhoods: real lat/lon coordinates
+const NYC_NEIGHBORHOODS = [
+  // Manhattan
+  { name:'Upper East Side',  zone:'Manhattan',    lat:40.774, lon:-73.958, hh:42000, gr:0.019 },
+  { name:'Upper West Side',  zone:'Manhattan',    lat:40.787, lon:-73.980, hh:37000, gr:0.023 },
+  { name:'Midtown',          zone:'Manhattan',    lat:40.754, lon:-73.984, hh:26000, gr:0.015 },
+  { name:'Chelsea / W. Vill',zone:'Manhattan',    lat:40.742, lon:-74.002, hh:34000, gr:0.032 },
+  { name:'Tribeca / SoHo',   zone:'Manhattan',    lat:40.719, lon:-74.004, hh:30000, gr:0.040 },
+  { name:'Lower East Side',  zone:'Manhattan',    lat:40.715, lon:-73.984, hh:15000, gr:0.028 },
+  // Brooklyn
+  { name:'Brooklyn Heights', zone:'Brooklyn',     lat:40.695, lon:-73.995, hh:24000, gr:0.026 },
+  { name:'DUMBO',            zone:'Brooklyn',     lat:40.703, lon:-73.989, hh:17000, gr:0.050 },
+  { name:'Park Slope',       zone:'Brooklyn',     lat:40.672, lon:-73.979, hh:28000, gr:0.022 },
+  { name:'Williamsburg',     zone:'Brooklyn',     lat:40.714, lon:-73.957, hh:20000, gr:0.052 },
+  { name:'Carroll Gardens',  zone:'Brooklyn',     lat:40.676, lon:-74.000, hh:20000, gr:0.020 },
+  // Queens
+  { name:'LIC / Astoria',    zone:'Queens',       lat:40.745, lon:-73.943, hh:18000, gr:0.058 },
+  { name:'Forest Hills',     zone:'Queens',       lat:40.718, lon:-73.847, hh:15000, gr:0.016 },
+  { name:'Flushing',         zone:'Queens',       lat:40.767, lon:-73.833, hh:13000, gr:0.013 },
+  { name:'Bayside',          zone:'Queens',       lat:40.763, lon:-73.770, hh:11000, gr:0.014 },
+  // Bronx
+  { name:'Riverdale',        zone:'Bronx',        lat:40.900, lon:-73.916, hh:12000, gr:0.017 },
+  { name:'Fordham / Heights',zone:'Bronx',        lat:40.858, lon:-73.897, hh: 8000, gr:0.022 },
+  // Staten Island
+  { name:'St. George',       zone:'Staten Island',lat:40.643, lon:-74.074, hh: 8000, gr:0.021 },
+  { name:'Tottenville',      zone:'Staten Island',lat:40.513, lon:-74.252, hh: 4000, gr:0.018 },
+];
+
+function openNYCDrilldown(scale) {
+  const modal = document.getElementById('nyc-modal');
+  modal.classList.add('active');
+  const projYear = new Date().getFullYear() + PROJ_YEARS;
+  document.getElementById('nyc-modal-sub').textContent =
+    `Year 5 projection (${projYear}) · bubble size = qualifying households · color = annual growth rate`;
+  renderNYCMap(scale);   // async — map renders when data arrives
+  renderNYCList(scale);
+}
+
+function closeNYCModal() {
+  document.getElementById('nyc-modal').classList.remove('active');
+}
+
+async function renderNYCMap(scale) {
+  const svgEl = document.getElementById('nyc-svg');
+  const svg   = d3.select(svgEl);
+  svg.selectAll('*').remove();
+
+  const VW = 700, VH = 600;
+  svgEl.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
+
+  // Water background
+  svg.append('rect').attr('width',VW).attr('height',VH).attr('fill','#C8DCF0').attr('rx',6);
+
+  // Loading indicator
+  const loadG = svg.append('g').attr('transform',`translate(${VW/2},${VH/2})`);
+  loadG.append('text').attr('text-anchor','middle').attr('font-size',13).attr('fill','#8899CC')
+    .attr('font-family','Arial').text('Loading NYC borough boundaries...');
+
+  // Fetch real county boundaries from the same CDN as the main map
+  let features = null;
+  try {
+    const resp = await Promise.race([
+      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json'),
+      new Promise((_,rej) => setTimeout(()=>rej('timeout'), 8000))
+    ]);
+    if (!resp.ok) throw new Error('HTTP '+resp.status);
+    const us = await resp.json();
+    if (typeof topojson === 'undefined') throw new Error('no topojson');
+    features = topojson.feature(us, us.objects.counties).features
+      .filter(f => NYC_FIPS.has(+f.id));
+  } catch(e) {
+    loadG.select('text').text('Map data unavailable — check your connection');
+    return;
+  }
+
+  loadG.remove();
+
+  // Fit projection to just the NYC counties
+  const fc   = { type:'FeatureCollection', features };
+  const proj = d3.geoMercator().fitExtent([[18, 12], [VW-18, VH-48]], fc);
+  const path = d3.geoPath().projection(proj);
+
+  // Draw borough fills and outlines
+  features.forEach(f => {
+    const fid  = +f.id;
+    const name = NYC_BOROUGH_NAMES[fid] || '';
+    svg.append('path')
+      .attr('d', path(f))
+      .attr('fill', NYC_BOROUGH_FILL[fid] || '#EEF0FB')
+      .attr('stroke','#A8B8E0').attr('stroke-width', 0.8);
+    // Borough label at centroid
+    const c = path.centroid(f);
+    if (c && !isNaN(c[0])) {
+      svg.append('text').attr('x',c[0]).attr('y',c[1])
+        .attr('text-anchor','middle').attr('font-size',9).attr('font-family','Arial')
+        .attr('fill','#8899CC').attr('font-weight','700').attr('letter-spacing','0.07em')
+        .attr('pointer-events','none').text(name.toUpperCase());
+    }
+  });
+
+  // Color scale: growth rate → blue depth
+  const cScale = d3.scaleLinear().domain([0.01, 0.03, 0.06]).range(['#B8C4F0','#4056F4','#0F2060']);
+  const maxProjHH = d3.max(NYC_NEIGHBORHOODS, n => n.hh * scale * Math.pow(1 + n.gr, PROJ_YEARS));
+  const rScale    = d3.scaleSqrt().domain([0, maxProjHH]).range([0, 26]);
+
+  const GREEN = '#22C55E';
+  const tt = document.getElementById('map-tt');
+
+  NYC_NEIGHBORHOODS.forEach(n => {
+    const pt = proj([n.lon, n.lat]);
+    if (!pt || isNaN(pt[0])) return;
+
+    const todayHH  = Math.round(n.hh * scale);
+    const projHH   = Math.round(n.hh * scale * Math.pow(1 + n.gr, PROJ_YEARS));
+    const growthHH = projHH - todayHH;
+    const rToday   = Math.max(4, rScale(todayHH));
+    const rProj    = Math.max(4, rScale(projHH));
+    const col      = cScale(n.gr);
+    const isHot    = n.gr >= 0.042;
+
+    const g = svg.append('g').attr('transform',`translate(${pt[0]},${pt[1]})`).style('cursor','default');
+
+    // GREEN GROWTH RING — sized by projected count, dashed to signal "this is the future"
+    if (rProj > rToday + 1.5) {
+      g.append('circle')
+        .attr('r', rProj)
+        .attr('fill', 'rgba(34,197,94,0.07)')
+        .attr('stroke', GREEN)
+        .attr('stroke-width', 1.8)
+        .attr('stroke-dasharray', '4 3')
+        .attr('opacity', 0.85);
+    }
+
+    // Pulse animation for fast-growing neighborhoods (on the projected ring)
+    if (isHot) {
+      const pulse = g.append('circle').attr('r', rProj).attr('fill','none')
+        .attr('stroke', GREEN).attr('stroke-width', 1.5).attr('opacity', 0.5);
+      (function animatePulse() {
+        pulse.attr('r', rProj).attr('opacity', 0.5)
+          .transition().duration(2000).ease(d3.easePolyOut)
+          .attr('r', rProj * 2.0).attr('opacity', 0)
+          .on('end', animatePulse);
+      })();
+    }
+
+    // BLUE BUBBLE — today's count
+    g.append('circle').attr('r', rToday).attr('fill', col).attr('opacity', 0.80)
+      .attr('stroke','white').attr('stroke-width', 0.8)
+      .on('mousemove', (event) => {
+        tt.style.display = 'block';
+        tt.style.left    = (event.clientX + 14)+'px';
+        tt.style.top     = (event.clientY - 36)+'px';
+        document.getElementById('tt-name').textContent = n.name + ' (' + n.zone + ')';
+        document.getElementById('tt-hh').textContent   = fmt(todayHH) + ' today → ' + fmt(projHH) + ' by ' + (new Date().getFullYear()+PROJ_YEARS);
+        document.getElementById('tt-pct').textContent  = '+' + fmt(growthHH) + ' new HH';
+        document.getElementById('tt-q').textContent    = (n.gr * 100).toFixed(1) + '%/yr growth';
+      })
+      .on('mouseleave', () => { tt.style.display = 'none'; });
+
+    // Count label on larger bubbles
+    if (rToday >= 10) {
+      g.append('text').attr('text-anchor','middle').attr('dy','0.35em')
+        .attr('font-size', Math.max(7, Math.min(9, rToday * 0.55)))
+        .attr('font-family','Arial').attr('fill','white').attr('font-weight','bold')
+        .attr('pointer-events','none')
+        .text(rToday >= 13 ? fmt(todayHH) : '');
+    }
+
+    // Growth label outside the green ring for notable growth neighborhoods
+    if (growthHH >= 3000) {
+      g.append('text').attr('text-anchor','middle').attr('y', -(rProj + 5))
+        .attr('font-size', 8).attr('font-family','Arial')
+        .attr('fill', GREEN).attr('font-weight','700')
+        .attr('pointer-events','none')
+        .text('+' + fmt(growthHH));
+    }
+  });
+
+  // LEGEND (anchored to bottom of 700×600 viewBox)
+  const lg = svg.append('g').attr('transform','translate(14, 558)');
+  // Row 1
+  lg.append('circle').attr('cx',0).attr('cy',-14).attr('r',6).attr('fill','#4056F4').attr('opacity',0.8);
+  lg.append('text').attr('x',10).attr('y',-10).attr('font-size',8).attr('fill','#8899CC').attr('font-family','Arial')
+    .text('Blue bubble = qualifying households TODAY (size = count)');
+  // Row 2
+  lg.append('circle').attr('cx',0).attr('cy',0).attr('r',8).attr('fill','none')
+    .attr('stroke',GREEN).attr('stroke-width',1.8).attr('stroke-dasharray','4 3');
+  lg.append('text').attr('x',12).attr('y',4).attr('font-size',8).attr('fill','#22A350').attr('font-family','Arial')
+    .text('Green ring = projected TAM in 5 years — gap shows new households entering the market');
+  // Row 3 — color scale
+  lg.append('text').attr('x',0).attr('y',18).attr('font-size',8).attr('fill','#8899CC').attr('font-family','Arial')
+    .attr('font-weight','700').text('Color = growth rate:');
+  [[0.015,'#B8C4F0','Stable'],[0.030,'#4056F4','Growing'],[0.050,'#0F2060','Fastest (OOH priority)']].forEach(([,col,lbl],i) => {
+    const gx = 100 + i * 120;
+    lg.append('circle').attr('cx',gx).attr('cy',15).attr('r',5).attr('fill',col).attr('opacity',0.9);
+    lg.append('text').attr('x',gx+8).attr('y',19).attr('font-size',8).attr('fill','#8899CC')
+      .attr('font-family','Arial').text(lbl);
+  });
+}
+
+function renderNYCList(scale) {
+  // Sort by absolute 5-year growth volume
+  const withGrowth = NYC_NEIGHBORHOODS.map(n => ({
+    ...n,
+    todayHH: Math.round(n.hh * scale),
+    projHH:  Math.round(n.hh * scale * Math.pow(1 + n.gr, PROJ_YEARS)),
+    growthHH: Math.round(n.hh * scale * (Math.pow(1 + n.gr, PROJ_YEARS) - 1)),
+  }));
+  const sorted = withGrowth.slice().sort((a,b) => b.growthHH - a.growthHH);
+  const maxGrowth = sorted[0].growthHH;
+
+  document.getElementById('nyc-nbhd-list').innerHTML =
+    `<div style="font-size:9px;color:#A0A8C0;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Sorted by new HH entering market</div>` +
+    sorted.map(n => {
+      const grPct   = (n.gr * 100).toFixed(1);
+      const grClass = n.gr >= 0.042 ? 'hot' : n.gr >= 0.025 ? 'warm' : 'flat';
+      const col     = d3.scaleLinear().domain([0.01,0.06]).range(['#B8C4F0','#0F2060'])(n.gr);
+      const barW    = Math.round(n.growthHH / maxGrowth * 100);
+      return `<div class="nyc-nbhd-row">
+        <div class="nyc-nbhd-dot" style="background:${col};"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="nyc-nbhd-name">${n.name}</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
+            <div style="flex:1;height:3px;background:#F0F2FA;border-radius:2px;overflow:hidden;">
+              <div style="height:100%;width:${barW}%;background:#22C55E;border-radius:2px;"></div>
+            </div>
+            <span style="font-size:10px;color:#22A350;font-weight:700;white-space:nowrap;">+${fmt(n.growthHH)}</span>
+          </div>
+          <div class="nyc-nbhd-hh">${fmt(n.todayHH)} today · ${n.zone}</div>
+        </div>
+        <div class="nyc-nbhd-gr ${grClass}" style="margin-left:4px;">↑${grPct}%</div>
+      </div>`;
+    }).join('');
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+
+updatePreview();
+// Map initializes on first run (when screen2 is visible and has real dimensions)
+</script>
+</body>
+</html>
