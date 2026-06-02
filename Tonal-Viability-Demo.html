@@ -11,15 +11,15 @@
 :root {
   --blue:      #4056F4;
   --blue-dark: #1C3080;
-  --bg:        #F4F5FD;
+  --bg:        #F6F7F9;
   --surface:   #FFFFFF;
-  --border:    #E2E5F8;
-  --text:      #1A1A2E;
+  --border:    #E8EAEF;
+  --text:      #0F1524;
   --muted:     #6B7280;
   --red:       #DC2626;
   --yellow:    #D97706;
   --green:     #16A34A;
-  --shadow:    0 1px 5px rgba(64,86,244,.10);
+  --shadow:    0 1px 4px rgba(0,0,0,.07);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -37,7 +37,7 @@ body {
 
 /* ── HEADER ── */
 .app-header {
-  background: linear-gradient(130deg, var(--blue-dark) 0%, var(--blue) 100%);
+  background: #0E1B4F;
   color: white;
   padding: 14px 28px;
   display: flex;
@@ -262,10 +262,10 @@ select:focus { outline: none; border-color: var(--blue); }
 
 /* Population */
 .pop-kpi-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 3px; }
-.pop-kpi-num { font-size: 40px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.02em; line-height: 1; }
-.pop-kpi-unit { font-size: 15px; color: var(--muted); }
-.pop-kpi-sub { font-size: 12px; color: #A0A8C0; margin-bottom: 16px; line-height: 1.45; }
-.map-wrap { position: relative; background: #F7F8FD; border-radius: 4px; overflow: hidden; }
+.pop-kpi-num { font-size: 60px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.03em; line-height: 1; }
+.pop-kpi-unit { font-size: 20px; color: var(--muted); font-weight: 300; }
+.pop-kpi-sub { font-size: 13px; color: #A0A8C0; margin-bottom: 16px; line-height: 1.45; }
+.map-wrap { position: relative; background: #F5F6F8; border-radius: 4px; overflow: hidden; }
 #map-svg { display: block; width: 100%; }
 .map-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #A0A8C0; background: #F7F8FD; }
 .map-leg { display: flex; gap: 18px; padding: 8px 0 2px; align-items: center; flex-wrap: wrap; }
@@ -291,11 +291,11 @@ select:focus { outline: none; border-color: var(--blue); }
 /* Growth */
 .kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 14px; }
 .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 15px; }
-.kpi-card.accent { border-color: var(--blue); background: rgba(64,86,244,.04); }
+.kpi-card.accent { border-color: var(--blue-dark); border-left: 3px solid var(--blue-dark); background: #F8F9FD; }
 .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #A0A8C0; margin-bottom: 6px; }
-.kpi-val { font-size: 26px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.01em; }
-.kpi-card.accent .kpi-val { color: var(--blue); }
-.kpi-sub { font-size: 10px; color: #A0A8C0; margin-top: 2px; }
+.kpi-val { font-size: 40px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.02em; }
+.kpi-card.accent .kpi-val { color: var(--blue-dark); }
+.kpi-sub { font-size: 11px; color: #A0A8C0; margin-top: 2px; }
 .scen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 .scen-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
 .scen-card.c1 { border-top: 3px solid var(--blue); }
@@ -305,9 +305,9 @@ select:focus { outline: none; border-color: var(--blue); }
 .scen-params strong { color: var(--text); }
 .scen-out { margin-top: 10px; padding-top: 10px; border-top: 1px solid #F0F2FA; }
 .scen-out-label { font-size: 10px; color: #A0A8C0; }
-.scen-out-val { font-size: 20px; font-weight: 300; color: var(--blue-dark); }
+.scen-out-val { font-size: 28px; font-weight: 300; color: var(--blue-dark); }
 .arr-banner { background: linear-gradient(120deg, var(--blue-dark), var(--blue)); border-radius: 8px; padding: 14px 20px; color: white; margin-bottom: 14px; }
-.arr-banner-val { font-size: 28px; font-weight: 300; color: white; }
+.arr-banner-val { font-size: 40px; font-weight: 300; color: white; }
 .arr-banner-label { font-size: 12px; color: rgba(255,255,255,.85); margin-top: 2px; }
 .arr-banner-sub { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 4px; line-height: 1.5; }
 
@@ -1566,16 +1566,16 @@ function renderGrowth(o) {
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${t.col};margin-bottom:6px;">
           ${t.label}${isSel?' &nbsp;★ selected':''}
         </div>
-        <div style="font-size:30px;font-weight:300;color:#1C3080;line-height:1;margin-bottom:2px;">${(t.target/1000).toFixed(0)}K</div>
-        <div style="font-size:11px;color:#A0A8C0;margin-bottom:12px;">subscribers</div>
+        <div style="font-size:44px;font-weight:300;color:#0E1B4F;line-height:1;margin-bottom:2px;letter-spacing:-.02em;">${(t.target/1000).toFixed(0)}K</div>
+        <div style="font-size:12px;color:#A0A8C0;margin-bottom:14px;">subscribers</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:10px;border-top:1px solid var(--border);">
           <div>
             <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#A0A8C0;">TAM penetration</div>
-            <div style="font-size:20px;font-weight:700;color:${t.col};">${pen}%</div>
+            <div style="font-size:30px;font-weight:300;color:${t.col};letter-spacing:-.01em;">${pen}%</div>
           </div>
           <div>
             <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#A0A8C0;">Sub. ARR</div>
-            <div style="font-size:20px;font-weight:700;color:#1C3080;">$${arr}M</div>
+            <div style="font-size:30px;font-weight:300;color:#0E1B4F;letter-spacing:-.01em;">$${arr}M</div>
           </div>
         </div>
         <div style="font-size:11px;color:${reachCol};font-weight:600;margin-top:8px;">
@@ -1732,7 +1732,7 @@ function renderStrategy(o) {
   document.getElementById('insight-cards').innerHTML = INSIGHTS.map(ins => `
     <div style="background:var(--surface);border:1px solid var(--border);border-top:4px solid ${ins.col};
       border-radius:8px;padding:18px;">
-      <div style="font-size:22px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:10px;letter-spacing:-.01em;">
+      <div style="font-size:20px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:10px;letter-spacing:-.01em;">
         ${ins.title}
       </div>
       <div style="font-size:12px;color:${ins.col};font-weight:600;margin-bottom:6px;line-height:1.5;background:rgba(0,0,0,.03);padding:8px 10px;border-radius:5px;">
