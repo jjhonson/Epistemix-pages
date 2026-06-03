@@ -20,38 +20,84 @@
 
 :root {
   /* Surfaces */
-  --e-surface:        #FFFFFF;
-  --e-surface-muted:  #F3F4F6;   /* table headers, grouped row backgrounds */
-  --e-bg:             #F6F7F9;   /* page background */
+  --e-surface:        #ffffff;
+  --e-surface-muted:  #f8f9fa;   /* table headers, grouped row backgrounds */
+  --e-bg:             #f0f1f3;   /* page background */
 
   /* Borders */
-  --e-border:         #E8EAEF;   /* card borders, cell dividers */
-  --e-border-strong:  #D1D5DB;   /* dividers that need more emphasis */
+  --e-border:         #e5e7eb;
+  --e-border-strong:  #d1d5db;
+  --e-border-focus:   #4056F4;   /* input focus rings */
 
   /* Text */
-  --e-text:           #0F1524;   /* primary — values, headings */
-  --e-text-secondary: #4B5563;   /* body copy, descriptions */
-  --e-text-muted:     #9CA3AF;   /* labels, units, timestamps */
-  --e-text-label:     #6B7280;   /* column headers, card titles */
+  --e-text:           #1a1a1a;
+  --e-text-secondary: #6b7280;
+  --e-text-muted:     #9ca3af;
+  --e-text-label:     #6b7280;
 
-  /* Brand (interactive elements only) */
-  --e-blue:           #4056F4;
-  --e-blue-dark:      #1C3080;
-  --e-navy:           #0E1B4F;   /* page header, dark card backgrounds */
+  /* Brand — interactive elements ONLY (buttons, active tabs, focus states) */
+  --e-blue:           #4056F4;   /* Epistemix brand blue */
+  --e-blue-dark:      #1C3080;   /* brand navy */
+  --e-navy:           #0E1B4F;   /* page header background */
 
-  /* Semantic data colors (always with opacity in cells) */
-  --e-green:          #6FD93F;   /* favorable / on track */
-  --e-yellow:         #F59E0B;   /* moderate / watch */
-  --e-red:            #DC2626;   /* unfavorable / off track */
+  /* Semantic data highlight colors */
+  --e-green:          #6FD93F;
+  --e-yellow:         #F5C542;
+  --e-red:            #EF5350;
 
-  /* Cell highlighting (15% opacity fills per spec) */
+  /* Cell fills (15% opacity, linear gradient left→transparent) */
   --e-highlight-green:  rgba(111, 217, 63, 0.15);
-  --e-highlight-yellow: rgba(245, 158, 11, 0.15);
-  --e-highlight-red:    rgba(220, 38, 38, 0.15);
+  --e-highlight-yellow: rgba(245, 197, 66, 0.15);
+  --e-highlight-red:    rgba(239, 83, 80, 0.15);
+
+  /* Categorical chart palette (desaturated) */
+  --e-cat-0: #5B8FD4;  --e-cat-0-fill: rgba(91,143,212,0.12);
+  --e-cat-1: #4DB6AC;  --e-cat-1-fill: rgba(77,182,172,0.12);
+  --e-cat-2: #D4915B;  --e-cat-2-fill: rgba(212,145,91,0.12);
+  --e-cat-3: #9575CD;  --e-cat-3-fill: rgba(149,117,205,0.12);
+  --e-cat-4: #81C784;  --e-cat-4-fill: rgba(129,199,132,0.12);
+  --e-cat-5: #E57373;  --e-cat-5-fill: rgba(229,115,115,0.12);
+
+  /* Chart defaults (gray-first) */
+  --e-chart-primary:   #374151;
+  --e-chart-secondary: #9CA3AF;
 
   /* Shadows */
-  --e-shadow:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --e-shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --e-shadow:          0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --e-shadow-hover:    0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --e-shadow-modal:    0 20px 60px rgba(0,0,0,.15), 0 4px 16px rgba(0,0,0,.08);
+  --e-shadow-dropdown: 0 4px 16px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.06);
+
+  /* Spacing */
+  --e-space-1:  4px;
+  --e-space-2:  8px;
+  --e-space-3:  12px;
+  --e-space-4:  16px;
+  --e-space-5:  20px;
+  --e-space-6:  24px;
+  --e-space-8:  32px;
+  --e-space-10: 40px;
+
+  /* Border radii */
+  --e-radius-sm:  3px;   /* bars, cell highlights */
+  --e-radius-md:  6px;   /* buttons, inputs */
+  --e-radius-lg:  10px;  /* cluster outer edges */
+  --e-radius-xl:  12px;  /* cards, modals */
+
+  /* Typography */
+  --e-text-xs:     11px;
+  --e-text-sm:     12px;
+  --e-text-base:   14px;
+  --e-text-md:     15px;
+  --e-text-lg:     18px;
+  --e-text-xl:     22px;
+  --e-metric:      36px;       /* metric card values */
+  --e-metric-hero: 60px;       /* headline demo numbers (TAM, key output) */
+
+  /* Transitions */
+  --e-transition-fast: 120ms ease;
+  --e-transition-base: 200ms ease;
+  --e-transition-slow: 300ms ease;
 }
 
 /* ================================================================
@@ -343,10 +389,10 @@ body {
 /*
   GAPS TO RESOLVE WITH PETER
   ---------------------------
-  1. Exact hex values for yellow and red highlight colors (only green is spec'd)
-  2. Full typography px scale (H1, H2, H3, Body, Label, Metric)
-  3. Explicit brand color tokens for #4056F4 and #1C3080 in the token system
-  4. Header/nav treatment — logo size, nav height
-  5. Shadow values (currently inferred from mockups)
-  6. Dark mode token values
+  1. Button system — primary / secondary / ghost + hover / active / disabled states
+  2. Form controls — slider track & thumb, dropdown, toggle switch, text input
+  3. Map base tile style — specific subdued theme for light and dark mode
+  4. Application chrome — header height, logo sizing, case/client context display
+  5. Dark mode token values
+  6. Loading and empty states
 */
