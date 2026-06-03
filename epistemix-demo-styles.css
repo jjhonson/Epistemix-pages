@@ -1,0 +1,352 @@
+/*
+  Epistemix Demo Design System
+  Based on Prism Cards design system (Peter Nowell)
+  For use in all HTML demo builds (Stage 1 illustrative)
+
+  PHILOSOPHY
+  ----------
+  - White / near-white surfaces with neutral gray borders
+  - Gray-first charts and data — color only for semantic meaning (good/warn/bad)
+  - Brand blue (#4056F4) reserved for INTERACTIVE elements only:
+    active tabs, selected states, buttons, slider thumbs
+  - Large light-weight numbers for metrics
+  - Small uppercase spaced labels for context
+  - Spotlight (soft radial glow) on headline metric values
+*/
+
+/* ================================================================
+   TOKENS
+   ================================================================ */
+
+:root {
+  /* Surfaces */
+  --e-surface:        #FFFFFF;
+  --e-surface-muted:  #F3F4F6;   /* table headers, grouped row backgrounds */
+  --e-bg:             #F6F7F9;   /* page background */
+
+  /* Borders */
+  --e-border:         #E8EAEF;   /* card borders, cell dividers */
+  --e-border-strong:  #D1D5DB;   /* dividers that need more emphasis */
+
+  /* Text */
+  --e-text:           #0F1524;   /* primary — values, headings */
+  --e-text-secondary: #4B5563;   /* body copy, descriptions */
+  --e-text-muted:     #9CA3AF;   /* labels, units, timestamps */
+  --e-text-label:     #6B7280;   /* column headers, card titles */
+
+  /* Brand (interactive elements only) */
+  --e-blue:           #4056F4;
+  --e-blue-dark:      #1C3080;
+  --e-navy:           #0E1B4F;   /* page header, dark card backgrounds */
+
+  /* Semantic data colors (always with opacity in cells) */
+  --e-green:          #6FD93F;   /* favorable / on track */
+  --e-yellow:         #F59E0B;   /* moderate / watch */
+  --e-red:            #DC2626;   /* unfavorable / off track */
+
+  /* Cell highlighting (15% opacity fills per spec) */
+  --e-highlight-green:  rgba(111, 217, 63, 0.15);
+  --e-highlight-yellow: rgba(245, 158, 11, 0.15);
+  --e-highlight-red:    rgba(220, 38, 38, 0.15);
+
+  /* Shadows */
+  --e-shadow:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --e-shadow-md: 0 4px 12px rgba(0,0,0,.08);
+}
+
+/* ================================================================
+   RESET
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ================================================================
+   BASE
+   ================================================================ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Arial, sans-serif;
+  background: var(--e-bg);
+  color: var(--e-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ================================================================
+   PAGE HEADER
+   ================================================================ */
+.e-header {
+  background: var(--e-navy);
+  color: white;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.e-header-brand {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .7;
+  margin-bottom: 3px;
+}
+.e-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.e-header-sub {
+  font-size: 11px;
+  opacity: .5;
+  margin-top: 2px;
+}
+
+/* ================================================================
+   CARD
+   ================================================================ */
+.e-card {
+  background: var(--e-surface);
+  border: 1px solid var(--e-border);
+  border-radius: 8px;
+  box-shadow: var(--e-shadow);
+  overflow: hidden;
+}
+
+/* Card header */
+.e-card-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--e-border);
+  gap: 12px;
+}
+.e-card-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--e-text-label);
+  flex: 1;
+}
+.e-card-body {
+  padding: 16px;
+}
+
+/* ================================================================
+   TYPOGRAPHY — TEXT HIERARCHY
+   ================================================================ */
+
+/* Section label (replaces decorative blue labels) */
+.e-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--e-text-muted);
+}
+
+/* Body */
+.e-body     { font-size: 13px; color: var(--e-text-secondary); line-height: 1.55; }
+.e-body-sm  { font-size: 11px; color: var(--e-text-secondary); line-height: 1.5; }
+.e-muted    { color: var(--e-text-muted); }
+
+/* ================================================================
+   METRIC CARD — Large number + unit + label
+   ================================================================ */
+.e-metric-value {
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--e-navy);
+  letter-spacing: -.03em;
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+/* Spotlight: soft radial glow behind metric value */
+.e-metric-value::before {
+  content: '';
+  position: absolute;
+  inset: -40% -30%;
+  background: radial-gradient(ellipse at center,
+    rgba(28, 48, 128, 0.10) 0%,
+    transparent 70%);
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(8px);
+}
+.e-metric-unit {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--e-text-muted);
+  margin-left: 6px;
+}
+.e-metric-label {
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--e-text-muted);
+  margin-top: 4px;
+}
+
+/* ================================================================
+   TAB BAR
+   ================================================================ */
+.e-tab-bar {
+  background: var(--e-surface);
+  border-bottom: 1px solid var(--e-border);
+  display: flex;
+  padding: 0 24px;
+}
+.e-tab {
+  padding: 11px 18px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--e-text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s;
+  user-select: none;
+}
+.e-tab:hover          { color: var(--e-blue); }
+.e-tab.e-tab--active  { color: var(--e-blue); border-bottom-color: var(--e-blue); }
+
+/* ================================================================
+   TABLE
+   ================================================================ */
+.e-table { width: 100%; border-collapse: collapse; }
+.e-table th {
+  background: var(--e-surface-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--e-text-label);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--e-border);
+  position: sticky;
+  top: 0;
+}
+.e-table td {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--e-text);
+  border-bottom: 1px solid var(--e-border);
+  height: 40px;
+}
+.e-table tr:last-child td { border-bottom: none; }
+.e-table tr:hover td { background: var(--e-surface-muted); }
+
+/* Cell highlight (gradient per spec) */
+.e-cell-green  { background: linear-gradient(90deg, var(--e-highlight-green) 0%, transparent 100%); }
+.e-cell-yellow { background: linear-gradient(90deg, var(--e-highlight-yellow) 0%, transparent 100%); }
+.e-cell-red    { background: linear-gradient(90deg, var(--e-highlight-red) 0%, transparent 100%); }
+
+/* ================================================================
+   CHART COLORS
+   ================================================================ */
+/*
+  Default chart palette — gray first, color only for meaning.
+  Use these as reference when setting Chart.js colors in JS.
+
+  Primary series:   #374151 (dark gray)
+  Secondary series: #9CA3AF (mid gray)
+  Highlight / call-out: var(--e-blue) #4056F4 sparingly
+  Positive data:    #6FD93F
+  Warning data:     #F59E0B
+  Negative data:    #DC2626
+*/
+
+/* ================================================================
+   FUNNEL ROWS (population narrowing)
+   ================================================================ */
+.e-funnel-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #F3F4F6;
+  font-size: 12px;
+}
+.e-funnel-row:last-child { border-bottom: none; }
+.e-funnel-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.e-funnel-label { flex: 1; color: var(--e-text-secondary); }
+.e-funnel-bar-wrap { width: 80px; height: 5px; background: var(--e-border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.e-funnel-bar-fill { height: 100%; border-radius: 3px; }
+.e-funnel-val { font-size: 12px; font-weight: 600; color: var(--e-text); min-width: 44px; text-align: right; }
+.e-funnel-pct { font-size: 11px; color: var(--e-text-muted); min-width: 32px; text-align: right; }
+
+/* ================================================================
+   STATUS BADGES
+   ================================================================ */
+.e-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.e-badge--green  { background: rgba(111,217,63,.15);  color: #166534; }
+.e-badge--yellow { background: rgba(245,158,11,.15); color: #92400E; }
+.e-badge--gray   { background: #F3F4F6; color: var(--e-text-muted); }
+
+/* ================================================================
+   FORM CONTROLS (input/range)
+   ================================================================ */
+.e-range {
+  width: 100%;
+  height: 3px;
+  appearance: none;
+  background: var(--e-border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.e-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--e-blue);
+  cursor: pointer;
+}
+.e-select {
+  width: 100%;
+  font-size: 12px;
+  padding: 6px 24px 6px 8px;
+  border: 1px solid var(--e-border);
+  border-radius: 6px;
+  background: var(--e-bg);
+  color: var(--e-text);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239CA3AF'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  cursor: pointer;
+}
+
+/* ================================================================
+   UTILITY
+   ================================================================ */
+.e-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.e-three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.e-mb-sm { margin-bottom: 8px; }
+.e-mb-md { margin-bottom: 14px; }
+.e-mb-lg { margin-bottom: 20px; }
+
+/*
+  GAPS TO RESOLVE WITH PETER
+  ---------------------------
+  1. Exact hex values for yellow and red highlight colors (only green is spec'd)
+  2. Full typography px scale (H1, H2, H3, Body, Label, Metric)
+  3. Explicit brand color tokens for #4056F4 and #1C3080 in the token system
+  4. Header/nav treatment — logo size, nav height
+  5. Shadow values (currently inferred from mockups)
+  6. Dark mode token values
+*/
