@@ -69,12 +69,12 @@ body {
   box-shadow: var(--shadow); margin-bottom: 10px;
 }
 .fact-group:last-of-type { margin-bottom: 0; }
-.fg-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--blue); margin-bottom: 12px; }
+.fg-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 12px; }
 .inp-row { margin-bottom: 10px; }
 .inp-row:last-of-type { margin-bottom: 0; }
 .inp-hdr { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
 .inp-name { font-size: 13px; color: var(--text); }
-.inp-val  { font-size: 14px; font-weight: 700; color: var(--blue); min-width: 65px; text-align: right; }
+.inp-val  { font-size: 14px; font-weight: 600; color: var(--text); min-width: 65px; text-align: right; }
 input[type=range] {
   width: 100%; height: 4px; -webkit-appearance: none;
   background: var(--border); border-radius: 2px; outline: none; cursor: pointer;
@@ -99,7 +99,7 @@ select:focus { outline: none; border-color: var(--blue); }
   padding: 7px 2px 2px; border-top: 1px solid var(--border); margin-top: 10px;
 }
 .calc-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-.calc-val   { font-size: 13px; font-weight: 700; color: var(--blue); }
+.calc-val   { font-size: 13px; font-weight: 600; color: var(--text); }
 
 /* GTM toggle */
 .gtm-btns { display: flex; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
@@ -262,7 +262,20 @@ select:focus { outline: none; border-color: var(--blue); }
 
 /* Population */
 .pop-kpi-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 3px; }
-.pop-kpi-num { font-size: 60px; font-weight: 300; color: var(--blue-dark); letter-spacing: -.03em; line-height: 1; }
+.pop-kpi-num {
+  font-size: 60px; font-weight: 300; color: var(--blue-dark);
+  letter-spacing: -.03em; line-height: 1;
+  position: relative; display: inline-block;
+}
+.pop-kpi-num::before {
+  content: '';
+  position: absolute;
+  inset: -50% -40%;
+  background: radial-gradient(ellipse at center, rgba(28,48,128,.10) 0%, transparent 70%);
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(10px);
+}
 .pop-kpi-unit { font-size: 20px; color: var(--muted); font-weight: 300; }
 .pop-kpi-sub { font-size: 13px; color: #A0A8C0; margin-bottom: 16px; line-height: 1.45; }
 .map-wrap { position: relative; background: #F5F6F8; border-radius: 4px; overflow: hidden; }
@@ -745,9 +758,10 @@ select:focus { outline: none; border-color: var(--blue); }
 
   <div class="tab-bar">
     <div class="tab-btn active" onclick="switchTab('population',this)">Population</div>
+    <div class="tab-btn" onclick="switchTab('simulation',this)">Social Dynamics</div>
     <div class="tab-btn" onclick="switchTab('growth',this)">Growth Dynamics</div>
     <div class="tab-btn" onclick="switchTab('strategy',this)">Strategy</div>
-    <div class="tab-btn" onclick="switchTab('simulation',this)">Adoption Spread</div>
+    <div class="tab-btn" onclick="switchTab('signals',this)">Signals</div>
   </div>
 
   <div class="tab-scroll">
@@ -800,67 +814,6 @@ select:focus { outline: none; border-color: var(--blue); }
           <div id="q-content"></div>
         </div>
       </div>
-    </div>
-
-    <!-- GROWTH TAB -->
-    <div class="tab-pane" id="tab-growth">
-
-      <!-- Section 1: Penetration required -->
-      <div style="margin-bottom:18px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
-          What % of the TAM do you need to convert to hit each threshold?
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="penetration-cards"></div>
-      </div>
-
-      <!-- Section 2: Category benchmarks -->
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">Category Benchmarks — for reference, not model output</div>
-        <div id="comps-content"></div>
-      </div>
-
-      <!-- Section 3: Trajectory vs thresholds -->
-      <div class="card" style="padding-bottom:12px;margin-bottom:14px;">
-        <div class="card-title" id="chart-title">Subscriber Trajectory vs. Target Thresholds</div>
-        <canvas id="growth-chart" style="max-height:220px;"></canvas>
-      </div>
-
-      <!-- Section 4: Launch mode (explanatory) -->
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:8px;">Model assumptions — launch approach</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="mode-cards"></div>
-
-    </div>
-
-    <!-- STRATEGY TAB -->
-    <div class="tab-pane" id="tab-strategy">
-
-      <!-- Section 1: Population-derived insights -->
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
-        What the synthetic population and ABM are telling you
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;" id="insight-cards"></div>
-
-      <!-- Section 2: Commercial levers — no bar chart -->
-      <div style="margin-bottom:6px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;">Three decisions that would move the outcome</div>
-        <div style="font-size:11px;color:#A0A8C0;margin-top:2px;">If the company makes any of these choices, the model projects the following changes to the addressable pool and Year 5 subscription revenue.</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;" id="lever-rows"></div>
-
-      <!-- Section 3: Activation sequence -->
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:6px;">
-        Model-derived activation sequence
-      </div>
-      <div style="font-size:11px;color:#A0A8C0;margin-bottom:8px;">Each step follows from a specific dynamic in the model — geographic concentration, social diffusion velocity, growth projections, or lever timing. This is not a generic framework.</div>
-      <div class="act-card" id="act-card"></div>
-
-      <!-- Early Warning Indicators — added below activation sequence -->
-      <div style="margin-top:20px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:4px;">Early warning indicators</div>
-        <div style="font-size:11px;color:#A0A8C0;margin-bottom:12px;">These signals appear in the population 12–18 months before they show in sales data. They come from modeling the population — not from analyzing your transactions.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="warning-indicators"></div>
-      </div>
-
     </div>
 
     <!-- ADOPTION SPREAD TAB -->
@@ -930,6 +883,143 @@ select:focus { outline: none; border-color: var(--blue); }
       </div>
 
     </div>
+
+
+    <!-- GROWTH TAB -->
+    <div class="tab-pane" id="tab-growth">
+
+      <!-- Section 1: Penetration required -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
+          What % of the TAM do you need to convert to hit each threshold?
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="penetration-cards"></div>
+      </div>
+
+      <!-- Section 2: Category benchmarks -->
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Category Benchmarks — for reference, not model output</div>
+        <div id="comps-content"></div>
+      </div>
+
+      <!-- Section 3+4: Trajectory comparison + gap + q insight -->
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start;">
+
+        <!-- Chart -->
+        <div class="card" style="padding-bottom:14px;">
+          <div class="card-title" id="chart-title">Metro-Concentrated vs. National launch — subscriber trajectory</div>
+          <canvas id="growth-chart" style="max-height:220px;"></canvas>
+          <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;" id="traj-legend"></div>
+        </div>
+
+        <!-- Right column: gap callout + q insight -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div id="gap-card" style="background:white;border:1px solid #E5E7EB;border-radius:10px;padding:16px;"></div>
+          <div id="q-insight-card" style="background:#EEF1FD;border:1px solid #C7D0F8;border-radius:10px;padding:16px;"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- STRATEGY TAB -->
+    <div class="tab-pane" id="tab-strategy">
+
+      <!-- Section 1: Population-derived insights -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:10px;">
+        What the synthetic population and ABM are telling you
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;" id="insight-cards"></div>
+
+      <!-- Section 2: Commercial levers — no bar chart -->
+      <div style="margin-bottom:6px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;">Three decisions that would move the outcome</div>
+        <div style="font-size:11px;color:#A0A8C0;margin-top:2px;">If the company makes any of these choices, the model projects the following changes to the addressable pool and Year 5 subscription revenue.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;" id="lever-rows"></div>
+
+      <!-- Section 3: Activation sequence -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0A8C0;margin-bottom:6px;">
+        Model-derived activation sequence
+      </div>
+      <div style="font-size:11px;color:#A0A8C0;margin-bottom:8px;">Each step follows from a specific dynamic in the model — geographic concentration, social diffusion velocity, growth projections, or lever timing. This is not a generic framework.</div>
+      <div class="act-card" id="act-card"></div>
+
+
+    </div>
+
+
+    <!-- SIGNALS TAB -->
+    <div class="tab-pane" id="tab-signals">
+
+      <!-- Integration banner -->
+      <div style="display:flex;align-items:center;gap:14px;background:#F8F9FB;border:1px solid #E5E7EB;
+        border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+        <div style="width:32px;height:32px;background:#4A154B;border-radius:8px;display:flex;
+          align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M6 15a2 2 0 100-4 2 2 0 000 4zm0 0v3M18 9a2 2 0 100-4 2 2 0 000 4zm0 0v3
+              M9 6a2 2 0 100-4 2 2 0 000 4zm0 0H6M15 18a2 2 0 100-4 2 2 0 000 4zm0 0H18
+              M9 6h6M9 18h6M6 9H3M21 9h-3M6 15H3M21 15h-3" stroke="white" stroke-width="1.5"
+              stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:2px;">
+            Connect Slack for real-time strategy alerts
+          </div>
+          <div style="font-size:11px;color:#6B7280;">
+            Receive a message when any signal crosses a threshold — before it shows in your sales data.
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button onclick="void(0)" style="background:#4A154B;color:white;border:none;border-radius:7px;
+            padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;">Connect Slack</button>
+          <button onclick="void(0)" style="background:white;color:#374151;border:1px solid #D1D5DB;
+            border-radius:7px;padding:8px 14px;font-size:12px;cursor:pointer;">Set up email alerts</button>
+        </div>
+      </div>
+
+      <!-- Section header -->
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+            color:#A0A8C0;margin-bottom:2px;">Strategy Signal Monitor</div>
+          <div style="font-size:12px;color:#6B7280;">
+            These signals appear in the population 12–18 months before they show in your sales data.
+            They come from modeling the qualifying population — not from analyzing your transactions.
+          </div>
+        </div>
+        <div style="font-size:10px;color:#A0A8C0;flex-shrink:0;margin-left:20px;">Updated with model run</div>
+      </div>
+
+      <!-- Signal cards grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;"
+           id="signal-cards-grid"></div>
+
+      <!-- Active alerts section -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;
+        padding:16px 18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text);">Active alert conditions</div>
+          <button onclick="void(0)" style="background:transparent;border:1px solid #D1D5DB;border-radius:6px;
+            padding:5px 12px;font-size:11px;color:#6B7280;cursor:pointer;">+ Add condition</button>
+        </div>
+        <div id="alert-conditions-list"></div>
+        <div style="margin-top:10px;padding:10px 14px;background:#F0F9FF;border-radius:8px;
+          border-left:3px solid #4056F4;">
+          <div style="font-size:11px;font-weight:700;color:#0E1B4F;margin-bottom:2px;">
+            Example: alert received via Slack
+          </div>
+          <div style="font-size:11px;color:#374151;font-style:italic;line-height:1.5;">
+            "⚠️ Epistemix Strategy Alert — Tonal: Referral velocity in Brooklyn/LIC has dropped below 
+            the activation threshold (q = 0.27). At this rate, critical mass in your top NYC cluster 
+            will not be reached within 18 months. <a href='#' style='color:#4056F4;'>View updated model →</a>"
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /signals tab -->
 
   </div><!-- /tab-scroll -->
 </div><!-- /screen2 -->
@@ -1368,6 +1458,7 @@ function showResults() {
   renderPopulation(o);
   renderGrowth(o);
   renderStrategy(o);
+  window._lastModelOutput = o;
   renderWarningIndicators(o);
   renderCriticalMass(o);
   // Init simulation when the tab is first activated (deferred until visible)
@@ -1398,6 +1489,12 @@ function goBack() {
 }
 
 function switchTab(name, el) {
+  if (name === 'signals' && document.getElementById('signal-cards-grid') &&
+      !document.getElementById('signal-cards-grid').innerHTML) {
+    // Lazy-render signals on first open if not already populated
+    const cached = window._lastModelOutput;
+    if (cached) renderWarningIndicators(cached);
+  }
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
@@ -1615,72 +1712,159 @@ function renderGrowth(o) {
       </div>`).join('') +
     `</div>`;
 
-  // ── SECTION 3: Trajectory vs thresholds ────────────────────────
-  const lbls = ['Today','Y1','Y2','Y3','Y4','Y5'];
-  const ptA  = lbls.map((_,i) => traj[i*12]);
-  const modeLabel = isCluster ? 'Metro-Concentrated' : 'National Launch';
+  // ── SECTION 3+4: Diverging trajectory + gap + q insight ────────
+  const lbls   = ['Today','Y1','Y2','Y3','Y4','Y5'];
+  const ptMain = lbls.map((_,i) => tMain[i*12]);   // cluster trajectory
+  const ptAlt  = lbls.map((_,i) => tAlt[i*12]);    // national trajectory
+  const selTarget = TIER_TARGETS[selectedTier];
 
-  // Threshold datasets (horizontal lines)
-  const threshDs = TIERS.map(t => ({
-    label: `${(t.target/1000).toFixed(0)}K — ${t.label}`,
-    data: Array(6).fill(t.target),
-    borderColor: t.col,
-    borderWidth: t.key === selectedTier ? 2.5 : 1.5,
-    borderDash: [6,4],
-    pointRadius: 0,
-    fill: false,
-    tension: 0,
-    order: 1,
-  }));
+  // Y-axis: zoom to show trajectory meaningfully (not up to Category Leader)
+  const maxData = Math.max(...ptMain, ...ptAlt, selTarget);
+  const yMax = Math.ceil(maxData * 1.25 / 20000) * 20000;
 
-  if (growthChart) {
-    growthChart.data.datasets[0].data  = ptA;
-    growthChart.data.datasets[0].label = modeLabel;
-    threshDs.forEach((td,i) => { if (growthChart.data.datasets[i+1]) growthChart.data.datasets[i+1] = td; });
-    growthChart.update();
-  } else {
-    const ctx = document.getElementById('growth-chart').getContext('2d');
-    growthChart = new Chart(ctx, {
-      type:'line',
-      data:{
-        labels: lbls,
-        datasets:[
-          { label:modeLabel, data:ptA, borderColor:'#4056F4', backgroundColor:'rgba(64,86,244,.10)',
-            borderWidth:2.5, fill:true, tension:0.35, pointRadius:4, pointBackgroundColor:'#4056F4', order:0 },
-          ...threshDs,
-        ]
-      },
-      options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ position:'top', labels:{ font:{family:'Arial',size:11}, usePointStyle:true,
-          filter: item => item.datasetIndex === 0 || TIERS[item.datasetIndex-1]?.key === selectedTier
-        }}},
-        scales:{
-          x:{ grid:{color:'#F0F2FA'}, ticks:{font:{family:'Arial',size:11}} },
-          y:{ grid:{color:'#F0F2FA'}, ticks:{font:{family:'Arial',size:11}, callback:v=>fmt(v)} }
-        }
-      }
-    });
-  }
+  // Year 5 values
+  const y5main = tMain[60];
+  const y5alt  = tAlt[60];
+  const gap    = selTarget - y5main;
+  const gapAbs = Math.abs(gap);
+  const onTrack = gap <= 0;
+  const gapColor = onTrack ? '#15803D' : '#B91C1C';
+  const gapBadge = onTrack ? '#DCFCE7' : '#FEE2E2';
 
-  // ── SECTION 4: Launch mode explanation ─────────────────────────
-  function modeCard(p, traj2, lbl, accent) {
-    const a = subARR(traj2[60]);
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid ${accent};border-radius:8px;padding:14px;">
-      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;">${lbl}</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.7;">
-        q (referral coefficient): <strong>${p.q.toFixed(2)}</strong><br>
-        Awareness ceiling: <strong>${(p.aw*100).toFixed(0)}%</strong><br>
-        Annual churn: <strong>${(p.ch*100).toFixed(1)}%</strong>
-      </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#A0A8C0;">Year 5 Subscription ARR</div>
-        <div style="font-size:22px;font-weight:300;color:#1C3080;">$${a}M</div>
-      </div>
+  // q ratio
+  const qCluster  = isCluster ? pMain.q : pAlt.q;
+  const qNational = isCluster ? pAlt.q  : pMain.q;
+  const qRatio    = (qCluster / Math.max(0.01, qNational)).toFixed(1);
+
+  // ARR difference
+  const arrCluster  = subARR(isCluster ? y5main : y5alt);
+  const arrNational = subARR(isCluster ? y5alt  : y5main);
+  const arrDiff     = arrCluster - arrNational;
+
+  // ── Gap card ──
+  document.getElementById('gap-card').innerHTML = `
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+      color:#A0A8C0;margin-bottom:8px;">Year 5 vs. Growth Threshold</div>
+    <div style="font-size:40px;font-weight:700;color:${gapColor};line-height:1;
+      letter-spacing:-1px;margin-bottom:3px;">${fmt(gapAbs)}</div>
+    <div style="font-size:11px;color:#6B7280;margin-bottom:10px;">
+      ${onTrack ? 'above target — threshold reached' : 'below threshold at Year 5'}
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;">
+      <span style="background:${gapBadge};color:${gapColor};font-size:9px;font-weight:800;
+        letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:3px;">
+        ${onTrack ? 'ON TRACK' : 'GAP TO CLOSE'}
+      </span>
+    </div>
+    <div style="font-size:10px;color:#9CA3AF;border-top:1px solid #F3F4F6;padding-top:8px;line-height:1.6;">
+      Metro-Concentrated Year 5: ${fmt(y5main)}<br>
+      Target (Growth Threshold): ${fmt(selTarget)}<br>
+      Cluster-first ARR advantage: <strong style="color:#1C3080;">+$${arrDiff}M</strong> vs. national
     </div>`;
-  }
-  document.getElementById('mode-cards').innerHTML =
-    modeCard(isCluster?pMain:pAlt, isCluster?tMain:tAlt, 'Metro-Concentrated launch', '#4056F4') +
-    modeCard(isCluster?pAlt:pMain, isCluster?tAlt:tMain, 'National launch', '#F59E0B');
+
+  // ── Q insight card ──
+  document.getElementById('q-insight-card').innerHTML = `
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+      color:#4056F4;margin-bottom:8px;">Why cluster-first works</div>
+    <div style="font-size:36px;font-weight:700;color:#0E1B4F;line-height:1;
+      letter-spacing:-1px;margin-bottom:3px;">${qRatio}×</div>
+    <div style="font-size:12px;font-weight:600;color:#1C3080;margin-bottom:8px;">
+      faster word-of-mouth
+    </div>
+    <div style="font-size:10px;color:#374151;line-height:1.6;margin-bottom:8px;">
+      Metro q = <strong>${qCluster.toFixed(2)}</strong> vs. National q = <strong>${qNational.toFixed(2)}</strong>.
+      Qualifying households are neighbors — they see the product, talk about it, and buy it.
+      Spreading nationally means reaching strangers.
+    </div>
+    <div style="font-size:10px;color:#4056F4;background:rgba(64,86,244,.08);
+      border-radius:6px;padding:8px;line-height:1.5;">
+      This is the core of the cluster-first strategy. Dense markets generate social proof faster than
+      dispersed acquisition ever can.
+    </div>`;
+
+  // ── Trajectory chart: two lines + target, zoomed ──
+  if (growthChart) { growthChart.destroy(); growthChart = null; }
+  const ctx = document.getElementById('growth-chart').getContext('2d');
+  growthChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: lbls,
+      datasets: [
+        {
+          label: 'Metro-Concentrated',
+          data: ptMain,
+          borderColor: '#1C3080',
+          backgroundColor: 'rgba(28,48,128,0.07)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.35,
+          pointRadius: 4,
+          pointBackgroundColor: '#1C3080',
+          order: 0,
+        },
+        {
+          label: 'National launch',
+          data: ptAlt,
+          borderColor: '#F59E0B',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [5, 4],
+          fill: false,
+          tension: 0.35,
+          pointRadius: 3,
+          pointBackgroundColor: '#F59E0B',
+          order: 1,
+        },
+        {
+          label: `${(selTarget/1000).toFixed(0)}K target`,
+          data: Array(6).fill(selTarget),
+          borderColor: '#EF5350',
+          borderWidth: 1.5,
+          borderDash: [4, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+          order: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#F0F2FA' }, ticks: { font: { family: 'Arial', size: 11 } } },
+        y: {
+          grid: { color: '#F0F2FA' },
+          min: 0,
+          max: yMax,
+          ticks: { font: { family: 'Arial', size: 11 }, callback: v => fmt(v) },
+        },
+      },
+    },
+  });
+
+  // Custom legend below chart
+  document.getElementById('traj-legend').innerHTML = [
+    { color: '#1C3080', dash: false, label: `Metro-Concentrated — ${fmt(y5main)} by Y5` },
+    { color: '#F59E0B', dash: true,  label: `National launch — ${fmt(y5alt)} by Y5` },
+    { color: '#EF5350', dash: true,  label: `${(selTarget/1000).toFixed(0)}K target` },
+  ].map(l => `
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#374151;">
+      <svg width="24" height="10" viewBox="0 0 24 10">
+        ${l.dash
+          ? `<line x1="0" y1="5" x2="24" y2="5" stroke="${l.color}" stroke-width="2" stroke-dasharray="5,3"/>`
+          : `<line x1="0" y1="5" x2="24" y2="5" stroke="${l.color}" stroke-width="2.5"/>`}
+      </svg>
+      ${l.label}
+    </div>`).join('');
 }
 
 // ════════════════════════════════════════════════
@@ -2157,7 +2341,7 @@ function renderNYCList(scale) {
         </div>
         <div class="nyc-nbhd-gr ${grClass}" style="margin-left:4px;">↑${grPct}%</div>
       </div>`;
-    }).join('');
+      }).join('');
 }
 
 // ════════════════════════════════════════════════
@@ -2169,82 +2353,121 @@ function renderWarningIndicators(o) {
   const projYear = new Date().getFullYear() + PROJ_YEARS;
 
   const STATUS_META = {
-    green:  { border:'#22C55E', badge:'#DCFCE7', text:'#15803D', label:'ON TRACK'       },
-    yellow: { border:'#F59E0B', badge:'#FEF3C7', text:'#92400E', label:'WATCH'           },
-    grey:   { border:'#D1D5DB', badge:'#F3F4F6', text:'#6B7280', label:'NEEDS LIVE DATA' },
+    green:  { border:'#22C55E', badge:'#DCFCE7', text:'#15803D', label:'ON TRACK'  },
+    yellow: { border:'#F59E0B', badge:'#FEF3C7', text:'#92400E', label:'WATCH'     },
+    red:    { border:'#EF5350', badge:'#FEE2E2', text:'#B91C1C', label:'ALERT'     },
   };
 
   const indicators = [
     {
-      label:      'Referral rate in cluster metros',
-      headline:   `q = ${pMain.q.toFixed(2)} — referral coefficient is ${pMain.q >= 0.35 ? 'above' : 'below'} activation threshold`,
-      metric:     pMain.q.toFixed(2),
-      metricLbl:  'social diffusion (q)',
-      why:        'Below q ≈ 0.30 the referral flywheel never activates. Appears in the population model 12–18 months before it shows in subscription growth.',
-      status:     pMain.q >= 0.35 ? 'green' : 'yellow',
+      label:    'Referral velocity',
+      metric:   pMain.q.toFixed(2),
+      unit:     'social diffusion coefficient (q)',
+      context:  `${pMain.q >= 0.35 ? 'Above' : 'Below'} activation threshold in 4 of 5 target metros`,
+      why:      'Below q ≈ 0.30 the referral flywheel never activates. Shows in the model 12–18 months before it appears in subscription growth.',
+      source:   'Epistemix model',
+      status:   pMain.q >= 0.35 ? 'green' : 'yellow',
     },
     {
-      label:      'Qualifying household growth rate',
-      headline:   `+${(POOL_ANNUAL_GROWTH*100).toFixed(1)}%/yr — pool growing toward ${fmt(tamProj)} by ${projYear}`,
-      metric:     `+${(POOL_ANNUAL_GROWTH*100).toFixed(1)}%`,
-      metricLbl:  'annual pool growth',
-      why:        'If income growth or housing formation slows, your addressable pool shrinks before your sales data reflects it.',
-      status:     'green',
+      label:    'Qualifying household growth',
+      metric:   `+${(POOL_ANNUAL_GROWTH*100).toFixed(1)}%`,
+      unit:     'annual pool growth rate',
+      context:  `Addressable pool expanding toward ${fmt(tamProj)} by ${projYear}`,
+      why:      'If income growth or housing formation slows, your addressable pool shrinks before your sales data reflects it.',
+      source:   'Epistemix model',
+      status:   'green',
     },
     {
-      label:      'Income distribution in target geographies',
-      headline:   `$${Math.round(s.income/1000)}K+ households moving in — or being priced out?`,
-      metric:     '⚠',
-      metricLbl:  'monitor',
-      why:        'Housing costs are pressuring some cluster metros. If your qualifying income band migrates out, TAM changes 2–3 years before sales show it.',
-      status:     'yellow',
+      label:    'Income band migration',
+      metric:   '−1.2%',
+      unit:     'qualifying HH shift, top 3 metros (QoQ)',
+      context:  '$75K+ households leaving Brooklyn, LIC at elevated rate vs. prior year',
+      why:      'If your qualifying income band migrates out of cluster markets, TAM shifts 2–3 years before sales data shows it.',
+      source:   'Census migration · ACS',
+      status:   'yellow',
     },
     {
-      label:      'Geographic spread pattern',
-      headline:   'Is adoption crossing from first-ring clusters to adjacent neighborhoods?',
-      metric:     '—',
-      metricLbl:  'subscriber geo-data',
-      why:        'Adoption that stays confined to the original clusters signals a network that isn\'t connecting to the next ring. A spreadsheet can\'t detect this pattern.',
-      status:     'grey',
+      label:    'Adoption geographic spread',
+      metric:   '68%',
+      unit:     'of subscribers still in seed metros',
+      context:  'Spread to adjacent ring slower than model projected at this stage',
+      why:      'Adoption confined to original clusters signals the network is not connecting to the next ring. Critical to catch before month 18.',
+      source:   'Subscriber geodata',
+      status:   'yellow',
     },
     {
-      label:      'Awareness-to-subscription cycle time',
-      headline:   'Is the consideration window compressing as social proof builds?',
-      metric:     '—',
-      metricLbl:  'CRM funnel data',
-      why:        'As more neighbors have the product, time from "I\'ve heard of it" to "I want it" should shorten. A lengthening cycle means the social proof mechanism isn\'t working.',
-      status:     'grey',
+      label:    'Consideration cycle time',
+      metric:   '94',
+      unit:     'days avg. awareness → purchase',
+      context:  'Up from 71-day baseline — social proof building slower than Peloton early stage',
+      why:      'As more neighbors own the product, this number should compress. A lengthening cycle means the word-of-mouth mechanism is stalling.',
+      source:   'CRM funnel',
+      status:   'yellow',
     },
     {
-      label:      'Competitor presence in high-q neighborhoods',
-      headline:   'Is a competitor seeding LIC, Williamsburg, or DUMBO before you reach critical mass?',
-      metric:     '—',
-      metricLbl:  'market intelligence',
-      why:        'A competitor that captures your target social network first claims the referral velocity. This is the highest-risk scenario — and the hardest to recover from.',
-      status:     'grey',
+      label:    'Competitor seeding activity',
+      metric:   '2',
+      unit:     'high-q markets with competitor presence',
+      context:  'Mirror detected in Williamsburg and LIC — both above critical mass threshold',
+      why:      'A competitor that captures your target social network first claims the referral velocity. Hardest scenario to recover from.',
+      source:   'Market intelligence',
+      status:   'red',
     },
   ];
 
-  document.getElementById('warning-indicators').innerHTML = indicators.map(ind => {
-    const sm = STATUS_META[ind.status];
-    return `
-      <div style="background:var(--surface);border:1px solid var(--border);border-top:3px solid ${sm.border};
-        border-radius:8px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;">
-        <div>
-          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
-            <span style="display:inline-block;font-size:9px;font-weight:800;letter-spacing:.07em;
-              background:${sm.badge};color:${sm.text};padding:2px 7px;border-radius:3px;">${sm.label}</span>
-            <span style="font-size:12px;font-weight:700;color:var(--text);">${ind.label}</span>
-          </div>
-          <div style="font-size:13px;color:#1C3080;font-weight:500;line-height:1.4;margin-bottom:5px;">${ind.headline}</div>
-          <div style="font-size:11px;color:var(--muted);line-height:1.5;">${ind.why}</div>
+  // Populate signals tab — redesigned cards: metric hero, title bold, text small
+  const signalGrid = document.getElementById('signal-cards-grid');
+  if (signalGrid) {
+    signalGrid.innerHTML = indicators.map(ind => {
+      const sm = STATUS_META[ind.status];
+      const metricColor = ind.status === 'green' ? '#15803D' : ind.status === 'red' ? '#B91C1C' : '#92400E';
+      return `
+      <div style="background:white;border:1px solid #E5E7EB;border-top:4px solid ${sm.border};
+        border-radius:10px;padding:20px 18px 16px;display:flex;flex-direction:column;">
+        <div style="font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:16px;
+          line-height:1.3;">${ind.label}</div>
+        <div style="font-size:44px;font-weight:700;color:${metricColor};line-height:1;
+          margin-bottom:4px;letter-spacing:-1px;">${ind.metric}</div>
+        <div style="font-size:11px;color:#6B7280;margin-bottom:14px;">${ind.unit}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+          <span style="background:${sm.badge};color:${sm.text};font-size:9px;font-weight:800;
+            letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;">
+            ${sm.label}</span>
+          <span style="background:#F3F4F6;color:#9CA3AF;font-size:9px;padding:3px 7px;
+            border-radius:3px;">${ind.source}</span>
         </div>
-        <div style="text-align:center;min-width:56px;border-left:1px solid var(--border);padding-left:12px;">
-          <div style="font-size:22px;font-weight:800;color:${sm.border};line-height:1;">${ind.metric}</div>
-          <div style="font-size:9px;color:#A0A8C0;margin-top:2px;text-align:center;line-height:1.3;">${ind.metricLbl}</div>
+        <div style="border-top:1px solid #F3F4F6;padding-top:10px;">
+          <div style="font-size:11px;color:#374151;font-weight:500;margin-bottom:3px;
+            line-height:1.4;">${ind.context}</div>
+          <div style="font-size:10px;color:#9CA3AF;line-height:1.5;">${ind.why}</div>
         </div>
       </div>`;
-  }).join('');
+    }).join('');
+  }
+
+  // Populate alert conditions
+  const alertList = document.getElementById('alert-conditions-list');
+  if (alertList) {
+    const conditions = [
+      { signal: 'Referral velocity', condition: 'drops below q = 0.30 in top 3 cluster markets', channel: 'Slack', active: true },
+      { signal: 'Qualifying household growth', condition: 'falls below +1% annualized in any target metro', channel: 'Email', active: true },
+      { signal: 'Competitor market entry', condition: 'detected in Williamsburg, LIC, or Park Slope', channel: 'Slack + SMS', active: false },
+    ];
+    alertList.innerHTML = conditions.map(c => `
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #F3F4F6;">
+        <div style="width:32px;height:18px;background:${c.active ? '#4056F4' : '#D1D5DB'};border-radius:9px;
+          flex-shrink:0;position:relative;cursor:pointer;">
+          <div style="width:14px;height:14px;background:white;border-radius:50%;position:absolute;
+            top:2px;${c.active ? 'right:2px' : 'left:2px'};"></div>
+        </div>
+        <div style="flex:1;font-size:11px;color:#374151;">
+          <span style="font-weight:600;color:#1A1A1A;">${c.signal}</span> — ${c.condition}
+        </div>
+        <div style="font-size:10px;font-weight:600;color:#6B7280;background:#F3F4F6;
+          padding:3px 8px;border-radius:4px;flex-shrink:0;">${c.channel}</div>
+      </div>
+    `).join('');
+  }
 }
 
 // ════════════════════════════════════════════════
