@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning for the Past — Why Strategic Planning Lets Your Organization Down</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #dedad4;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1a1a1a;
+    padding: 52px 20px 100px;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 68px 88px 88px;
+    box-shadow: 0 4px 48px rgba(0,0,0,0.16);
+  }
+
+  /* ── Publication mark ──────────────────────────────────── */
+  .pub-mark {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 5px solid #1C3080;
+    border-bottom: 1px solid #1C3080;
+    padding: 8px 0;
+    margin-bottom: 44px;
+  }
+  .pub-mark-left {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #1C3080;
+  }
+  .pub-mark-right {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: #999;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── Title block ───────────────────────────────────────── */
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 62px;
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: #0d0d0d;
+    margin-bottom: 14px;
+  }
+  .subtitle {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    font-style: italic;
+    color: #555;
+    margin-bottom: 22px;
+    line-height: 1.38;
+  }
+  .byline {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 36px;
+  }
+
+  /* ── At a Glance sidebar ───────────────────────────────── */
+  .at-a-glance {
+    float: right;
+    width: 256px;
+    margin: 6px 0 28px 36px;
+    background: #EEF1FF;
+    border-left: 4px solid #1C3080;
+    padding: 18px 20px 20px;
+  }
+  .glance-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1C3080;
+    margin-bottom: 14px;
+  }
+  .glance-item {
+    padding: 11px 0 0;
+    border-top: 1px solid rgba(28,48,128,0.14);
+    margin-top: 11px;
+  }
+  .glance-item:nth-child(2) {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .glance-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1C3080;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .glance-text {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.62;
+    color: #333;
+    margin: 0;
+  }
+  .glance-list {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.62;
+    color: #333;
+    margin: 0;
+    padding-left: 17px;
+  }
+  .glance-list li {
+    margin-bottom: 4px;
+  }
+  .glance-list li:last-child {
+    margin-bottom: 0;
+  }
+  .clearfix::after { content: ''; display: table; clear: both; }
+
+  /* ── Body text ─────────────────────────────────────────── */
+  .body {
+    font-size: 16px;
+    line-height: 1.82;
+    color: #1a1a1a;
+  }
+  .body p { margin-bottom: 1.05em; }
+
+  .lede {
+    font-size: 19px;
+    line-height: 1.74;
+    color: #111;
+    margin-bottom: 1.05em;
+  }
+
+  /* ── Dividers ──────────────────────────────────────────── */
+  .section-rule {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 40px 0 0;
+    clear: both;
+  }
+
+  /* ── Section headers ───────────────────────────────────── */
+  .body h3 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1C3080;
+    margin: 0 0 18px;
+    padding-top: 20px;
+    border-top: 2px solid #1C3080;
+  }
+
+  /* ── Pull quotes ───────────────────────────────────────── */
+  .pullquote {
+    border-left: 4px solid #4056F4;
+    padding: 4px 0 4px 22px;
+    margin: 28px 0 24px;
+  }
+  .pullquote p {
+    font-size: 21px;
+    font-style: italic;
+    line-height: 1.46;
+    color: #1C3080;
+    margin: 0;
+    font-family: Georgia, serif;
+  }
+
+  /* ── Diagram ───────────────────────────────────────────── */
+  .diagram-wrap {
+    margin: 24px -8px 0;
+    text-align: center;
+  }
+  .diagram-wrap svg { max-width: 100%; height: auto; }
+  .diagram-caption {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: #b8b8b8;
+    margin-top: 9px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* ── Footnote refs ─────────────────────────────────────── */
+  sup { line-height: 0; }
+  sup a {
+    color: #4056F4;
+    text-decoration: none;
+    font-size: 11px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* ── Notes ─────────────────────────────────────────────── */
+  .footnotes {
+    margin-top: 60px;
+    padding-top: 22px;
+    border-top: 1px solid #ddd;
+  }
+  .fn-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c0c0c0;
+    margin-bottom: 14px;
+  }
+  .footnotes ol {
+    list-style: decimal;
+    padding-left: 18px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #666;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  .footnotes li { margin-bottom: 7px; }
+  .footnotes em { font-style: italic; }
+  .footnotes a { color: #bbb; text-decoration: none; font-size: 10px; }
+
+  /* ── Footer ────────────────────────────────────────────── */
+  .article-footer {
+    margin-top: 44px;
+    padding-top: 14px;
+    border-top: 1px solid #ebebeb;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: #bbb;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 680px) {
+    .page { padding: 40px 28px 64px; }
+    h1 { font-size: 38px; }
+    .at-a-glance { float: none; width: 100%; margin: 0 0 28px; }
+  }
+
+  @page {
+    size: letter;
+    margin: 0.8in 0.9in;
+  }
+
+  @media print {
+    body {
+      background: white;
+      padding: 0;
+      color: #000;
+    }
+    .page {
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+      background: white;
+    }
+    /* Widows and orphans */
+    p {
+      orphans: 3;
+      widows: 3;
+    }
+    /* Section headers stay with following text */
+    h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    /* Dividers stay with following header */
+    .section-rule {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+    /* h3 immediately after rule stays together */
+    .section-rule + h3 {
+      break-before: avoid;
+      page-break-before: avoid;
+    }
+    /* First paragraph after heading stays with heading */
+    h3 + p {
+      break-before: avoid;
+      page-break-before: avoid;
+    }
+    /* Keep these blocks intact */
+    .diagram-wrap,
+    .pullquote,
+    .at-a-glance,
+    .pub-mark,
+    .footnotes {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    /* Footer stays together */
+    .article-footer {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    /* Lighten footnote links for print */
+    .footnotes a {
+      color: #999;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="pub-mark">
+    <span class="pub-mark-left">Epistemix</span>
+    <span class="pub-mark-right">Strategy &amp; Commercial Practice &nbsp;&middot;&nbsp; 2026</span>
+  </div>
+
+  <h1>Planning for&nbsp;the Past</h1>
+  <div class="subtitle">Why Strategic Planning Lets Your Organization Down</div>
+  <div class="byline">Epistemix &nbsp;&middot;&nbsp; Strategy &amp; Commercial Practice</div>
+
+  <div class="body">
+
+    <div class="at-a-glance">
+      <div class="glance-title">At a Glance</div>
+      <div class="glance-item">
+        <span class="glance-label">The Problem</span>
+        <p class="glance-text">Organizations commit months of senior time and real resources to strategy. What they produce governs capital allocation, hiring, and competitive direction for years. Getting it wrong has consequences that are slow to surface and hard to reverse.</p>
+      </div>
+      <div class="glance-item">
+        <span class="glance-label">The Cause</span>
+        <ol class="glance-list">
+          <li>Strategy is built from a snapshot of conditions that are already changing.</li>
+          <li>Human cognition cannot hold the complexity real markets require.</li>
+          <li>The base case treats unstated assumptions as premises rather than hypotheses.</li>
+          <li>The approval process selects for confidence rather than validity.</li>
+        </ol>
+      </div>
+      <div class="glance-item">
+        <span class="glance-label">The Solution</span>
+        <p class="glance-text">Model the market as a dynamic system before making the plan. Surface the assumptions the strategy most depends on, treat the base case as a hypothesis, and use the model when conditions shift to ask: does this alter the strategic conclusion?</p>
+      </div>
+    </div>
+
+    <p class="lede">Strategy governs the choices that compound over years: where capital goes, how you compete, what you build. Most organizations put months of senior time and real resources into getting it right. What comes out feels like something whole. What follows is another matter.</p>
+
+    <p>Ask someone six months later whether the strategy is actually guiding what the organization does each day. The honest answer is usually some version of: <em>not as much as we hoped.</em></p>
+
+    <p>McKinsey surveyed roughly eight hundred senior executives about their strategic planning processes. Fewer than half were satisfied with them. Only one in four reported that major strategic decisions were actually made within the formal process.<sup><a href="#fn1" id="ref1">1</a></sup> Kaplan and Norton, reviewing two decades of research, found that 60 to 80 percent of companies fall short of the targets their strategic plans express.<sup><a href="#fn2" id="ref2">2</a></sup> These are organizations running serious planning functions. The process is working. The strategies it produces often are not. The gap is not a function of effort. It is a function of architecture.</p>
+
+    <p>Some organizations commit confidently and move efficiently in the wrong direction, toward an outcome the market or the customer has already made irrelevant. Others commit to a broadly right direction but build a strategy that was never designed to be operated: too abstract to guide daily decisions, too opaque to reveal when conditions have changed enough to matter. The two failures are different in kind but share a common cause. They trace to the same flaws in how strategy gets made.</p>
+
+    <div class="clearfix"></div>
+
+    <hr class="section-rule">
+    <h3>Strategy as Snapshot</h3>
+
+    <p>Every strategic plan begins with an act of observation. Research into the market. Analysis of competitive dynamics. Assessment of customer behavior and organizational capability. That analysis is, at best, a precise description of a system in motion at a specific point in time. The strategy that emerges from it is built on conditions that were already changing.</p>
+
+    <p>Colonel John Boyd, a US Air Force combat pilot and strategist who developed the theory of competitive decision cycles in the 1970s and 1980s, formalized this problem as the OODA loop: Observe, Orient, Decide, Act. The side that could cycle through that sequence faster would consistently outmaneuver a slower opponent. Not because it was stronger, but because its decision-making stayed current with conditions on the ground.</p>
+
+    <p>Applied to organizational strategy, the framework reveals two distinct loops running simultaneously, each with its own latency. The first is the front-line loop: the people doing the work observe conditions, make local decisions, and act, whether or not the strategy clearly connects their actions to a coherent intent. The second is the strategic loop: observations from execution are supposed to travel back to leadership, get processed into updated understanding, and return as revised guidance. In most organizations, this loop completes once a year, if at all. By the time it does, the conditions that prompted the feedback have already changed again.</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 720 390" xmlns="http://www.w3.org/2000/svg" role="img">
+        <title>Two Feedback Loops in Commercial Strategy</title>
+        <desc>The Strategic Loop connects Strategy and Leadership to Front-Line Operators annually. The Front-Line Loop connects Front-Line Operators to the Market continuously.</desc>
+        <defs>
+          <marker id="ah" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto">
+            <polygon points="0,0 8,4 0,8" fill="#4056F4"/>
+          </marker>
+        </defs>
+        <rect width="720" height="390" fill="white"/>
+        <rect x="20" y="158" width="176" height="83" rx="8" fill="#1C3080"/>
+        <text x="108" y="194" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Strategy &amp;</text>
+        <text x="108" y="213" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Leadership</text>
+        <text x="108" y="232" font-family="Arial,sans-serif" font-size="10" fill="#8BA4D8" text-anchor="middle">Plans annually</text>
+        <rect x="276" y="158" width="198" height="83" rx="8" fill="#2D42C8"/>
+        <text x="375" y="194" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Front-Line</text>
+        <text x="375" y="213" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Operators</text>
+        <text x="375" y="232" font-family="Arial,sans-serif" font-size="10" fill="#8BA4D8" text-anchor="middle">Executes · Observes locally</text>
+        <rect x="538" y="163" width="162" height="73" rx="8" fill="#EEF1FF" stroke="#4056F4" stroke-width="1.5"/>
+        <text x="619" y="198" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#1C3080" text-anchor="middle">Market &amp;</text>
+        <text x="619" y="217" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#1C3080" text-anchor="middle">Competitive Env.</text>
+        <path d="M 196 170 C 218 85 258 85 276 170" stroke="#4056F4" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+        <path d="M 276 228 C 258 322 218 322 196 228" stroke="#4056F4" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+        <path d="M 474 168 C 496 88 528 88 538 168" stroke="#4056F4" stroke-width="2.5" fill="none" marker-end="url(#ah)"/>
+        <path d="M 538 228 C 528 316 496 316 474 228" stroke="#4056F4" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+        <text x="236" y="37" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1C3080" text-anchor="middle">Strategic Direction</text>
+        <text x="236" y="52" font-family="Arial,sans-serif" font-size="10" fill="#777" text-anchor="middle">Annual cycle</text>
+        <text x="506" y="37" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1C3080" text-anchor="middle">Continuous observation</text>
+        <rect x="176" y="103" width="120" height="14" rx="2" fill="white"/>
+        <text x="236" y="114" font-family="Arial,sans-serif" font-size="9" fill="#9AACCC" text-anchor="middle" letter-spacing="1">STRATEGIC LOOP</text>
+        <rect x="438" y="103" width="136" height="14" rx="2" fill="white"/>
+        <text x="506" y="114" font-family="Arial,sans-serif" font-size="9" fill="#9AACCC" text-anchor="middle" letter-spacing="1">FRONT-LINE LOOP</text>
+        <text x="236" y="344" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1C3080" text-anchor="middle">Market Observations</text>
+        <text x="236" y="360" font-family="Arial,sans-serif" font-size="10" fill="#777" text-anchor="middle">Filtered, delayed</text>
+        <text x="506" y="344" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1C3080" text-anchor="middle">Local responses</text>
+      </svg>
+      <p class="diagram-caption">Two feedback loops in commercial strategy: the strategic loop (annual) and the front-line loop (continuous).</p>
+    </div>
+
+    <p>The snapshot that justified the strategy grows less accurate the moment execution begins. What has changed in recent decades is the pace at which it becomes wrong. Competitors can reprice within days. Platform algorithms reshape channel economics in weeks. Consumer behavior shifts in response to events no planning cycle anticipated. The front-line loop accelerates; the strategic loop does not. The gap between them widens.</p>
+
+    <p>The conventional tools for addressing this (dashboards, quarterly reviews, rolling forecasts) are useful instruments for tracking what has already happened. They describe the gap between plan and reality after it has formed. They were not designed to run a strategy forward and show where the gaps will emerge before they do.</p>
+
+    <hr class="section-rule">
+    <h3>The Ceiling on Human Synthesis</h3>
+
+    <p>In 1956, the psychologist George Miller published what became known as Miller&#8217;s Law: working memory can hold approximately seven items simultaneously.<sup><a href="#fn3" id="ref3">3</a></sup> When that limit is reached, what becomes invisible is the relationships between variables. In any complex system, the interactions between variables determine outcomes. A strategist holding seven variables in working memory has roughly twenty-one pairwise relationships to track. Those relationships are largely invisible to the human mind doing the analysis. Peter Senge&#8217;s systems thinking research identified the organizational consequence: when feedback loops exceed what human minds can track, the predictable result is decisions that optimize locally and fail systemically.<sup><a href="#fn4" id="ref4">4</a></sup></p>
+
+    <p>This was always a constraint. What has changed is the pace of interaction between the parts of a market: variables move faster, influence each other more nonlinearly, and the number with measurable effect on commercial outcomes has grown. Markets have always been complex adaptive systems; what has changed is the rate at which they evolve.<sup><a href="#fn5" id="ref5">5</a></sup></p>
+
+    <p>Each geography responds differently to competitive moves. Each customer segment has its own demand dynamics. Macroeconomic and competitive forces ripple through populations in ways that vary by household, by channel, by prior purchase behavior. In our work with clients in complex commercial markets, we have found the number of distinct variables with measurable strategic impact running to a hundred or more. At a hundred variables, pairwise relationships alone approach five thousand. That is before accounting for higher-order interactions. <strong>The gap between what human synthesis can hold and what commercial strategy actually requires runs to orders of magnitude.</strong></p>
+
+    <p>The planning response to this constraint follows predictably. When the problem exceeds what the instrument can hold, the instrument simplifies the problem. Historical growth rates become proxies for the forces that produced them. Competitive behavior is held stable for the duration of the plan. A company that grew at ten percent last year builds its strategy around assumptions intended to produce twelve percent next year, without examining what actually generated the ten or what would have to change for the same drivers to produce twelve.</p>
+
+    <p>The hallmarks of this simplification appear in virtually every planning process. Sensitivity analysis varies one assumption at a time while holding all others fixed. Scenarios cover a small number of named alternatives rather than a distribution of outcomes. Targets are expressed as percentage improvements over prior performance, decoupled from the underlying drivers. Market assumptions are sourced from external analyst projections rather than built from the structural conditions of demand. None of these is a failure of rigor; each is a rational adaptation to a constraint the planning process has no other way to address. Together, they produce a plan that is internally consistent. The interactions between variables, which determine strategic outcomes more than any single variable can, are not in the model.</p>
+
+    <hr class="section-rule">
+    <h3>The Base Case Is a Choice</h3>
+
+    <p>Given that planning happens in annual bursts and human synthesis has limits, the planning process needs to start from something stable. That stable reference point is the base case: typically some version of current trajectory if the organization changes nothing significant. The analysis then asks which strategic option outperforms that baseline.</p>
+
+    <p><strong>The base case compresses the complexity of a market into a single assumed trajectory and holds it still while options are evaluated against it.</strong> The assumptions required to do that are not stated. Competitive behavior is assumed to hold. Customer dynamics are assumed to be stable. Macroeconomic conditions are assumed not to shift. The world, of course, does not hold still. Those assumptions are encoded into the trajectory rather than examined explicitly. Most of the time, they are not even identified as assumptions. They are simply the numbers. Once established, the base case tends to be treated as a premise rather than an assumption. Questioning it would require reopening the entire analysis.</p>
+
+    <p>The result, as any practitioner of financial modeling knows, is that the same model can be built to produce almost any answer its authors need it to produce. The planning process selects for internal consistency, not accuracy. Rita McGrath and Ian MacMillan identified the more productive starting point in their foundational work on discovery-driven planning:<sup><a href="#fn6" id="ref6">6</a></sup> rather than projecting forward from current conditions, ask what would have to be true for the strategy to succeed, and then test whether you actually believe those things are true. That discipline reframes planning from a forecasting exercise into a structured test of the assumptions doing the most work.</p>
+
+    <p>The reason this discipline is rarely applied rigorously is that it surfaces the assumptions the strategy most depends on. Those are almost always the assumptions no one has tested.</p>
+
+    <hr class="section-rule">
+    <h3>The Approval Process Selects for Confidence</h3>
+
+    <p>A strategy has to do two distinct things. It has to organize execution: give the people doing the work a coherent basis for the decisions they face each day. And it has to win commitment: from the board allocating capital, from the managers deciding where to direct their energy, from the people choosing whether to work there. A strategy that cannot generate energetic belief rarely gets the resources or focus it needs to succeed. Uncertainty about direction is itself a failure mode, not a neutral state.</p>
+
+    <p>But the requirement to win commitment creates its own dynamics. There are three distinct ways a strategy can fail. The first is never committing: the organization deliberates indefinitely and loses to competitors who move. The second is committing with incomplete energy: the strategy is underfunded, under-prioritized, and half-executed, which is its own reliable path to failure. The third is committing fully to something it should not have committed to. The first two failure modes are broadly understood. The third is the one that looks like success until it isn&#8217;t.</p>
+
+    <div class="pullquote">
+      <p>&#8220;From the outside, they look the same: a coherent direction, a confident delivery, a clear claim about where the organization is going.&#8221;</p>
+    </div>
+
+    <p>The distinction that matters is between confidence that knows what it is betting on and confidence that has simply resolved uncertainty by not examining it. A leadership team that can name the specific assumptions that would make its strategy wrong, and say how they would know early if those assumptions were not holding, is offering something different from one that cannot. From the outside, they look the same: a coherent direction, a confident delivery, a clear claim about where the organization is going. <strong>The process of winning commitment has no mechanism to test which is right.</strong> It selects for conviction.</p>
+
+    <p>The consequence surfaces later. The chain of reasoning that produced the strategy (what was known, what was assumed, what was decided) gets compressed into a commitment and largely discarded. When a foundational assumption later proves wrong, there is no path from the outcome back to the ingredient that failed. The strategy cannot be audited. The organization loses the ability to answer the most important question available to it: is what we are executing still the right strategy given what we now know?</p>
+
+    <hr class="section-rule">
+    <h3>A Different Architecture</h3>
+
+    <p>These four problems share a common root: a planning architecture designed to produce documents rather than understanding, artifacts that capture a position rather than models that can be tested, updated, and run forward.<sup><a href="#fn7" id="ref7">7</a></sup> Together they make the third failure mode not just possible but likely: full commitment, from an organization moving with energy and conviction, to a strategy built on untested foundations.</p>
+
+    <p>A better approach starts earlier. Before planning to influence outcomes, understand the forces that produce them. Model the market as a dynamic system, not a static landscape. Run the strategy forward through that model before committing organizational energy and resources to it.</p>
+
+    <p>What this requires is a structural model of the market itself: one that represents how competitive dynamics, customer behavior, and channel economics interact, and can show what any given strategy produces across the full range of plausible conditions simultaneously. Scenario planning gives you a handful of alternatives; sensitivity analysis varies one assumption at a time. A structural model shows the full distribution of outcomes with all variables moving together.</p>
+
+    <p>From a model like this, <strong>the assumptions actually driving outcomes become visible:</strong> the places where a small change in input produces a large change in output. Those become the leading indicators for strategy health, the bets to validate first before full commitment, the specific claims against which accountability is measured. The question shifts from &#8220;you said we would grow eighteen percent&#8221; to &#8220;you said this assumption would hold; it has not; here is how we adjust.&#8221;</p>
+
+    <div class="pullquote">
+      <p>&#8220;We are talking about the future. You are going to be wrong about some things.&#8221;</p>
+    </div>
+
+    <p>We are talking about the future. You are going to be wrong about some things. The question is not whether assumptions will prove incorrect, but which ones, and what that means for the conclusions that depended on them. Some things that diverge from the plan are noise: tactical setbacks that do not change the underlying logic of the strategy. Others signal something structural: a foundational assumption has failed and the strategy, as written, no longer applies. A strategy built without surfaced assumptions cannot answer that question when it matters. The organization is left with a binary: press on or start over. In practice, neither is usually right. A structural model makes the distinction available. When conditions change, you can run the new reality through the model and ask whether it changes the strategic conclusion. If it does not, keep operating. If it does, stop and reconsider. The model tells you which.</p>
+
+    <div class="pullquote">
+      <p>&#8220;Two people can nod at the same strategy story while holding entirely different mental models of what it demands from them.&#8221;</p>
+    </div>
+
+    <p>Alignment built around a shared model works differently from alignment built around a narrative. A narrative requires agreement on an interpretation; a model requires agreement on a structure. Two people can nod at the same strategy story while holding entirely different mental models of what it demands from them.</p>
+
+    <p>The gap this creates is larger than most leaders recognize. In research published by <em>MIT Sloan Management Review</em>, Donald Sull and colleagues surveyed executives and middle managers at 124 companies and found that only 28 percent could name three of their organization&#8217;s top strategic priorities when asked to do so in their own words. In a related study, a CEO who met monthly with her management team (whose employee engagement surveys showed 84 percent of staff believed they were &#8220;clear on our top priorities&#8221;) discovered that fewer than one-third of her management team could name even two of the top five priorities when asked separately to describe the strategy unprompted. The 84 percent alignment figure was measuring agreement with a statement, not shared understanding of substance.<sup><a href="#fn8" id="ref8">8</a></sup></p>
+
+    <p>A shared model closes that gap structurally. Communication campaigns do not. When conditions change, you update the model; you do not renegotiate the story.</p>
+
+    <p>A story that orients people who do not have to operate the strategy (investors, board members, new employees) is genuinely useful. But a story that is asked to guide what a growth marketer does on Tuesday, or how a product team prioritizes a roadmap decision when competitive signals conflict, is asking language to do something language cannot do. Over time, those decisions accumulate into drift. No one chose to deviate.</p>
+
+    <p>Strategy does not have to be an episodic activity. Currently, execution runs on the last set of orders. External signals (competitor moves, channel shifts, market changes) arrive with no clear mechanism for evaluating what they mean strategically. Different parts of the organization interpret the same signal differently; the friction accumulates until the next planning cycle. With a strategy connected to a living model, those signals get a specific answer: does this change the strategic conclusion, or not?</p>
+
+    <hr class="section-rule">
+    <h3>What Has Changed</h3>
+
+    <p>Smart people have made versions of this argument for decades. The failures it describes appeared in academic and practitioner literature going back at least as far as the planning failures of the 1970s and 1980s. The argument stayed theoretical for a practical reason: the tools required to execute it were not accessible at commercial scale.</p>
+
+    <p>The methods themselves are not new in principle. <strong>Agent-based modeling</strong> represents market actors (customers, competitors, channel intermediaries) as rule-following entities whose interactions produce aggregate outcomes. <strong>Synthetic population modeling</strong> replaces demographic averages with statistically representative individuals calibrated to real behavioral data. <strong>World models</strong> represent the competitive environment as a queryable system that can be run forward under different conditions. These approaches have been applied in epidemiology, defense planning, and computational biology for decades. The computational infrastructure required to run them at the resolution relevant to commercial decision-making has now become widely available. The methodological work to connect them to business problems has matured alongside it.</p>
+
+    <p>The planning processes that exist in most organizations were designed for a world in which this was not possible. Those processes were designed for a world in which this was not possible. The question now is whether organizations will update them.</p>
+
+    <hr class="section-rule">
+    <h3>How Strategy Is Evolving</h3>
+
+    <p>The practical change starts before planning begins. Most organizations open the planning cycle with objectives. The better starting question is whether the organization has an accurate model of how its market works: who the actors are, what governs their behavior, what the feedback loops between them are, and what has shifted. Building or updating that model is the work that precedes strategy, not the work that follows from it.</p>
+
+    <p>The first thing that changes is the base case. In conventional planning, it encodes assumptions that are never named. A structural model forces those assumptions into the open. Run it forward under different conditions and you get a distribution of outcomes rather than a point estimate. The assumptions driving the most variance become visible: those are the bets to validate early, the claims to put leading indicators against, the specific things the strategy most depends on getting right.</p>
+
+    <p>Strategy reviews change character. The question is no longer whether you are on track against the plan, but whether anything has happened that changes the model&#8217;s conclusions. A competitor reprices. A regulatory change shifts channel economics. A segment moves earlier or later than expected. The model absorbs those updates and returns a specific answer: the strategic conclusion holds, or it does not, and here is why.</p>
+
+    <p>What changes for the people doing the work is more gradual but more durable. When strategy is built on a model rather than a narrative, the answer to the question that comes up at every level (what matters most right now, and why) becomes more specific and more stable. That is the connection between strategic intent and daily execution that formal planning has always promised and rarely delivered.</p>
+
+    <p>The planning process did not fail at its job. It succeeded at a job that was too small. Producing a committed strategy and producing the right one are different things. The tools to pursue both now exist. Most organizations are still only pursuing one.</p>
+
+  </div><!-- /.body -->
+
+  <div class="footnotes">
+    <div class="fn-title">Notes</div>
+    <ol>
+      <li id="fn1">McKinsey &amp; Company, &#8220;How to Improve Strategic Planning,&#8221; <em>McKinsey Quarterly</em>, 2006. The survey of approximately 800 executives found 45 percent satisfied with their planning process; a separate finding showed only 23 percent reported that major strategic decisions were made within the formal planning process. <a href="#ref1">&#8617;</a></li>
+      <li id="fn2">Robert S. Kaplan and David P. Norton, &#8220;Creating the Office of Strategy Management,&#8221; Harvard Business School Working Paper No. 05-071, 2005. The 60 to 80 percent figure reflects their review of two decades of survey data on strategy execution outcomes. <a href="#ref2">&#8617;</a></li>
+      <li id="fn3">George A. Miller, &#8220;The Magical Number Seven, Plus or Minus Two: Some Limits on Our Capacity for Processing Information,&#8221; <em>Psychological Review</em>, vol. 63, no. 2, 1956, pp. 81&#8211;97. <a href="#ref3">&#8617;</a></li>
+      <li id="fn4">Peter Senge, <em>The Fifth Discipline: The Art and Practice of the Learning Organization</em>, Doubleday/Currency, 1990. <a href="#ref4">&#8617;</a></li>
+      <li id="fn5">Eric D. Beinhocker, <em>The Origin of Wealth: Evolution, Complexity, and the Radical Remaking of Economics</em>, Harvard Business School Press, 2006. <a href="#ref5">&#8617;</a></li>
+      <li id="fn6">Rita Gunther McGrath and Ian C. MacMillan, &#8220;Discovery-Driven Planning,&#8221; <em>Harvard Business Review</em>, July&#8211;August 1995. <a href="#ref6">&#8617;</a></li>
+      <li id="fn7">Henry Mintzberg, <em>The Rise and Fall of Strategic Planning</em>, Free Press, 1994. <a href="#ref7">&#8617;</a></li>
+      <li id="fn8">Donald Sull, Stefano Turconi, Charles Sull, and James Yoder, &#8220;No One Knows Your Strategy &#8212; Not Even Your Top Leaders,&#8221; <em>MIT Sloan Management Review</em>, February 12, 2018; Donald Sull, Rebecca Homkes, and Charles Sull, &#8220;Why Strategy Execution Unravels &#8212; and What to Do About It,&#8221; <em>Harvard Business Review</em>, March 2015. <a href="#ref8">&#8617;</a></li>
+    </ol>
+  </div>
+
+  <div class="article-footer">
+    <span>Planning for the Past: Why Strategic Planning Lets Your Organization Down</span>
+    <span>epistemix.com &nbsp;&middot;&nbsp; &copy; 2026 Epistemix</span>
+  </div>
+
+</div><!-- /.page -->
+</body>
+</html>
