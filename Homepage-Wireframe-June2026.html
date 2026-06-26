@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epistemix — Homepage Wireframe (June 2026)</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250.45 311.32'%3E%3Crect width='250.45' height='311.32' fill='%234056F4'/%3E%3Crect x='91.26' y='142.46' width='77.4' height='20.5' fill='white'/%3E%3Cpolygon points='68.06 243.26 182.46 243.26 182.46 222.76 91.26 222.76 91.26 162.96 68.06 162.96 68.06 243.26' fill='white'/%3E%3Cpolygon points='182.46 88.56 182.46 68.06 68.06 68.06 68.06 142.46 91.26 142.46 91.26 88.56 182.46 88.56' fill='white'/%3E%3C/svg%3E">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    background: #fff;
+    line-height: 1.5;
+  }
+
+  /* ─── NAV ─────────────────────────────────────────── */
+  nav {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo svg {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    list-style: none;
+    font-size: 14px;
+    color: #404040;
+  }
+  .nav-links a { text-decoration: none; color: inherit; }
+  .nav-cta {
+    background: #4056F4;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+
+  /* ─── SECTION UTILITIES ───────────────────────────── */
+  section { padding: 80px 48px; }
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4056F4;
+    margin-bottom: 16px;
+  }
+  .annotation {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #999;
+    background: #f5f5f5;
+    border: 1px dashed #ccc;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── PLACEHOLDER BOXES ───────────────────────────── */
+  .placeholder {
+    background: #f0f0f0;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .placeholder-sm { height: 160px; }
+  .placeholder-md { height: 280px; }
+  .placeholder-lg { height: 400px; }
+  .placeholder-xl { height: 520px; }
+
+  /* ─── HERO ────────────────────────────────────────── */
+  .hero {
+    background: #0a0f2e;
+    color: #fff;
+    padding: 96px 48px 80px;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero-logo {
+    margin-bottom: 40px;
+  }
+  .hero-logo svg {
+    height: 28px;
+    width: auto;
+    display: block;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #b0b8d8;
+    margin-bottom: 36px;
+    max-width: 480px;
+  }
+  .hero p strong {
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: #4056F4;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 14px 28px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.25);
+    text-decoration: none;
+    margin-left: 12px;
+  }
+
+  /* ─── LOGO BAR ────────────────────────────────────── */
+  .logo-bar {
+    background: #f8f8f8;
+    padding: 40px 48px;
+    text-align: center;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .logo-bar p {
+    font-size: 13px;
+    color: #777;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .logo-row {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .logo-chip img {
+    height: 32px;
+    width: auto;
+    display: block;
+    filter: grayscale(100%) opacity(55%);
+  }
+
+  /* ─── THREE PILLARS ───────────────────────────────── */
+  .pillars { background: #fff; }
+  .pillars-header { margin-bottom: 56px; max-width: 640px; }
+  .pillars-header h2 {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .pillars-header p {
+    font-size: 17px;
+    color: #595959;
+    line-height: 1.6;
+  }
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .pillar-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+  }
+  .pillar-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+  .pillar-card p {
+    font-size: 15px;
+    color: #595959;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+  .pillar-card img {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  /* ─── USE CASES ───────────────────────────────────── */
+  .use-cases {
+    background: #0a0f2e;
+    color: #fff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .use-cases .section-label { color: #6b7fff; }
+  .use-cases-left h2 {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: #fff;
+    position: sticky;
+    top: 100px;
+  }
+  .use-cases-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .use-cases-list li {
+    font-size: 17px;
+    color: #b0b8d8;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .use-cases-list li::before {
+    content: "→";
+    color: #6b7fff;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ─── WORKFLOW ─────────────────────────────────────── */
+  .workflow { background: #f8f8f8; color: #1a1a1a; }
+  .workflow-header { text-align: center; margin-bottom: 72px; }
+  .workflow-header h2 {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+  .workflow-header p {
+    font-size: 18px;
+    color: #595959;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .workflow-step {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    padding: 56px 0;
+    border-top: 1px solid #e0e0e0;
+  }
+  .workflow-step-reverse .workflow-step-image { order: -1; }
+  .step-number {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4056F4;
+    margin-bottom: 16px;
+  }
+  .workflow-step h3 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.3;
+    color: #1a1a1a;
+  }
+  .workflow-step p {
+    font-size: 16px;
+    color: #595959;
+    line-height: 1.75;
+  }
+
+  /* ─── BLOG ────────────────────────────────────────── */
+  .blog { background: #fff; }
+  .blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 40px;
+  }
+  .blog-header h2 { font-size: 32px; font-weight: 700; }
+  .blog-header a { font-size: 14px; color: #4056F4; text-decoration: none; font-weight: 500; }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .blog-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .blog-card-img { height: 160px; background: #f0f0f0; border-bottom: 1px solid #e8e8e8; overflow: hidden; }
+  .blog-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .blog-card-body { padding: 20px; }
+  .blog-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4056F4;
+    margin-bottom: 8px;
+  }
+  .blog-card h4 { font-size: 15px; font-weight: 600; line-height: 1.4; color: #1a1a1a; }
+
+  /* ─── CLOSING CTA ─────────────────────────────────── */
+  .closing-cta {
+    background: #4056F4;
+    color: #fff;
+    text-align: center;
+    padding: 96px 48px;
+  }
+  .closing-cta h2 {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .closing-cta p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.8);
+    max-width: 480px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+  .btn-white {
+    display: inline-block;
+    background: #fff;
+    color: #4056F4;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+
+  /* ─── FOOTER ──────────────────────────────────────── */
+  footer {
+    background: #0a0f2e;
+    color: #b0b8d8;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  footer h4 { color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 16px; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer ul { list-style: none; }
+  footer li { font-size: 14px; margin-bottom: 10px; color: #8899cc; }
+  .footer-logo { margin-bottom: 16px; }
+  .footer-logo svg { height: 20px; width: auto; display: block; }
+  .footer-tagline { font-size: 14px; color: #8899cc; max-width: 240px; line-height: 1.6; }
+  .footer-copy { font-size: 12px; color: #445; margin-top: 16px; }
+
+  /* ─── WIREFRAME BANNER ───────────────────────────── */
+  .wf-banner {
+    background: #fffbea;
+    border-bottom: 2px solid #f5d000;
+    padding: 10px 48px;
+    font-size: 13px;
+    color: #6b5a00;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- WIREFRAME LABEL -->
+<div class="wf-banner">
+  Wireframe — draft messaging only, June 2026. Graphics, video, and final client logos not included.
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- NAV -->
+<!-- ══════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo">
+    <!-- Black wordmark, background rect removed -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1633.1 404.6">
+      <g>
+        <polygon points="402.5 135.2 452 135.2 452 269.4 402.5 269.4 402.5 289.9 525 289.9 525 269.4 475.5 269.4 475.5 135.2 525 135.2 525 114.7 402.5 114.7 402.5 135.2"/>
+        <polygon points="1209.1 135.2 1258.7 135.2 1258.7 269.4 1209.1 269.4 1209.1 289.9 1331.6 289.9 1331.6 269.4 1282.1 269.4 1282.1 135.2 1331.6 135.2 1331.6 114.7 1209.1 114.7 1209.1 135.2"/>
+        <rect x="135.2" y="189.1" width="77.4" height="20.5"/>
+        <polygon points="112 289.9 226.4 289.9 226.4 269.4 135.2 269.4 135.2 209.6 112 209.6 112 289.9"/>
+        <polygon points="112 189.1 135.2 189.1 135.2 135.2 226.4 135.2 226.4 114.7 112 114.7 112 189.1"/>
+        <rect x="869.3" y="189.1" width="77.4" height="20.5"/>
+        <polygon points="846.1 189.1 869.3 189.1 869.3 135.2 960.5 135.2 960.5 114.7 846.1 114.7 846.1 189.1"/>
+        <polygon points="846.1 289.9 960.5 289.9 960.5 269.4 869.3 269.4 869.3 209.6 846.1 209.6 846.1 289.9"/>
+        <path d="M323.8,114.5c0,.1-66.8.1-66.8.1v175.2h23.4v-73.5h43.4c37.1,0,60.8-18.1,60.8-51s-23.7-50.8-60.8-50.8ZM322.6,196.2h-42.2v-61.3h42.2c24.9,0,38.8,10.7,38.8,30.5s-13.9,30.8-38.8,30.8Z"/>
+        <path d="M613.1,189c-24.6-5.8-41-9.7-41-28.2s15.4-28.6,36.6-28.6,36.6,11.5,45.6,28.3l17.8-14.2c-10.5-19.8-32.5-34.4-63-34.4s-59.8,20-59.8,50.8,27.3,40.5,54.9,47.1c26.6,6.3,46.9,10,46.9,31.2s-17.6,31.2-40.3,31.2-42.5-12.2-53.4-33.2l-18.3,14.6c12,23.7,41,38.8,71.3,38.8s63.7-20.7,63.7-53.4-32-43.2-61-50Z"/>
+        <polygon points="680.8 135.2 740.1 135.2 740.1 289.9 763.5 289.9 763.5 135.2 822.8 135.2 822.8 114.7 680.8 114.7 680.8 135.2"/>
+        <polygon points="1347.8 114.7 1407.8 200.8 1345.8 289.9 1372.2 289.9 1433.5 201.2 1373.7 114.7 1347.8 114.7"/>
+        <polygon points="1459.1 200.8 1519.1 114.7 1493.3 114.7 1433.5 201.2 1494.7 289.9 1521.1 289.9 1459.1 200.8"/>
+        <polygon points="1087.5 258.7 1034.3 114.7 1012.8 114.7 1077.7 289.9 1096.5 289.9 1161.7 114.7 1140.9 114.7 1087.5 258.7"/>
+        <rect x="1161.7" y="114.7" width="21.8" height="175.2"/>
+        <rect x="991.1" y="114.7" width="21.7" height="175.2"/>
+      </g>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Populus</a></li>
+    <li><a href="#">Company</a></li>
+    <li><a href="#">Resources</a></li>
+    <li><a href="#">We're hiring</a></li>
+  </ul>
+  <a href="#" class="nav-cta">Get started</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 1: HERO -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>A working model of your market, built for the decisions that shape it.</h1>
+    <p>Every person, every business, every network, and all the forces that connect them. A <strong>world model</strong> of your market to build, test, and execute strategy.</p>
+    <a href="#" class="btn-primary">Get started</a>
+    <a href="#" class="btn-secondary">See how it works</a>
+  </div>
+  <div class="hero-visual">
+    <img src="hero-image.png" style="width:100%; height:auto; border-radius:8px; display:block;">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 2: LOGO BAR -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="logo-bar">
+  <p>Trusted by leading companies and institutions to build, test, and execute strategy</p>
+  <div class="logo-row">
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/CwCG3cMFfJF39rYsDROfkqAXIBc.svg?width=140&height=30" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/8IrRYivHgRSjI2r9M3t2XSnfm34.svg?width=106&height=30" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/7v2ylN8a9tiOh5c5h6Kf4VRLLBs.svg?width=154&height=42" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/XUKD5w9tRRrRrDjFV2Xlu3mIZQY.svg?width=130&height=40" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/rwAvn9eKZlD0wCJmik4Wo1tb0zo.svg?width=96&height=26" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/sVBbhqqWce9DlzpkChMhciuvc1s.svg?width=130&height=78" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/REYtP5hTsFMgKRMomqnmqdnpbA.svg?width=58&height=58" alt="client logo"></div>
+    <div class="logo-chip"><img src="https://framerusercontent.com/images/BT3S6jClPCuIB5ruKAceYkF1vGY.svg?width=138&height=27" alt="client logo"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 3: THREE PILLARS -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="pillars">
+  <div class="section-label">The Platform</div>
+  <div class="pillars-header">
+    <h2>A working model of your market</h2>
+    <p>Built at the individual level: where people live, what they do, who they know, and how they respond when conditions change. A foundation for the analysis that builds strategy, tests it, and puts it into motion.</p>
+  </div>
+  <div class="pillars-grid">
+
+    <div class="pillar-card">
+      <h3>Know who's in your market</h3>
+      <p>Know who is in your market, how they behave, and how their circumstances are shifting. Built from individual-level data, not population averages.</p>
+      <img src="https://framerusercontent.com/images/OENE26rvBlOJwAB0kZvEV2Ufg4.svg" style="width:100%; height:auto; display:block; border-radius:4px;">
+    </div>
+
+    <div class="pillar-card">
+      <h3>Test what happens when conditions change</h3>
+      <p>Run scenarios your current tools can't reach. What if a competitor launches, a regulation changes, or a disruption reshapes market dynamics faster than your assumptions? Projective simulation answers questions that forecasting cannot.</p>
+      <img src="https://framerusercontent.com/images/qkSAwnBc4AGxi5zQGNlJqYQI.svg?width=508&height=360" style="width:100%; height:auto; display:block; border-radius:4px;">
+    </div>
+
+    <div class="pillar-card">
+      <h3>Run the strategy loop</h3>
+      <p>Making a better decision is step one. The model connects to execution so performance can be tracked against the conditions strategy was built on, and learning feeds back into the next cycle.</p>
+      <img src="https://framerusercontent.com/images/vA3sB7OCqLI1XOFCI8TdiilRQ.svg?width=508&height=360" style="width:100%; height:auto; display:block; border-radius:4px;">
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 4: USE CASES -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="use-cases">
+  <div class="use-cases-left">
+    <div class="section-label">What it's for</div>
+    <h2>Use Epistemix to</h2>
+  </div>
+  <ul class="use-cases-list">
+    <li>Forecast how a market shift affects your competitive position before it happens</li>
+    <li>Model GLP-1 adoption scenarios across your member population</li>
+    <li>Project what happens when a new entrant changes your market dynamics</li>
+    <li>Stress-test actuarial assumptions against population-level disruption</li>
+    <li>Understand how adoption cascades through a population before committing to a plan</li>
+    <li>Identify segments your current analytics doesn't reach</li>
+    <li>Forecast competitive drug launches before they reach the market</li>
+    <li>Test the downstream effects of regulatory or policy changes on your strategy</li>
+    <li>Find where targeted intervention creates the most leverage in your market</li>
+    <li>Evaluate scenarios your standard forecasting treats as unknowable</li>
+  </ul>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 5: WORKFLOW -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="workflow">
+  <div class="workflow-header">
+    <h2>Ask. Model. Decide.</h2>
+    <p>Build strategy on how your market actually works. Test it before you commit. Track it as conditions shift.</p>
+  </div>
+  <div class="workflow-step">
+    <div class="workflow-step-text">
+      <div class="step-number">Step 01: Define</div>
+      <h3>Frame the question</h3>
+      <p>Start with what actually matters for this decision: who is in your market, how they're behaving, and what conditions you're deciding under. Built from how your world actually looks, not from assumptions about how it should.</p>
+    </div>
+    <div class="workflow-step-image">
+      <img src="https://framerusercontent.com/images/NLvBBo4dNlkWgyNZOAhAO0V8s.svg?width=421&height=300" style="width:100%; height:auto; display:block; border-radius:8px;">
+    </div>
+  </div>
+
+  <div class="workflow-step workflow-step-reverse">
+    <div class="workflow-step-text">
+      <div class="step-number">Step 02: Model</div>
+      <h3>Run the scenarios</h3>
+      <p>Change the conditions and see what happens. Test competing hypotheses simultaneously. Projective simulation finds the outcomes that forecasting cannot reach.</p>
+    </div>
+    <div class="workflow-step-image">
+      <img src="https://framerusercontent.com/images/0MH8vw4My2VIEhwYRmyWyX22nC4.svg?width=458&height=268" style="width:100%; height:auto; display:block; border-radius:8px;">
+    </div>
+  </div>
+
+  <div class="workflow-step">
+    <div class="workflow-step-text">
+      <div class="step-number">Step 03: Decide</div>
+      <h3>Commit to what survives simulation</h3>
+      <p>The strategies that hold up under simulation are the ones worth betting on. As conditions shift, track performance against the model that strategy was built on, and feed what you learn into the next cycle.</p>
+    </div>
+    <div class="workflow-step-image">
+      <img src="https://framerusercontent.com/images/ylYXg5eZyHdG8xpw9Bi0l3ss.svg?width=968&height=305" style="width:100%; height:auto; display:block; border-radius:8px;">
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 6: BLOG -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="blog">
+  <div class="blog-header">
+    <h2>From the library</h2>
+    <a href="#">Go to blog →</a>
+  </div>
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="blog-card-img"><img src="https://framerusercontent.com/images/B0UHSbc804fffXSRppe4RYF4Bw.png?width=800&height=535" alt="Gigasheet partnership"></div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Partnership</div>
+        <h4>Epistemix partners with Gigasheet to transform healthcare cost forecasting</h4>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-card-img"><img src="https://framerusercontent.com/images/15XkISUagpdzXdd03BC5ZXuaT8.jpg?width=800&height=535" alt="A new way to make sense of emergence"></div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Knowledge</div>
+        <h4>A new way to make sense of emergence</h4>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-card-img"><img src="https://framerusercontent.com/images/8UlnRHxgftaNxdGOVq3pKtPUx0.jpg?width=800&height=535" alt="Build agent-based models to improve decision making"></div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Knowledge</div>
+        <h4>Build agent-based models to improve decision making</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECTION 7: CLOSING CTA -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="closing-cta">
+  <h2>Your data, on the world model</h2>
+  <p>Epistemix Populus scales your existing data across a 1:1 population model of any market. What your sample tells you about millions.</p>
+  <a href="#" class="btn-white">Explore Populus</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">
+      <!-- White wordmark, background rect removed -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1633.1 404.6">
+        <style>.fw { fill: #fff; }</style>
+        <g>
+          <polygon class="fw" points="402.5 135.2 452 135.2 452 269.4 402.5 269.4 402.5 289.9 525 289.9 525 269.4 475.5 269.4 475.5 135.2 525 135.2 525 114.7 402.5 114.7 402.5 135.2"/>
+          <polygon class="fw" points="1209.1 135.2 1258.7 135.2 1258.7 269.4 1209.1 269.4 1209.1 289.9 1331.6 289.9 1331.6 269.4 1282.1 269.4 1282.1 135.2 1331.6 135.2 1331.6 114.7 1209.1 114.7 1209.1 135.2"/>
+          <rect class="fw" x="135.2" y="189.1" width="77.4" height="20.5"/>
+          <polygon class="fw" points="112 289.9 226.4 289.9 226.4 269.4 135.2 269.4 135.2 209.6 112 209.6 112 289.9"/>
+          <polygon class="fw" points="112 189.1 135.2 189.1 135.2 135.2 226.4 135.2 226.4 114.7 112 114.7 112 189.1"/>
+          <rect class="fw" x="869.3" y="189.1" width="77.4" height="20.5"/>
+          <polygon class="fw" points="846.1 189.1 869.3 189.1 869.3 135.2 960.5 135.2 960.5 114.7 846.1 114.7 846.1 189.1"/>
+          <polygon class="fw" points="846.1 289.9 960.5 289.9 960.5 269.4 869.3 269.4 869.3 209.6 846.1 209.6 846.1 289.9"/>
+          <path class="fw" d="M323.8,114.5c0,.1-66.8.1-66.8.1v175.2h23.4v-73.5h43.4c37.1,0,60.8-18.1,60.8-51s-23.7-50.8-60.8-50.8ZM322.6,196.2h-42.2v-61.3h42.2c24.9,0,38.8,10.7,38.8,30.5s-13.9,30.8-38.8,30.8Z"/>
+          <path class="fw" d="M613.1,189c-24.6-5.8-41-9.7-41-28.2s15.4-28.6,36.6-28.6,36.6,11.5,45.6,28.3l17.8-14.2c-10.5-19.8-32.5-34.4-63-34.4s-59.8,20-59.8,50.8,27.3,40.5,54.9,47.1c26.6,6.3,46.9,10,46.9,31.2s-17.6,31.2-40.3,31.2-42.5-12.2-53.4-33.2l-18.3,14.6c12,23.7,41,38.8,71.3,38.8s63.7-20.7,63.7-53.4-32-43.2-61-50Z"/>
+          <polygon class="fw" points="680.8 135.2 740.1 135.2 740.1 289.9 763.5 289.9 763.5 135.2 822.8 135.2 822.8 114.7 680.8 114.7 680.8 135.2"/>
+          <polygon class="fw" points="1347.8 114.7 1407.8 200.8 1345.8 289.9 1372.2 289.9 1433.5 201.2 1373.7 114.7 1347.8 114.7"/>
+          <polygon class="fw" points="1459.1 200.8 1519.1 114.7 1493.3 114.7 1433.5 201.2 1494.7 289.9 1521.1 289.9 1459.1 200.8"/>
+          <polygon class="fw" points="1087.5 258.7 1034.3 114.7 1012.8 114.7 1077.7 289.9 1096.5 289.9 1161.7 114.7 1140.9 114.7 1087.5 258.7"/>
+          <rect class="fw" x="1161.7" y="114.7" width="21.8" height="175.2"/>
+          <rect class="fw" x="991.1" y="114.7" width="21.7" height="175.2"/>
+        </g>
+      </svg>
+    </div>
+    <div class="footer-tagline">A working model of your market, built for the decisions that shape it.</div>
+    <div class="footer-copy">© 2026 Epistemix. All rights reserved.</div>
+  </div>
+  <div>
+    <h4>Platform</h4>
+    <ul><li>Populus</li></ul>
+  </div>
+  <div>
+    <h4>Resources</h4>
+    <ul>
+      <li>Blog</li>
+      <li>Podcast</li>
+      <li>Documentation</li>
+      <li>Github</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Company</h4>
+    <ul>
+      <li>About</li>
+      <li>Careers</li>
+      <li>Contact</li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>
