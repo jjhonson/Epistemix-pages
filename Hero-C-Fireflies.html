@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero C: Fireflies (synchrony)</title>
+<style>
+  :root { --blue: #4056F4; --bg: #F6F6F6; --text: #141414; --muted: #595959; --hint: #9ca0a8; }
+  body.dark { --bg: #141414; --text: #F6F6F6; --muted: #b9bcc4; --hint: #5a5d66; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; transition: background 0.3s; }
+  #field { position: fixed; inset: 0; display: block; }
+  .scrim { position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 46% 36% at 50% 36%,
+      rgba(246,246,246,0.94) 0%, rgba(246,246,246,0.72) 55%, rgba(246,246,246,0) 100%); }
+  body.dark .scrim {
+    background: radial-gradient(ellipse 46% 36% at 50% 36%,
+      rgba(20,20,20,0.94) 0%, rgba(20,20,20,0.72) 55%, rgba(20,20,20,0) 100%); }
+  .hero { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start; text-align: center;
+    pointer-events: none; padding: 15vh 8vw 0; }
+  h1 { font-weight: 300; font-size: clamp(40px, 6vw, 72px); line-height: 1.1;
+    color: var(--text); margin: 0 0 22px; letter-spacing: -0.01em; max-width: 18ch; }
+  p.sub { font-weight: 400; font-size: clamp(15px, 1.4vw, 19px); color: var(--muted);
+    margin: 0 0 34px; max-width: 52ch; line-height: 1.5; }
+  .cta { pointer-events: auto; display: inline-block; background: var(--blue);
+    color: #fff; text-decoration: none; font-size: 14px; padding: 12px 26px;
+    border-radius: 9999px; }
+  .hint { position: fixed; bottom: 18px; width: 100%; text-align: center;
+    color: var(--hint); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<canvas id="field"></canvas>
+<div class="scrim"></div>
+<div class="hero">
+  <h1>A world model built for the decisions that shape your market</h1>
+  <p class="sub">Every person, every business, every network, and all the forces that connect them.</p>
+  <a class="cta" href="#">Learn More</a>
+</div>
+<div class="hint">C: Synchrony &nbsp;·&nbsp; Click to reveal a hidden cohort &nbsp;·&nbsp; Press B for light / dark</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('field');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  const PALETTE = [[64,86,244],[212,145,91],[77,182,172],[28,48,128]];
+  const isDark = () => document.body.classList.contains('dark');
+  const palette = () => isDark() ? { base: [150,158,182], dotA: 0.30 } : { base: [110,116,134], dotA: 0.38 };
+  addEventListener('keydown', e => { if (e.key.toLowerCase() === 'b') document.body.classList.toggle('dark'); });
+
+  let dots = [], cohorts = [];
+  let safe = { cx: 0, cy: 0, rx: 1, ry: 1 };
+  const inSafe = (x, y, m = 1) => {
+    const dx = (x - safe.cx) / (safe.rx * m), dy = (y - safe.cy) / (safe.ry * m);
+    return dx * dx + dy * dy < 1;
+  };
+
+  function resize() {
+    const DPR = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    safe = { cx: W / 2, cy: H * 0.36, rx: Math.min(W * 0.30, 470), ry: Math.min(H * 0.30, 300) };
+    dots = []; cohorts = [];
+    const s = 20;
+    for (let gy = s / 2; gy < H; gy += s) for (let gx = s / 2; gx < W; gx += s)
+      dots.push({ x: gx + (Math.random() - .5) * s * .85, y: gy + (Math.random() - .5) * s * .85,
+                  r: .9 + Math.random() * .8, a: 0, col: PALETTE[0] });
+    // hidden cohorts scattered across the whole sea, one brand color each
+    const eligible = dots.map((d, i) => i).filter(i => !inSafe(dots[i].x, dots[i].y, 1.05));
+    for (let c = 0; c < 8; c++) {
+      const size = 80 + (Math.random() * 40) | 0;
+      const members = []; const taken = new Set();
+      while (members.length < size && taken.size < eligible.length) {
+        const i = eligible[(Math.random() * eligible.length) | 0];
+        if (taken.has(i)) continue;
+        taken.add(i);
+        members.push({ i, ph: (Math.random() - .5) * 2.0 });
+      }
+      cohorts.push({ members, state: 'idle', t0: 0, col: PALETTE[c % 4] });
+    }
+  }
+
+  // gentler than v1: slower pulse, higher floor, so it breathes rather than strobes
+  const RAMP = 2000, SYNC = 5200, OUT = 2000, FREQ = 0.55;
+  let active = 0;
+  const reveal = (c, now) => { if (c.state === 'idle') { c.state = 'run'; c.t0 = now; active++; } };
+  const randomReveal = (now) => {
+    const idle = cohorts.filter(c => c.state === 'idle');
+    if (idle.length) reveal(idle[(Math.random() * idle.length) | 0], now);
+  };
+  addEventListener('pointerdown', () => randomReveal(performance.now()));
+
+  let lastAuto = 0;
+  function frame(now) {
+    ctx.clearRect(0, 0, W, H);
+    const P = palette();
+
+    if (now - lastAuto > 8500 && active < 1) { randomReveal(now); lastAuto = now; }
+
+    for (const d of dots) d.targ = 0;
+    for (const c of cohorts) {
+      if (c.state !== 'run') continue;
+      const el = now - c.t0;
+      let env, lock;
+      if (el < RAMP) { env = el / RAMP; lock = el / RAMP; }
+      else if (el < RAMP + SYNC) { env = 1; lock = 1; }
+      else { const q = (el - RAMP - SYNC) / OUT; env = Math.max(0, 1 - q); lock = Math.max(0, 1 - q * 1.4); }
+      for (const m of c.members) {
+        const ph = m.ph * (1 - lock);
+        const pulse = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(2 * Math.PI * FREQ * (el / 1000) + ph));
+        const v = env * pulse;
+        if (v > dots[m.i].targ) { dots[m.i].targ = v; dots[m.i].col = c.col; }
+      }
+      if (el > RAMP + SYNC + OUT) { c.state = 'idle'; active--; }
+    }
+
+    for (const d of dots) {
+      d.a += (d.targ - d.a) * 0.14;
+      const dim = inSafe(d.x, d.y) ? 0.4 : 1;
+      if (d.a > 0.05) {
+        ctx.fillStyle = `rgba(${d.col[0]},${d.col[1]},${d.col[2]},${(0.2 + 0.8 * d.a) * dim})`;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r + 1.4 * d.a, 0, 7); ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(${P.base[0]},${P.base[1]},${P.base[2]},${P.dotA * dim})`;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 7); ctx.fill();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', resize);
+  resize();
+  setTimeout(() => randomReveal(performance.now()), 1200);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

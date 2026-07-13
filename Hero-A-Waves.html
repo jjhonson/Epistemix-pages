@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero A: Traveling Waves</title>
+<style>
+  :root { --blue: #4056F4; --bg: #F6F6F6; --text: #141414; --muted: #595959; --hint: #9ca0a8; }
+  body.dark { --bg: #141414; --text: #F6F6F6; --muted: #b9bcc4; --hint: #5a5d66; }
+  html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; transition: background 0.3s; }
+  #field { position: fixed; inset: 0; display: block; }
+  .scrim { position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 46% 36% at 50% 36%,
+      rgba(246,246,246,0.94) 0%, rgba(246,246,246,0.72) 55%, rgba(246,246,246,0) 100%); }
+  body.dark .scrim {
+    background: radial-gradient(ellipse 46% 36% at 50% 36%,
+      rgba(20,20,20,0.94) 0%, rgba(20,20,20,0.72) 55%, rgba(20,20,20,0) 100%); }
+  .hero { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start; text-align: center;
+    pointer-events: none; padding: 15vh 8vw 0; }
+  h1 { font-weight: 300; font-size: clamp(40px, 6vw, 72px); line-height: 1.1;
+    color: var(--text); margin: 0 0 22px; letter-spacing: -0.01em; max-width: 18ch; }
+  p.sub { font-weight: 400; font-size: clamp(15px, 1.4vw, 19px); color: var(--muted);
+    margin: 0 0 34px; max-width: 52ch; line-height: 1.5; }
+  .cta { pointer-events: auto; display: inline-block; background: var(--blue);
+    color: #fff; text-decoration: none; font-size: 14px; padding: 12px 26px;
+    border-radius: 9999px; }
+  .hint { position: fixed; bottom: 18px; width: 100%; text-align: center;
+    color: var(--hint); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<canvas id="field"></canvas>
+<div class="scrim"></div>
+<div class="hero">
+  <h1>A world model built for the decisions that shape your market</h1>
+  <p class="sub">Every person, every business, every network, and all the forces that connect them.</p>
+  <a class="cta" href="#">Learn More</a>
+</div>
+<div class="hint">Click to set off a wave &nbsp;·&nbsp; Press B to compare light / dark</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('field');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  const BLUE = [64, 86, 244];
+  // brand wave colors: blue dominant, orange and navy as alternates
+  const WAVE_COLORS = [
+    { c: [64, 86, 244], w: 0.45 },   // brand blue #4056F4
+    { c: [212, 145, 91], w: 0.25 },  // orange #D4915B
+    { c: [77, 182, 172], w: 0.20 },  // teal #4DB6AC
+    { c: [28, 48, 128], w: 0.10 }    // navy #1C3080
+  ];
+  const pickColor = () => {
+    let r = Math.random();
+    for (const wc of WAVE_COLORS) { if ((r -= wc.w) <= 0) return wc.c; }
+    return WAVE_COLORS[0].c;
+  };
+  const isDark = () => document.body.classList.contains('dark');
+  const palette = () => isDark()
+    ? { base: [150, 158, 182], dotA: 0.30 }
+    : { base: [110, 116, 134], dotA: 0.38 };
+  addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'b') document.body.classList.toggle('dark');
+  });
+
+  let dots = [];
+  let safe = { cx: 0, cy: 0, rx: 1, ry: 1 };
+  const inSafe = (x, y, m = 1) => {
+    const dx = (x - safe.cx) / (safe.rx * m), dy = (y - safe.cy) / (safe.ry * m);
+    return dx * dx + dy * dy < 1;
+  };
+
+  function resize() {
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    safe = { cx: W / 2, cy: H * 0.36, rx: Math.min(W * 0.30, 470), ry: Math.min(H * 0.30, 300) };
+    build();
+  }
+
+  function build() {
+    dots = [];
+    const s = 20;
+    for (let gy = s / 2; gy < H; gy += s) {
+      for (let gx = s / 2; gx < W; gx += s) {
+        dots.push({
+          ox: gx + (Math.random() - 0.5) * s * 0.85,
+          oy: gy + (Math.random() - 0.5) * s * 0.85,
+          r: 0.9 + Math.random() * 0.8
+        });
+      }
+    }
+  }
+
+  // --- traveling waves: impact fronts with real displacement ---
+  const SPEED = 240;      // px per second
+  const THICK = 55;       // front thickness (rise zone)
+  const TAIL = 110;       // decay length behind the front
+  const RMAX = () => Math.min(W, H) * 0.75;
+  let waves = [];
+
+  function spawnWave(x, y) {
+    const sector = Math.random() < 0.55;
+    waves.push({
+      x, y, t0: performance.now(),
+      dir: Math.random() * Math.PI * 2,
+      half: sector ? (0.5 + Math.random() * 0.5) : Math.PI,   // wedge or full ring
+      rmax: RMAX() * (0.7 + Math.random() * 0.5),
+      col: pickColor()
+    });
+  }
+
+  function randomSpawn() {
+    for (let t = 0; t < 40; t++) {
+      const x = 40 + Math.random() * (W - 80), y = 40 + Math.random() * (H - 80);
+      if (!inSafe(x, y, 1.1)) return spawnWave(x, y);
+    }
+  }
+
+  addEventListener('pointerdown', e => spawnWave(e.clientX, e.clientY));
+
+  const angDiff = (a, b) => {
+    let d = a - b;
+    while (d > Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    return Math.abs(d);
+  };
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lastAuto = 0;
+
+  function frame(now) {
+    ctx.clearRect(0, 0, W, H);
+    const P = palette();
+
+    if (!reduced && now - lastAuto > 3800 && waves.length < 3) { randomSpawn(); lastAuto = now; }
+    waves = waves.filter(w => (now - w.t0) / 1000 * SPEED < w.rmax + TAIL * 3);
+
+    for (const d of dots) {
+      let a = 0, px = 0, py = 0, col = BLUE;
+      for (const w of waves) {
+        const dx = d.ox - w.x, dy = d.oy - w.y;
+        const dist = Math.hypot(dx, dy) || 0.001;
+        const R = (now - w.t0) / 1000 * SPEED;
+        const u = R - dist;                       // how far past this dot the front is
+        if (u < -10) continue;
+        // sector falloff (wedge waves travel in a direction)
+        let sect = 1;
+        if (w.half < Math.PI) {
+          const ad = angDiff(Math.atan2(dy, dx), w.dir);
+          if (ad > w.half) continue;
+          sect = Math.cos((ad / w.half) * Math.PI / 2);
+        }
+        // wave dies as it expands
+        const env = Math.max(0, 1 - (R / w.rmax) ** 2) * sect;
+        if (env <= 0) continue;
+        // activation: rise through the front, exponential tail behind it
+        let f = 0;
+        if (u <= THICK) f = Math.max(0, u / THICK);
+        else f = Math.exp(-(u - THICK) / TAIL);
+        const contrib = f * env;
+        if (contrib > a) { a = contrib; col = w.col; }
+        // the knock: a radial shove as the front passes
+        const g = Math.exp(-((u - 28) ** 2) / (2 * 34 ** 2)) * env;
+        px += (dx / dist) * 6.5 * g;
+        py += (dy / dist) * 6.5 * g;
+      }
+      const x = d.ox + px, y = d.oy + py;
+      const dim = inSafe(x, y) ? 0.4 : 1;
+      if (a > 0.03) {
+        ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${(0.22 + 0.78 * a) * dim})`;
+        ctx.beginPath(); ctx.arc(x, y, d.r + 1.5 * a, 0, 7); ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(${P.base[0]},${P.base[1]},${P.base[2]},${P.dotA * dim})`;
+        ctx.beginPath(); ctx.arc(x, y, d.r, 0, 7); ctx.fill();
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', resize);
+  resize();
+  if (reduced) {
+    // static: one frozen front
+    spawnWave(W * 0.22, H * 0.7);
+    waves[0].t0 = performance.now() - 900;
+  } else {
+    setTimeout(randomSpawn, 900);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
