@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTM Stack Map — Epistemix</title>
+<style>
+  :root{
+    --surface:#ffffff; --surface-muted:#f8f9fa; --bg:#f0f1f3;
+    --border:#e5e7eb; --border-strong:#d1d5db;
+    --text:#1a1a1a; --text-2:#6b7280; --text-3:#9ca3af;
+    --blue:#4056F4; --navy:#0E1B4F;
+    --have:#2E9E5B; --have-bg:rgba(46,158,91,.10);
+    --now:#4056F4;  --now-bg:rgba(64,86,244,.09);
+    --next:#C2761F; --next-bg:rgba(212,145,91,.14);
+    --wait:#9ca3af; --wait-bg:#f3f4f6;
+    --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --shadow-hover:0 4px 14px rgba(0,0,0,.09),0 2px 5px rgba(0,0,0,.05);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Arial,sans-serif;
+    background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+  .hd{background:var(--navy);color:#fff;padding:18px 28px}
+  .hd-brand{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;opacity:.65;margin-bottom:6px}
+  .hd-title{font-size:22px;font-weight:600;line-height:1.15}
+  .hd-sub{font-size:12px;opacity:.62;margin-top:6px;max-width:820px;line-height:1.55}
+
+  .bar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border);
+    padding:11px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow)}
+  .bar-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
+  .legend{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;
+    padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:var(--surface);
+    color:var(--text-2);cursor:pointer;user-select:none;transition:all .15s}
+  .chip:hover{border-color:var(--border-strong)}
+  .chip .dot{width:9px;height:9px;border-radius:50%}
+  .chip[data-k="have"] .dot{background:var(--have)}
+  .chip[data-k="now"] .dot{background:var(--now)}
+  .chip[data-k="next"] .dot{background:var(--next)}
+  .chip[data-k="wait"] .dot{background:var(--wait)}
+  .chip.off{opacity:.38}
+  .chip .n{color:var(--text-3);font-weight:700}
+  .bar-spacer{flex:1}
+  .howbtn{font-size:11px;font-weight:700;color:var(--blue);cursor:pointer;background:none;border:none;letter-spacing:.02em}
+  .howbtn:hover{text-decoration:underline}
+
+  .wrap{padding:22px 28px 60px;max-width:1320px;margin:0 auto}
+  .zone-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-3);margin:0 0 10px 2px;display:flex;align-items:center;gap:10px}
+  .zone-label::after{content:"";flex:1;height:1px;background:var(--border)}
+  .found-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:26px}
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:start}
+  .stage{min-width:0}
+  .stage-head{display:flex;flex-direction:column;gap:3px;padding:0 2px 10px}
+  .stage-name{font-size:13px;font-weight:700;color:var(--text)}
+  .stage-verb{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .stage-cards{display:flex;flex-direction:column;gap:10px}
+
+  .cat{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--wait);
+    border-radius:8px;padding:11px 12px;cursor:pointer;box-shadow:var(--shadow);
+    transition:transform .12s,box-shadow .15s,opacity .15s;position:relative;
+    overflow-wrap:anywhere;word-break:normal}
+  .cat:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+  .cat.dim{opacity:.26;filter:saturate(.4)}
+  .cat[data-status="have"]{border-left-color:var(--have)}
+  .cat[data-status="now"]{border-left-color:var(--now)}
+  .cat[data-status="next"]{border-left-color:var(--next)}
+  .cat[data-status="wait"]{border-left-color:var(--wait)}
+  .cat-job{font-size:12px;font-weight:650;line-height:1.3;color:var(--text);margin-bottom:6px}
+  .cat-tool{font-size:11px;color:var(--text-2);line-height:1.35;min-height:15px}
+  .cat-tool .none{color:var(--text-3);font-style:italic}
+  .cat-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px}
+  .pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:20px}
+  .pill.have{background:var(--have-bg);color:var(--have)}
+  .pill.now{background:var(--now-bg);color:var(--now)}
+  .pill.next{background:var(--next-bg);color:var(--next)}
+  .pill.wait{background:var(--wait-bg);color:var(--text-2)}
+  .cost{font-size:10px;color:var(--text-3);font-weight:600;white-space:nowrap}
+
+  .scrim{position:fixed;inset:0;background:rgba(14,27,79,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .panel{position:fixed;top:0;right:0;height:100%;width:440px;max-width:94vw;background:var(--surface);
+    box-shadow:-8px 0 40px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .24s ease;z-index:50;display:flex;flex-direction:column}
+  .panel.open{transform:translateX(0)}
+  .panel-hd{padding:22px 24px 16px;border-bottom:1px solid var(--border)}
+  .panel-stage{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+  .panel-job{font-size:19px;font-weight:600;line-height:1.25;margin-bottom:12px}
+  .panel-tags{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .panel-pill{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+  .panel-cost{font-size:11px;color:var(--text-2);font-weight:600}
+  .panel-body{padding:18px 24px;overflow-y:auto}
+  .fld{margin-bottom:16px}
+  .fld-l{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px}
+  .fld-v{font-size:13px;color:var(--text);line-height:1.55}
+  .fld-v.muted{color:var(--text-2)}
+  .vendors{display:flex;flex-wrap:wrap;gap:6px}
+  .vendor{font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;background:var(--surface-muted);border:1px solid var(--border);color:var(--text-2)}
+  .vendor.ours{background:var(--now-bg);border-color:rgba(64,86,244,.35);color:var(--now)}
+  .seq{display:flex;flex-direction:column;gap:6px}
+  .seq-row{display:flex;gap:8px;font-size:12px;line-height:1.4}
+  .seq-row .k{font-weight:700;color:var(--text-3);min-width:52px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+  .seq-row .v{color:var(--text);flex:1}
+  .panel-close{position:absolute;top:16px;right:18px;width:30px;height:30px;border:none;background:transparent;font-size:22px;color:var(--text-3);cursor:pointer;line-height:1;border-radius:6px}
+  .panel-close:hover{background:var(--surface-muted);color:var(--text)}
+
+  .howbox{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:24px;box-shadow:var(--shadow);display:none}
+  .howbox.open{display:block}
+  .howbox h3{font-size:13px;margin-bottom:8px}
+  .howbox p{font-size:12.5px;color:var(--text-2);line-height:1.6;margin-bottom:8px}
+  .howbox b{color:var(--text)}
+
+  .foot{font-size:11px;color:var(--text-3);margin-top:30px;line-height:1.6;border-top:1px solid var(--border);padding-top:16px}
+
+  @media(max-width:1080px){
+    .found-grid{grid-template-columns:repeat(2,1fr)}
+    .flow{grid-template-columns:1fr;gap:22px}
+    .stage-head{border-bottom:1px solid var(--border)}
+  }
+</style>
+</head>
+<body>
+<div class="hd">
+  <div class="hd-brand">Epistemix · GTM Operating Capabilities</div>
+  <div class="hd-title">The GTM Stack Map</div>
+  <div class="hd-sub">Every job a functioning go-to-market team does, and the category of tool that proves the job is real. Each box is a job, not a product. Color shows sequence: have it, do it now, on deck next, or wait for a trigger. Click any box for what it connects to, who owns it, what it moves, why, when, and what it costs.</div>
+</div>
+
+<div class="bar">
+  <span class="bar-label">Filter</span>
+  <div class="legend" id="legend">
+    <span class="chip" data-k="have"><span class="dot"></span>Have <span class="n" id="c-have"></span></span>
+    <span class="chip" data-k="now"><span class="dot"></span>Now <span class="n" id="c-now"></span></span>
+    <span class="chip" data-k="next"><span class="dot"></span>Next <span class="n" id="c-next"></span></span>
+    <span class="chip" data-k="wait"><span class="dot"></span>Wait <span class="n" id="c-wait"></span></span>
+  </div>
+  <span class="bar-spacer"></span>
+  <button class="howbtn" id="howbtn">How the sequencing works ›</button>
+</div>
+
+<div class="wrap">
+  <div class="howbox" id="howbox">
+    <h3>The rule behind Have / Now / Next / Wait</h3>
+    <p>A tool earns <b>Now</b> only when three things are all true: the job it does is a bottleneck on a motion we're <b>actually running today</b>, its prerequisites already exist, and volume is high enough that the tool beats doing it by hand.</p>
+    <p>If the job optimizes a motion we <b>haven't built yet</b>, it's <b>Wait</b> (with a named trigger). If the job is real and near but its <b>prerequisite isn't in place</b>, it's <b>Next</b> (queued behind that prerequisite). If we could do it <b>by hand</b> at current volume, it waits.</p>
+    <p>The practical read: <b>Now</b> is a short list on purpose. <b>Next</b> is the on-deck queue once the enabling hire or motion lands (mostly the DoM/enrichment owner and the Content Lead). <b>Wait</b> is the optimization layer for a machine we're still building, and most of it is correctly empty right now. That emptiness is the point: it's the shape of the function we're growing into, not a backlog of gaps to close this quarter.</p>
+  </div>
+
+  <div class="zone-label">Foundation — cuts across every stage</div>
+  <div class="found-grid" id="found-grid"></div>
+
+  <div class="zone-label">The bowtie — acquisition through expansion</div>
+  <div class="flow" id="flow"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel">
+  <button class="panel-close" id="panelClose" aria-label="Close">&times;</button>
+  <div class="panel-hd">
+    <div class="panel-stage" id="p-stage"></div>
+    <div class="panel-job" id="p-job"></div>
+    <div class="panel-tags"><span class="panel-pill" id="p-pill"></span><span class="panel-cost" id="p-cost"></span></div>
+  </div>
+  <div class="panel-body">
+    <div class="fld"><div class="fld-l">Why we need it</div><div class="fld-v muted" id="p-why"></div></div>
+    <div class="fld"><div class="fld-l">When</div><div class="fld-v" id="p-when"></div></div>
+    <div class="fld"><div class="fld-l">Connects to</div>
+      <div class="seq">
+        <div class="seq-row"><span class="k">Depends on</span><span class="v" id="p-dep"></span></div>
+        <div class="seq-row"><span class="k">Enables</span><span class="v" id="p-en"></span></div>
+        <div class="seq-row"><span class="k">Roles</span><span class="v" id="p-roles"></span></div>
+        <div class="seq-row"><span class="k">Metrics</span><span class="v" id="p-metrics"></span></div>
+      </div>
+    </div>
+    <div class="fld"><div class="fld-l">Tool category / example vendors</div><div class="vendors" id="p-vendors"></div></div>
+    <div class="fld"><div class="fld-l">Where Epistemix stands</div><div class="fld-v muted" id="p-note"></div></div>
+    <div class="fld" id="p-admin-wrap">
+      <div class="fld-l">Vendor admin <span id="a-flag"></span></div>
+      <div class="seq">
+        <div class="seq-row"><span class="k">Spend</span><span class="v" id="a-spend"></span></div>
+        <div class="seq-row"><span class="k">Model</span><span class="v" id="a-model"></span></div>
+        <div class="seq-row"><span class="k">Seats / cap</span><span class="v" id="a-cap"></span></div>
+        <div class="seq-row"><span class="k">Renewal</span><span class="v" id="a-renew"></span></div>
+        <div class="seq-row"><span class="k">Owner</span><span class="v" id="a-owner"></span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<script>
+const LABEL={have:"Have it",now:"Now",next:"Next",wait:"Wait"};
+
+// Each item: job,status,tool,cost,why,when,dep,en,roles,metrics,vendors[[name,ours]],note
+const foundation=[
+ {job:"CRM / system of record",status:"have",tool:"HubSpot",cost:"Have · Free–$",
+  why:"The single record of every contact, company, deal, and interaction. It's the spine every other tool syncs to, so it has to exist before almost anything else earns its place.",
+  when:"Have it. The active work is finishing configuration (the paused Sprint 1), not buying it.",
+  dep:"Nothing — this is the base layer",en:"Sequencing, scheduling, signal routing, reporting, renewals — all sync here",
+  roles:"Jason (owner), Sasha, John",metrics:"Everything rolls up here: pipeline, sales velocity, net retention",
+  vendors:[["HubSpot",1],["Salesforce",0]],
+  note:"Have it, partially configured. Full config (Sprint 1) is on hold until funding. Nothing downstream is fully trustworthy until this is clean."},
+ {job:"Function building / process",status:"have",tool:"Linear",cost:"Have · $",
+  why:"Where the GTM function itself gets built and improved. If the function were fully mature this would be nearly empty; new issues appear only when we change how the function works.",
+  when:"Have it, active.",
+  dep:"Nothing",en:"Every capability on this map gets built as a Linear project before it's a running motion",
+  roles:"Jason",metrics:"GTM build progress (not a revenue metric)",
+  vendors:[["Linear",1],["Asana",0],["Jira",0]],
+  note:"Have it. Revenue team restructured around the bowtie."},
+ {job:"Knowledge base / enablement",status:"have",tool:"Notion",cost:"Have · $",
+  why:"Where institutional knowledge lives so anyone new can ramp: playbook, product marketing, competitive intel, collateral catalog. The reference layer for the whole function.",
+  when:"Have it, active.",
+  dep:"Nothing",en:"Onboarding, sales enablement, competitive positioning all draw from here",
+  roles:"Jason, John (contributes stories), future hires",metrics:"Ramp time for new hires (indirect)",
+  vendors:[["Notion",1],["Guru",0],["Confluence",0]],
+  note:"Have it. Sales Playbook and Product Marketing repository in progress."},
+ {job:"RevOps / reporting / warehouse",status:"wait",tool:"",cost:"~$0 now (HubSpot native)",
+  why:"Stitches sources together and turns activity into a trustworthy read: dashboards, pipeline analytics, a warehouse once volume warrants.",
+  when:"Wait. HubSpot's native reporting covers this at current scale.",
+  dep:"A clean HubSpot + more than one data source worth joining",en:"Board-grade reporting, attribution",
+  roles:"Jason; a future RevOps/GTM Engineer",metrics:"GTM ROI, forecast accuracy",
+  vendors:[["HubSpot Reporting",0],["dbt / warehouse",0],["Looker",0]],
+  note:"Trigger: multiple sources that need reconciling, or reporting HubSpot can't produce."},
+ {job:"Attribution / measurement",status:"wait",tool:"",cost:"~$0 now",
+  why:"Ties pipeline and revenue back to the programs that produced them, so spend decisions are evidence-based.",
+  when:"Wait. Not enough program volume yet to attribute against.",
+  dep:"Sustained program spend (content, events, demand gen)",en:"Confident reallocation of program budget",
+  roles:"Jason; Content Lead; DoM",metrics:"GTM ROI, cost per opportunity",
+  vendors:[["HubSpot",0],["Dreamdata",0],["Bizible",0]],
+  note:"Trigger: meaningful, sustained program spend that needs ROI proof."}
+];
+
+const stages=[
+ {name:"Brand / Universe",verb:"Build",cats:[
+  {job:"Website / CMS",status:"have",tool:"Framer",cost:"Have · $",
+   why:"The owned front door and primary brand surface. Everything published points back here.",
+   when:"Have it. New homepage live; Populus page rebuild is the next website step.",
+   dep:"Brand direction (Peter)",en:"Every inbound motion, the blog, the CTA/booking flow",
+   roles:"Jason; future Content Lead / web help",metrics:"Traffic, inbound, conversion to booking",
+   vendors:[["Framer",1],["Webflow",0],["Next.js / Vercel",0]],
+   note:"Have it. Post-funding rebuild on Next.js/Vercel is contemplated, not urgent."},
+  {job:"Content / blog / SEO",status:"next",tool:"Framer blog",cost:"SEO tool ~$100–250/mo",
+   why:"Producing published points of view and making them findable. The blog surface exists; the missing pieces are a publishing engine and, later, SEO tooling to compound search traffic.",
+   when:"Next. Gated on the Content Lead hire and an actual publishing cadence. Buying an SEO tool before there's content to optimize is backwards.",
+   dep:"Content Lead hire; a steady publishing rhythm",en:"Inbound at the top of the funnel; feeds social and email",
+   roles:"Content Lead (owns); Jason, John (contribute)",metrics:"Audience/subscriber growth, inbound, organic traffic",
+   vendors:[["Framer blog",1],["HubSpot",1],["Ahrefs / Semrush ~$100–250/mo",0]],
+   note:"Blog + backlog + podcast repurposing seeded. SEO tool waits for the Content Lead."},
+  {job:"Social publishing",status:"wait",tool:"LinkedIn (manual)",cost:"Scheduler ~$15–100/mo",
+   why:"Scheduling and distributing content to owned social, primarily LinkedIn.",
+   when:"Wait. Manual posting is fine until there's a cadence a scheduler would actually relieve.",
+   dep:"A content engine producing enough to schedule",en:"Distribution of published content",
+   roles:"Content Lead; Jason, John (personal posting)",metrics:"Reach, engagement, referral traffic",
+   vendors:[["LinkedIn",1],["Buffer",0],["Hootsuite",0]],
+   note:"Trigger: a steady content cadence manual posting can't keep up with."},
+  {job:"Podcast / video production",status:"have",tool:"Buzzsprout",cost:"~$12–19/mo",
+   why:"Producing, hosting, and distributing the podcast — and the transcripts that feed content repurposing.",
+   when:"Have hosting. Production help (editing, video) is a Content Lead / freelance question, not a tool gap.",
+   dep:"Nothing (hosting is in place)",en:"Podcast-to-blog repurposing; social clips",
+   roles:"John (host); Content Lead (production); Jason (repurposing)",metrics:"Downloads, content output, audience growth",
+   vendors:[["Buzzsprout",1],["Riverside",0],["Descript",0]],
+   note:"Have it. Cheap paid plan (free tier deletes episodes after 90 days, so we're on paid). Confirm whose account it is. 25 episodes live with auto-transcripts."},
+  {job:"PR / earned media",status:"wait",tool:"",cost:"Agency ~$5–15K/mo when engaged",
+   why:"Getting into others' channels: press, analyst mentions, journalist relationships, earned coverage.",
+   when:"Wait. Relationship-led for now; folded into the Series B + TED PR plan.",
+   dep:"A newsworthy moment (Series B, TED); budget",en:"Third-party credibility, category presence",
+   roles:"Jason, John; a PR agency",metrics:"Earned mentions, referral traffic, brand awareness",
+   vendors:[["Muck Rack",0],["PR agency",0]],
+   note:"Trigger: Series B announcement window; then an agency, not a monitoring tool."}
+ ]},
+ {name:"Relationships / Demand",verb:"Develop",cats:[
+  {job:"Prospecting intelligence (LinkedIn)",status:"have",tool:"LinkedIn Sales Navigator",cost:"~$8,000/yr (5 seats)",
+   why:"Finding, researching, and reaching prospects and buying-committee members on LinkedIn — the core prospecting-intelligence tool for a relationship-led motion.",
+   when:"Have it. Right-size seats at the Mar 8, 2027 renewal (drop the empty seat; question Carmen and John).",
+   dep:"Nothing — active",en:"Prospect research; warm outreach; account mapping",
+   roles:"Jason, Sasha (keep); John (question — fundraising-focused); Carmen (question — may be a recruiting use = wrong tool/budget)",metrics:"Connections, InMail response, sourced pipeline",
+   vendors:[["LinkedIn Sales Navigator",1],["ZoomInfo",0]],
+   note:"5 Advanced licenses → 1 now empty after removing the culltp1@gmail.com invite. Cost isn't shown in-console; get the invoice from John (Purchaser Admin). Renewal ~Mar 8 2027; seat changes route through John / the LinkedIn rep."},
+  {job:"Market mapping / firmographic data",status:"wait",tool:"ZoomInfo (lapsed)",cost:"ZoomInfo ~$15K+/yr · Apollo ~$50–100/user/mo",
+   why:"Building the map of the addressable market: who exists, firmographics, technographics, org structure.",
+   when:"Wait. ZoomInfo lapsed June 2026 (data extracted first). At current named-universe scale, re-buying isn't urgent.",
+   dep:"A validated ICP worth mapping at scale",en:"Target account list; enrichment; sequencing",
+   roles:"DoM; Jason",metrics:"TAM coverage, list quality",
+   vendors:[["ZoomInfo",0],["Apollo",0],["Clay",1]],
+   note:"Trigger: validated ICP + a universe too big to map by hand. Clay covers the near-term need more cheaply."},
+  {job:"Intent data / predictive ABM",status:"wait",tool:"",cost:"6sense ~$25K entry, ~$55K median/yr (2–4× first-year all-in)",
+   why:"Tells you which accounts are in-market right now from 1st/2nd/3rd-party signals, so effort goes where it's heating up. This is the 6sense / Demandbase category — the thing that keeps coming up.",
+   when:"Wait, and it's the furthest-out box here. It optimizes a working machine: it assumes a validated ICP and a rep team big enough that prioritization is the bottleneck. Neither is true yet.",
+   dep:"Validated ICP + large named universe + a rep team (4+) that prioritization actually gates + clean CRM",en:"Efficient account prioritization for a full sales team",
+   roles:"A built-out sales team + RevOps to run it",metrics:"Sales velocity, pipeline coverage, win rate",
+   vendors:[["6sense",0],["Demandbase",0],["Bombora",0]],
+   note:"Median ~$55K/yr, 2–4× that all-in year one. Clay is the stage-appropriate stand-in. Note the Insight Partners portfolio tie — part of why it recurs across companies."},
+  {job:"Enrichment & signal orchestration",status:"next",tool:"Clay (planned)",cost:"~$185/mo (Launch) → $495/mo (Growth)",
+   why:"Pulls signals and enrichment together to trigger the right outreach — the discovery-stage, experiment-friendly version of intent data. Built for testing ICP hypotheses, not optimizing a machine.",
+   when:"Next, not now. Gated on the DoM/enrichment owner and actually resuming outbound at volume. Cheaper than its reputation: Launch is $185/mo, not the enterprise number.",
+   dep:"DoM hire; a clean HubSpot; an ICP hypothesis to point it at",en:"Signal-based outbound; contact enrichment; the ICP-testing motion",
+   roles:"DoM (owns); Jason (interim on the enrichment slice)",metrics:"Sourced pipeline, ICP hit rate, cost per opportunity",
+   vendors:[["Clay",1],["Apollo",0]],
+   note:"REV-65: DoM owns Clay + enrichment/signal. This is the on-deck build, not a today buy."},
+  {job:"Advertising / retargeting",status:"wait",tool:"",cost:"Variable spend",
+   why:"Paid reach against target accounts and audiences: LinkedIn ads, display retargeting, account-based ads.",
+   when:"Wait. Paid isn't a channel at this stage.",
+   dep:"A validated message and funnel worth amplifying",en:"Top-of-funnel reach at scale",
+   roles:"DoM; Content Lead",metrics:"CAC, reach, assisted pipeline",
+   vendors:[["LinkedIn Ads",0],["Google Ads",0]],
+   note:"Trigger: a proven message and funnel worth putting money behind."}
+ ]},
+ {name:"Opportunities",verb:"Extract",cats:[
+  {job:"Sales engagement / sequencing",status:"have",tool:"HubSpot Sequences",cost:"Have · in HubSpot",
+   why:"Running structured multi-touch outreach: email + task cadences, enrollment, follow-up.",
+   when:"Have it. The gap is content (Touch 3-6 templates), not the tool.",
+   dep:"HubSpot; contacts; message content",en:"The outbound motion end to end",
+   roles:"Jason, Sasha; DoM",metrics:"Reply rate, meetings booked, sourced pipeline",
+   vendors:[["HubSpot Sequences",1],["Outreach",0],["Salesloft",0]],
+   note:"Have it. Consumer Health sequence built (6 touches); Touch 3-6 templates still pending — that's the actual blocker on outbound, not tooling."},
+  {job:"Sales intelligence / contact data",status:"next",tool:"—",cost:"Apollo ~$50–100/user/mo",
+   why:"Finding the right people and their contact details inside target accounts.",
+   when:"Next. A gap since ZoomInfo lapsed, but only bites when outbound resumes at volume. Apollo (or Clay's providers) likely covers it cheaply.",
+   dep:"Resumed outbound; a target list",en:"Sequencing; signal-based outbound",
+   roles:"DoM; Jason, Sasha",metrics:"Contactable accounts, bounce rate, sourced pipeline",
+   vendors:[["Apollo",0],["ZoomInfo",0],["Clay",1]],
+   note:"This is email/phone enrichment specifically — distinct from LinkedIn Sales Navigator (prospecting intel, which we have). Trigger: outbound resumes at volume; pair with Clay rather than a ZoomInfo re-buy."},
+  {job:"Meeting scheduling",status:"now",tool:"Google Calendar (stopgap)",cost:"Free (in HubSpot)",
+   why:"Lets prospects book time without back-and-forth and syncs it to the CRM. A live conversion step on the homepage right now.",
+   when:"Now — the one genuinely-now item. Fixes a live broken thing (the pulled Calendly embed), it's free, and its prerequisite (HubSpot) already exists.",
+   dep:"HubSpot",en:"Booked meetings from the website CTA; clean handoff to pipeline",
+   roles:"Jason (setup); Sasha, John (calendars)",metrics:"Meetings booked, CTA conversion",
+   vendors:[["HubSpot Meetings",1],["Calendly",0],["Cal.com",0]],
+   note:"Stopgap Google Calendar link in place. Swap to HubSpot Meetings: free, CRM-native, removes the plain link-out."},
+  {job:"Signal-based outbound",status:"next",tool:"Clay (planned)",cost:"Part of Clay",
+   why:"Triggering personalized outreach off a specific signal (funding, hire, product usage) rather than a static list. The Stage 1 outbound motion.",
+   when:"Next, not now — you were right to question this. The running motion (consumer health) is paused on content and manual LinkedIn, not on signal tooling. This activates with Clay and the DoM.",
+   dep:"Clay; DoM; a validated ICP signal to trigger on",en:"Higher-quality sourced pipeline than list-based outbound",
+   roles:"DoM (owns); Jason",metrics:"Sourced pipeline, reply/meeting rate, ICP hit rate",
+   vendors:[["Clay",1]],
+   note:"Same tool and trigger as enrichment. On deck, gated on the hire and resumed outbound."}
+ ]},
+ {name:"Close",verb:"Convert",cats:[
+  {job:"Sales enablement / content",status:"have",tool:"Notion + Drive (partial)",cost:"Have · $",
+   why:"Getting the right deck, case study, or answer to the right deal at the right moment.",
+   when:"Have the substance; no dedicated platform needed yet.",
+   dep:"Notion knowledge base; collateral catalog",en:"Faster, more consistent deals",
+   roles:"Jason; Sasha, Tim",metrics:"Win rate, cycle length",
+   vendors:[["Notion",1],["Google Drive",1],["Highspot",0]],
+   note:"Partial and sufficient. A Highspot-class platform is a large-team tool; premature here."},
+  {job:"Demo / POC environment",status:"have",tool:"Epistemix demos",cost:"Have · own product",
+   why:"Showing the product doing something a spreadsheet can't — the thing that actually moves a technical buyer. For Epistemix this is a differentiator, not overhead.",
+   when:"Have it, and improving it (Tim). This is a strength to lean on.",
+   dep:"The product; delivery/SA capacity",en:"Technical validation; deal conversion",
+   roles:"Tim (owns); Jason; Todd (delivery)",metrics:"Demo-to-opportunity, win rate",
+   vendors:[["Epistemix (own product)",1],["Tonal demo",1]],
+   note:"Have it. Interactive demos on the platform (Tonal, adoption models) are a live advantage."},
+  {job:"Proposal / CPQ / e-sign",status:"wait",tool:"",cost:"~$10–40/user/mo when needed",
+   why:"Generating quotes and proposals and getting them signed.",
+   when:"Wait. Deal volume is low enough that SOWs/MSAs go through legal directly.",
+   dep:"Deal volume; settled pricing/packaging",en:"Faster contracting at volume",
+   roles:"Jason; Bridgette (contracts)",metrics:"Cycle length, quote-to-close",
+   vendors:[["DocuSign",0],["PandaDoc",0]],
+   note:"Trigger: deal volume where manual proposals/contracts bottleneck."},
+  {job:"Conversation intelligence",status:"wait",tool:"",cost:"Gong ~$1,500/user/yr + platform fee",
+   why:"Recording, transcribing, and analyzing sales calls to coach reps and capture what buyers actually say.",
+   when:"Wait. High value for a larger rep team; premature with two sellers. A free recorder covers capture for now.",
+   dep:"A rep team worth coaching from call data",en:"Rep coaching, voice-of-customer, forecasting signal",
+   roles:"A built-out sales team; Jason",metrics:"Win rate, ramp time, forecast accuracy",
+   vendors:[["Gong",0],["Chorus",0],["Fathom (free)",0]],
+   note:"Trigger: a rep team worth coaching, or call volume too high to review by hand. Gong is pricey (~$1.5K/seat/yr + platform fee)."}
+ ]},
+ {name:"Success / Expansion",verb:"Manage",cats:[
+  {job:"CS platform / health scoring",status:"wait",tool:"",cost:"Gainsight-class ~$20K+/yr",
+   why:"Tracking account health and flagging churn or expansion signals across the customer base.",
+   when:"Wait. The customer base is small enough to manage by relationship.",
+   dep:"Enough live accounts to need software",en:"Retention, expansion, churn prevention at scale",
+   roles:"A future CS function; Todd (delivery)",metrics:"Net retention, churn, health score",
+   vendors:[["Gainsight",0],["Catalyst",0],["HubSpot",0]],
+   note:"Trigger: more live accounts than can be tracked in someone's head."},
+  {job:"Onboarding",status:"wait",tool:"",cost:"Process first, not a tool",
+   why:"Getting a new customer to first value in a repeatable way.",
+   when:"Wait. This is a process to design before it's a tool to buy; delivery is bespoke today.",
+   dep:"A repeatable product motion",en:"Faster time-to-value, better retention",
+   roles:"Todd (delivery); future CS",metrics:"Time-to-value, retention",
+   vendors:[["process-first",0]],
+   note:"Trigger: a repeatable motion where onboarding recurs the same way."},
+  {job:"Renewal / expansion tracking",status:"next",tool:"HubSpot",cost:"Free (in HubSpot)",
+   why:"Knowing when renewals come up and where expansion revenue sits, and acting on both. Net retention is a named metric in the build plan.",
+   when:"Next. Set it up in HubSpot as the first renewals approach — cheap and prerequisite already exists.",
+   dep:"HubSpot; live customers with renewal dates",en:"Net retention; expansion pipeline",
+   roles:"Jason; future CS",metrics:"Net retention, expansion revenue",
+   vendors:[["HubSpot",1]],
+   note:"Trigger: first renewals approaching; configure in the CRM before then."}
+ ]}
+];
+
+function catCard(c){
+  return `<div class="cat" data-status="${c.status}" data-job="${c.job.replace(/"/g,'&quot;')}" tabindex="0">
+    <div class="cat-job">${c.job}</div>
+    <div class="cat-tool">${c.tool?c.tool:'<span class="none">no tool yet</span>'}</div>
+    <div class="cat-row"><span class="pill ${c.status}">${LABEL[c.status]}</span></div>
+  </div>`;
+}
+document.getElementById("found-grid").innerHTML=foundation.map(catCard).join("");
+document.getElementById("flow").innerHTML=stages.map(st=>`
+  <div class="stage"><div class="stage-head"><span class="stage-verb">${st.verb}</span><span class="stage-name">${st.name}</span></div>
+  <div class="stage-cards">${st.cats.map(catCard).join("")}</div></div>`).join("");
+
+const all=[];
+foundation.forEach(c=>all.push({...c,stage:"Foundation"}));
+stages.forEach(st=>st.cats.forEach(c=>all.push({...c,stage:st.name})));
+
+const counts={have:0,now:0,next:0,wait:0};
+all.forEach(c=>counts[c.status]++);
+["have","now","next","wait"].forEach(k=>document.getElementById("c-"+k).textContent=counts[k]);
+
+// Vendor admin — actuals pulled from Tech-Stack-Costs.md; TBDs are the fill-in list.
+const admin={
+ "CRM / system of record":{spend:"~$1,635/mo pre-tax (~$19.6K/yr; ~$21K w/tax)",model:"Pro Customer Platform + additional Sales seats",cap:"DONE: Sasha → standard perms; Chace + Finn deactivated; John + Jason = only Super Admins. Sales seats 7→4 pending removal Jan 23 2027 (~$2,800/yr). Core seats free.",renew:"Term to Jan 23 2027 — reminder set Jan 5; ask annual prepay (~10%)",owner:"Jason = billing/primary contact (done). Ramp card still under departed Finn — reissue (Bridgette).",ok:true},
+ "Prospecting intelligence (LinkedIn)":{spend:"~$8,000/yr (assumed; 5 × ~$1,600)",model:"Per-seat (Sales Navigator Advanced)",cap:"5 licenses, 4 assigned (Carmen, Jason, John, Sasha) + 1 empty; drop empty + question Carmen (recruiting use?) and John at renewal",renew:"~Mar 8 2027 (2026 auto-renewed unreviewed) — reminder set Feb 20 2027",owner:"John = Purchaser Admin (billing not self-serve); get invoice from John; transition PA to Jason later",ok:true},
+ "Function building / process":{spend:"Company-wide — not GTM-optimized",model:"Piggybacks on the engineering (Todd's) bucket",cap:"—",renew:"—",owner:"Engineering owns the cost; Jason rides on it. Out of GTM scope.",ok:true},
+ "Knowledge base / enablement":{spend:"Company-wide — not GTM-optimized",model:"Company-wide access; GTM seats ride on it",cap:"—",renew:"—",owner:"Company plan; out of GTM optimization scope.",ok:true},
+ "Website / CMS":{spend:"~$2,247/yr now → ~$1,000–1,300 planned",model:"Per-project sites + editor seats",cap:"Keep 2 sites (Website + Populus subdomain); demos → unlinked pages; right-size 3 editor seats",renew:"By Aug 18: convert Populus monthly→yearly, editors. By Nov 12: fold in Epidemic X + Tipping Point, drop subs",owner:"Keep Framer until marketing lead · billing Tim→Jason · Stockholm entity? · reminders set (Aug 14, Nov 5)",ok:false},
+ "Content / blog / SEO":{spend:"Blog: in Framer · SEO tool: not bought",model:"—",cap:"—",renew:"—",owner:"Content Lead (planned)",ok:false},
+ "Podcast / video production":{spend:"~$12–19/mo (est.)",model:"Flat monthly (upload-hours tier)",cap:"Buzzsprout feed 2343304; show registered as 'Epistemix' (company-level)",renew:"Monthly",owner:"Account login/billing owner UNKNOWN — Jason gets no emails; possibly departed Finn. Asking John; move to a company login (continuity risk: hosts podcast + 25 transcripts).",ok:false},
+ "Sales engagement / sequencing":{spend:"Included in HubSpot",model:"Part of Sales Hub",cap:"Shared with CRM seats",renew:"With HubSpot",owner:"Jason",ok:false},
+ "Sales enablement / content":{spend:"Included (Notion + Drive)",model:"—",cap:"—",renew:"—",owner:"Jason",ok:true},
+ "Meeting scheduling":{spend:"Free (in HubSpot)",model:"Included in HubSpot",cap:"Per user",renew:"With HubSpot",owner:"Jason",ok:true},
+ "Market mapping / firmographic data":{spend:"$7,500/yr (2025–26 actual)",model:"Flat + data credits",cap:"Bulk credit pool (spent at expiry)",renew:"Lapsed June 2026 (offer expired Jun 30)",owner:"Jason",ok:true},
+ "Enrichment & signal orchestration":{spend:"$185/mo (Launch) → $495/mo (Growth)",model:"Consumption (credits + actions)",cap:"2,500 credits (Launch) / 6,000 (Growth) per mo",renew:"Not yet active; monthly or annual",owner:"DoM (planned)",ok:false},
+ "Signal-based outbound":{spend:"Part of Clay spend",model:"Consumption (Clay credits)",cap:"Shared Clay pool",renew:"With Clay",owner:"DoM (planned)",ok:false},
+ "Sales intelligence / contact data":{spend:"~$50–100/user/mo (Apollo est.)",model:"Seat-based, or via Clay credits",cap:"TBD",renew:"Not yet purchased",owner:"DoM (planned)",ok:false},
+ "Demo / POC environment":{spend:"Built in-house (own product)",model:"—",cap:"—",renew:"—",owner:"Tim",ok:true},
+ "Renewal / expansion tracking":{spend:"Free (in HubSpot)",model:"Included in HubSpot",cap:"—",renew:"With HubSpot",owner:"Jason",ok:false}
+};
+const adminTBD=Object.values(admin).filter(a=>!a.ok).length;
+const adminHave=Object.keys(admin).length;
+
+document.getElementById("foot").innerHTML=
+ `<b>How to read this.</b> Boxes are jobs; tools are evidence the job is real. `+
+ `Green = have it. Blue = do now. Amber = next, on deck once the enabling hire/motion lands. Gray = wait, with a named trigger. `+
+ `Only one box is truly Now (meeting scheduling), which is the honest state of a function still being built, not optimized. `+
+ `Costs are current as of July 2026 and approximate; confirm at purchase. Working draft — ties to Working/Operations/Tech-Stack-Costs.md.`+
+ `<br><br><b>Vendor admin:</b> ${adminHave} paid/in-place tools tracked, ${adminTBD} still need confirmed actuals (spend, seats, renewal). Click a tile marked NEEDS ACTUALS and fill it into Tech-Stack-Costs.md. Confirmed today: ZoomInfo ($7,500/yr, lapsed) and the HubSpot-included items.`;
+
+const panel=document.getElementById("panel"),scrim=document.getElementById("scrim");
+function vend(v){return `<span class="vendor ${v[1]?'ours':''}">${v[0]}${v[1]?' · ours':''}</span>`;}
+function openPanel(c){
+  document.getElementById("p-stage").textContent=c.stage;
+  document.getElementById("p-job").textContent=c.job;
+  const pl=document.getElementById("p-pill");pl.textContent=LABEL[c.status];pl.className="panel-pill "+c.status;
+  pl.style.background=`var(--${c.status}-bg)`;
+  pl.style.color=c.status==="wait"?"var(--text-2)":`var(--${c.status})`;
+  document.getElementById("p-cost").textContent=c.cost||"";
+  document.getElementById("p-why").textContent=c.why;
+  document.getElementById("p-when").textContent=c.when;
+  document.getElementById("p-dep").textContent=c.dep;
+  document.getElementById("p-en").textContent=c.en;
+  document.getElementById("p-roles").textContent=c.roles;
+  document.getElementById("p-metrics").textContent=c.metrics;
+  document.getElementById("p-vendors").innerHTML=c.vendors.map(vend).join("");
+  document.getElementById("p-note").textContent=c.note;
+  const a=admin[c.job],aw=document.getElementById("p-admin-wrap");
+  if(a){
+    aw.style.display="block";
+    document.getElementById("a-spend").textContent=a.spend;
+    document.getElementById("a-model").textContent=a.model;
+    document.getElementById("a-cap").textContent=a.cap;
+    document.getElementById("a-renew").textContent=a.renew;
+    document.getElementById("a-owner").textContent=a.owner;
+    document.getElementById("a-flag").innerHTML=a.ok?'':'<span style="font-size:9px;font-weight:800;letter-spacing:.05em;color:var(--next);background:var(--next-bg);padding:2px 7px;border-radius:20px;margin-left:4px">NEEDS ACTUALS</span>';
+  } else {
+    aw.style.display="none";
+  }
+  panel.classList.add("open");scrim.classList.add("open");
+}
+function closePanel(){panel.classList.remove("open");scrim.classList.remove("open");}
+document.getElementById("panelClose").onclick=closePanel;
+scrim.onclick=closePanel;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel();});
+function bind(el){
+  const open=()=>{const c=all.find(x=>x.stage===el.closest('.stage,.foundation,.found-grid')?'':''); };
+  el.addEventListener("click",()=>{const job=el.dataset.job;const c=all.find(x=>x.job===job);if(c)openPanel(c);});
+  el.addEventListener("keydown",e=>{if(e.key==="Enter")el.click();});
+}
+document.querySelectorAll(".cat").forEach(bind);
+
+const active={have:true,now:true,next:true,wait:true};
+document.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
+  const k=ch.dataset.k;active[k]=!active[k];ch.classList.toggle("off",!active[k]);
+  document.querySelectorAll(".cat").forEach(cat=>cat.classList.toggle("dim",!active[cat.dataset.status]));
+}));
+
+document.getElementById("howbtn").addEventListener("click",()=>{
+  const b=document.getElementById("howbox");const open=b.classList.toggle("open");
+  document.getElementById("howbtn").textContent=open?"Hide the sequencing logic ›":"How the sequencing works ›";
+});
+</script>
+</body>
+</html>
